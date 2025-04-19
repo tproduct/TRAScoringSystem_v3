@@ -1,0 +1,5 @@
+gender, category, grp, number, name, phonetic, team, is_open
+男子,classA,1,1,山田　太郎,やまだ　たろう,テストチーム,0
+男子,classA,1,2,佐藤　次郎,さとう　じろう,チームトラ,0
+男子,classB,1,1,小林　三郎,こばやし　さぶろう,虎チーム,0
+男子,classB,1,2,佐々木　四郎,ささき　しろう,TeamTra,0
