@@ -3,15 +3,13 @@ import { TiDeleteOutline } from "react-icons/ti";
 
 const DeleteButton = ({handler, itemId}) => {
   return (
-    <Flex _hover={{ cursor: "pointer" }} justifyContent="end">
-      <IconButton bg="white" color="myBlue.800" w="15px" h="15px">
+      <IconButton bg="white" color="myBlue.800" border="1px solid" onClick={() => {
+        handler(itemId);
+      }}>
         <TiDeleteOutline
-          onClick={() => {
-            handler(itemId);
-          }}
+          
         />
       </IconButton>
-    </Flex>
   );
 };
 

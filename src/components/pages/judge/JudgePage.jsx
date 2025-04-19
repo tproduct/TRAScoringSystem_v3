@@ -63,7 +63,7 @@ const JudgePage = () => {
         <SelectJudge handler={handleSelect} numE={numE} />
       </HStack>
 
-      <Text>有効本数：{maxMark}</Text>
+      <Text fontSize="2xl">有効本数：{maxMark}</Text>
 
       <JudgeForm
         judge={judge}

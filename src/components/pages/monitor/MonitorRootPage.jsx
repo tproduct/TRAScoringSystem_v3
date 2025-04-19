@@ -59,7 +59,6 @@ const MonitorRootPage = () => {
     const response = await getResult();
     setResult(response.data);
   };
-  console.log(pusherData)
 
   switch (monitorType) {
     case "score":

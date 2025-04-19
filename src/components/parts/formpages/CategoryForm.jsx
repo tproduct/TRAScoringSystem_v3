@@ -1,10 +1,4 @@
-import {
-  Box,
-  Flex,
-  HStack,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Flex, Float, HStack, Stack, Text } from "@chakra-ui/react";
 import InputField from "@parts/formparts/InputField";
 import RadioField from "@parts/formparts/RadioField";
 import SubmitButton from "@parts/formparts/SubmitButton";
@@ -15,6 +9,7 @@ import { useSelector } from "react-redux";
 import { setCategories as setStoredCategories } from "@store/competitionSlice";
 import AddButton from "@parts/AddButton";
 import DeleteButton from "@parts/DeleteButton";
+import BoxWithDeleteButton from "@parts/BoxWithDeleteButton";
 
 const CategoryForm = () => {
   const [errors, setErrors] = useState([]);
@@ -80,13 +75,13 @@ const CategoryForm = () => {
       <form action={formAction}>
         <Box display="flex" flexWrap="wrap" gap="1">
           {categories?.map((category, index) => (
-            <Box key={`${category.id}${index}`} layerStyle="boxThird">
-              {index ? (
-                <DeleteButton handler={handleDelete} itemId={category.id}/>
-              ) : (
-                ""
-              )}
-
+            <BoxWithDeleteButton
+              key={`${category.id}${index}`}
+              layerStyle="boxThird"
+              handler={() => {
+                if(categories.length > 1) handleDelete(category.id);
+              }}
+            >
               <input
                 type="hidden"
                 name={`id${index}`}
@@ -132,10 +127,14 @@ const CategoryForm = () => {
                   }
                 />
               </Flex>
-            </Box>
+            </BoxWithDeleteButton>
           ))}
 
-          <AddButton label="Category" handler={handleAdd} layerStyle="boxThird"/>
+          <AddButton
+            label="Category"
+            handler={handleAdd}
+            layerStyle="boxThird"
+          />
         </Box>
         <Flex justifyContent="end" p="2">
           <HStack gap="2">

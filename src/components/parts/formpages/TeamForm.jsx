@@ -1,10 +1,4 @@
-import {
-  Box,
-  Flex,
-  HStack,
-  Stack,
-  Table,
-} from "@chakra-ui/react";
+import { Box, Flex, HStack, Stack, Table } from "@chakra-ui/react";
 import { useForm } from "@hooks/useForm";
 import InputField from "@parts/formparts/InputField";
 import SubmitButton from "@parts/formparts/SubmitButton";
@@ -14,6 +8,7 @@ import { useSelector } from "react-redux";
 import { setTeams } from "@store/competitionSlice";
 import AddButton from "@parts/AddButton";
 import DeleteButton from "@parts/DeleteButton";
+import BoxWithDeleteButton from "@parts/BoxWithDeleteButton";
 
 const TeamForm = ({ gender, competitionId, categoryId = null, players }) => {
   const [teamPlayers, setTeamPlayers] = useState([]);
@@ -22,7 +17,11 @@ const TeamForm = ({ gender, competitionId, categoryId = null, players }) => {
   const registeredTeams = useSelector((state) => state.competition.teams);
 
   useEffect(() => {
-    const newTeams = categoryId ? registeredTeams.filter( team => team.category_id === categoryId && team.gender === gender ) : registeredTeams.filter( team => team.gender === gender );
+    const newTeams = categoryId
+      ? registeredTeams.filter(
+          (team) => team.category_id === categoryId && team.gender === gender
+        )
+      : registeredTeams.filter((team) => team.gender === gender);
     const newTeamPlayers = newTeams?.map((team) => {
       const newPlayers = [1, 2, 3, 4].reduce((acc, index) => {
         const newPlayer = players.find(
@@ -127,13 +126,15 @@ const TeamForm = ({ gender, competitionId, categoryId = null, players }) => {
   return (
     <form action={formAction}>
       <Stack w="100%">
-        
         <Flex justifyContent="left">
-          <Box h="75svh" w="100svw" overflow="auto">
+          <Box h="50svh" w="100svw" overflow="auto">
             {teamPlayers?.map((team, teamIndex) => (
-              <Box
+              <BoxWithDeleteButton
                 layerStyle="boxSingle"
                 key={team.id}
+                handler={() => {
+                  if (teamPlayers.length > 1) handleDelete(team.id);
+                }}
                 onClick={() => {
                   selectTeam(team);
                 }}
@@ -149,11 +150,7 @@ const TeamForm = ({ gender, competitionId, categoryId = null, players }) => {
                   name={`gender${teamIndex}`}
                   defaultValue={gender}
                 />
-                {teamIndex ? (
-                  <DeleteButton handler={handleDelete} itemId={team.id}/>
-                ) : (
-                  ""
-                )}
+
                 <InputField
                   label="チーム名"
                   type="text"
@@ -186,12 +183,16 @@ const TeamForm = ({ gender, competitionId, categoryId = null, players }) => {
                     )
                   )}
                 </HStack>
-              </Box>
+              </BoxWithDeleteButton>
             ))}
-            <AddButton label="Team" handler={handleAdd} layerStyle="boxSingle"/>
+            <AddButton
+              label="Team"
+              handler={handleAdd}
+              layerStyle="boxSingle"
+            />
           </Box>
 
-          <Table.ScrollArea rounded="md" height="75svh" w="98%" mt="3">
+          <Table.ScrollArea rounded="md" height="50svh" w="98%" mt="3">
             <Table.Root size="sm" stickyHeader>
               <Table.Header>
                 <Table.Row bg="bg.subtle">
@@ -226,11 +227,12 @@ const TeamForm = ({ gender, competitionId, categoryId = null, players }) => {
               </Table.Body>
             </Table.Root>
           </Table.ScrollArea>
-          
         </Flex>
         <Flex justifyContent="end" p="2">
-          <SubmitButton label="Update" value="sync" disabled={isPending} />
-          <SubmitButton label="Delete" value="delete" disabled={isPending} />
+          <HStack gap="2">
+            <SubmitButton label="Update" value="sync" disabled={isPending} />
+            <SubmitButton label="Delete" value="delete" disabled={isPending} />
+          </HStack>
         </Flex>
       </Stack>
     </form>
