@@ -12,7 +12,7 @@ use model\Thread;
 use model\Message;
 use errorhandler\ErrorHandler;
 
-class MessageController extends BaseController
+class ThreadController extends BaseController
 {
   private $data = [];
   private $error;
@@ -43,11 +43,11 @@ class MessageController extends BaseController
     echo json_encode(["status" => "success", "data" => $messages]);
   }
 
-  public function createMessage($userId, $threadId)
+  public function createThread($userId)
   {
     $this->checkUser($userId);
 
-    $result = Message::create($this->data);
+    $result = Thread::create($this->data);
     if($result){
       echo json_encode(["status" => "success", "data" => $result]);
     }else{
@@ -55,12 +55,12 @@ class MessageController extends BaseController
     }
   }
 
-  public function updateMessage($userId, $threadId, $messageId)
+  public function updateThread($userId, $threadId)
   {
     $this->checkUser($userId);
     $this->data["updated_at"] = $now = date('Y-m-d H:i:s');
 
-    $result = Message::patch($this->data, $messageId);
+    $result = Thread::patch($this->data, $threadId);
     if($result){
       echo json_encode(["status" => "success", "data" => $result]);
     }else{
@@ -68,9 +68,11 @@ class MessageController extends BaseController
     }
   }
 
-  public function deleteMessage($userId, $threadId, $messageId)
+  public function deleteThread($userId, $threadId)
   {
-    $result = Message::del( $messageId);
+    $this->checkUser($userId);
+
+    $result = Thread::del( $threadId);
     if($result){
       echo json_encode(["status" => "success", "data" => null]);
     }else{

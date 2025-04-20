@@ -65,9 +65,12 @@ $router->addController("POST", "/pusher/{competitionId}/monitor", "PusherControl
 $router->addController("POST", "/users/{userId}/monitors", "MonitorController@createMonitor");
 $router->addController("PATCH", "/users/{userId}/monitors/{monitorId}", "MonitorController@updateMonitor");
 
-//MESSAGE
-$router->addController("GET", "/threads", "MessageController@getAll");
-$router->addController("GET", "/threads/{userId}", "MessageController@getByUserId");
-$router->addController("POST", "/threads", "MessageController@createThread");
-$router->addController("PATCH", "/threads/{threadId}", "MessageController@updateThread");
-$router->addController("DELETE", "/threads/{threadId}", "MessageController@deleteThread");
+//THREAD & MESSAGE
+$router->addController("GET", "/users/{userId}/threads", "ThreadController@getAll");
+$router->addController("POST", "/users/{userId}/threads", "ThreadController@createThread");
+$router->addController("PATCH", "/users/{userId}/threads/{threadId}", "ThreadController@updateThread");
+$router->addController("DELETE", "/users/{userId}/threads/{threadId}", "ThreadController@deleteThread");
+
+$router->addController("POST", "/users/{userId}/threads/{threadId}/messages", "MessageController@createMessage");
+$router->addController("PATCH", "/users/{userId}/threads/{threadId}/messages/{messageId}", "MessageController@updateMessage");
+$router->addController("DELETE", "/users/{userId}/threads/{threadId}/messages/{messageId}", "MessageController@deleteMessage");

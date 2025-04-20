@@ -8,22 +8,32 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { useApiRequest } from "@hooks/useApiRequest";
 import { useForm } from "@hooks/useForm";
 import InputField from "@parts/formparts/InputField";
 import SubmitButton from "@parts/formparts/SubmitButton";
 import { useActionState, useState } from "react";
 import { useSelector } from "react-redux";
+import MessageForm from "./MessageForm";
+import MessageSubmitButton from "@parts/formparts/MessageSubmitButton";
 
-const ThreadForm = ({ contents, setThreads }) => {
+const ThreadForm = ({ contents, fetchAllMessages }) => {
   const [errors, setErrors] = useState(null);
   const userId = useSelector((state) => state.user.info.id);
 
+  const fields = contents
+    ? ["title", "message"]
+    : ["user_id", "title", "message"];
+
   const { createDefaultState, formAsyncAction } = useForm(
-    ["title", "message"],
-    { post: `/threads`, patch: `/threads/${contents?.thread.id}`, delete: `/threads/${contents?.thread.id}` },
+    fields,
+    {
+      post: `/users/${userId}/threads`,
+      patch: `/users/${userId}/threads/${contents?.thread.id}`,
+      delete: `/users/${userId}/threads/${contents?.thread.id}`,
+    },
     null,
-    setErrors
+    setErrors,
+    fetchAllMessages
   );
 
   const [state, formAction, isPending] = useActionState(
@@ -32,17 +42,6 @@ const ThreadForm = ({ contents, setThreads }) => {
     },
     createDefaultState()
   );
-
-  const handleSubmit = async () => {
-    await fetchAllMessages();
-  }
-
-  const fetchAllMessages = async () => {
-      const getAll = useApiRequest(`/threads`).get;
-      const response = await getAll();
-  
-      if (response.status === "success") setThreads(response.data);
-    };
 
   const isMyThread = contents?.thread.user_id === userId;
 
@@ -60,14 +59,12 @@ const ThreadForm = ({ contents, setThreads }) => {
             <Heading size="2xl">{contents.thread.title}</Heading>
           )}
           <Spacer />
-          <Text>{contents.thread.name}</Text>
-          /投稿:
-          <Text>{contents.thread.created_at}</Text>
+          <Text fontSize="lg">{contents.thread.name}</Text>
+          <Spacer />
+
+          <Text>{contents.thread.created_at}投稿</Text>
           {contents.thread.created_at !== contents.thread.updated_at && (
-            <>
-              更新:
-              <Text>{contents.thread.updated_at}</Text>
-            </>
+              <Text>({contents.thread.updated_at}更新)</Text>
           )}
         </Flex>
         {isMyThread ? (
@@ -81,21 +78,20 @@ const ThreadForm = ({ contents, setThreads }) => {
         ) : (
           <Box layerStyle="boxSingle">{contents.thread.message}</Box>
         )}
-        {contents.replies.map((reply) => (
-          <Box key={reply.id} p="2">
-            <Text>{reply.name}</Text>
-            <p>{reply.message}</p>
-          </Box>
-        ))}
+
         {isMyThread && (
           <Flex justifyContent="end">
             <HStack gap="2">
-              <SubmitButton label="Update" value="update"/>
-              <SubmitButton label="Delete" value="delete"/>
+              <MessageSubmitButton value="update" />
+              <MessageSubmitButton value="delete" />
             </HStack>
           </Flex>
         )}
       </form>
+      {contents.replies.map((reply) => (
+        <MessageForm reply={reply} key={reply.id} threadId={contents.thread.id} fetchAllMessages={fetchAllMessages}/>
+      ))}
+      <MessageForm threadId={contents.thread.id} fetchAllMessages={fetchAllMessages}/>
     </Box>
   ) : (
     <form action={formAction}>
@@ -108,7 +104,7 @@ const ThreadForm = ({ contents, setThreads }) => {
           <Textarea name="message" id="message" rows="5" cols="100" />
         </Stack>
         <Flex justifyContent="end">
-          <SubmitButton label="POST" value="create" />
+          <MessageSubmitButton value="create" />
         </Flex>
       </Stack>
     </form>

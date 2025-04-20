@@ -3,7 +3,7 @@ namespace validator;
 require_once __DIR__ . "/Validator.php";
 use validator\Validator;
 
-class MessageValidator extends Validator
+class ThreadValidator extends Validator
 {
   private $data;
   private $errors = [];
@@ -13,19 +13,20 @@ class MessageValidator extends Validator
     parent::__construct();
   }
 
-  public function createMessage()
+  public function createThread()
   {
     parent::setRules([
       "user_id" => ["type" => "string", "required" => true],
+      "title" => ["type" => "string", "max" => "50",  "required" => true],
       "message" => ["type" => "string","max" => "500", "required" => true],
     ]);
   }
 
-  public function updateMessage()
+  public function updateThread()
   {
     parent::setRules([
+      "title" => ["type" => "string", "max" => "50",  "required" => true],
       "message" => ["type" => "string","max" => "500", "required" => true],
     ]);
   }
-  
 }

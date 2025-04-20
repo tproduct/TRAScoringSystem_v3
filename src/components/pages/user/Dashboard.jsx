@@ -6,6 +6,7 @@ import {
   Flex,
   Spacer,
   IconButton,
+  Stack,
 } from "@chakra-ui/react";
 import { useApiRequest } from "@hooks/useApiRequest";
 import { useEffect, useState } from "react";
@@ -19,16 +20,18 @@ import { LuMonitor } from "react-icons/lu";
 import { PiGearSixBold } from "react-icons/pi";
 import { FaRegNewspaper } from "react-icons/fa";
 
-
 const Dashboard = () => {
   const [competitions, setCompetitions] = useState(null);
+  const [threads, setThreads] = useState(null);
   const userId = useSelector((state) => state.user.info.id);
   const getCompetitions = useApiRequest(`users/${userId}/competitions`).get;
+  const getThreads = useApiRequest(`users/${userId}/threads`).get;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     fetchCompetitionIds();
+    fetchThreads();
   }, []);
 
   const fetchCompetitionIds = async () => {
@@ -36,10 +39,13 @@ const Dashboard = () => {
     if (response.status === "success") setCompetitions(response.data);
   };
 
+  const fetchThreads = async () => {
+    const response = await getThreads();
+    if (response.status === "success") setThreads(response.data);
+  };
+
   const fetchCompetition = async (competitionId) => {
-    const getCompetition = useApiRequest(
-      `/competitions/${competitionId}`
-    ).get;
+    const getCompetition = useApiRequest(`/competitions/${competitionId}`).get;
 
     const response = await getCompetition();
     if (response.status === "success") return response.data;
@@ -73,8 +79,19 @@ const Dashboard = () => {
             <Box layerStyle="userHomeContainer">notice area</Box>
           </GridItem>
           <GridItem>
-            <a href="/system/message/">Message</a>
-            <Box layerStyle="userHomeContainer">Message area</Box>
+            <a href="/system/message/">Open Messages</a>
+
+            <Stack layerStyle="userHomeContainer" gap="1" p="2">
+              {!!threads && Object.entries(threads)?.map(([key, contents], index) => {
+                return (
+                  index < 10 && (
+                    <Text key={contents.thread.id}>
+                      {contents.thread.title}
+                    </Text>
+                  )
+                );
+              })}
+            </Stack>
           </GridItem>
         </SimpleGrid>
       </GridItem>
@@ -103,7 +120,7 @@ const Dashboard = () => {
               >
                 <PiGearSixBold />
               </IconButton>
-              
+
               <IconButton
                 bg="white"
                 color="myBlue.800"
@@ -135,7 +152,11 @@ const Dashboard = () => {
               </IconButton>
             </Flex>
           ))}
-          <AddButton label="Competition" handler={handleAdd} layerStyle="boxSingle"/>
+          <AddButton
+            label="Competition"
+            handler={handleAdd}
+            layerStyle="boxSingle"
+          />
         </Box>
       </GridItem>
     </SimpleGrid>

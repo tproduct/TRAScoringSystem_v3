@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { useApiRequest } from "./useApiRequest";
 import { toaster } from "@ui/toaster";
 
-export const useForm = (fields, endpoints, action, setErrors) => {
+export const useForm = (fields, endpoints, action, setErrors, middleWare = null) => {
   const dispatch = useDispatch();
 
   const createDefaultState = (baseArray = null) => {
@@ -57,6 +57,7 @@ export const useForm = (fields, endpoints, action, setErrors) => {
     } else {
       setErrors(null);
       !!action && dispatch(action(response.data));
+      !!middleWare && middleWare();
       toaster.create({
         title: "成功",
         description: "送信しました",

@@ -3,6 +3,7 @@ import { FaGear, FaUser } from "react-icons/fa6";
 import { FaHome, FaDatabase, FaNewspaper } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { LuMonitor } from "react-icons/lu";
+import { TbMessageFilled } from "react-icons/tb";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -35,6 +36,20 @@ const Sidebar = () => {
         </IconButton>
         <Text color="white" fontSize="10px">
           ユーザー
+        </Text>
+      </VStack>
+
+      <VStack>
+        <IconButton
+          bg={bg}
+          onClick={() => {
+            navigate("/system/message/");
+          }}
+        >
+          <TbMessageFilled color="white" />
+        </IconButton>
+        <Text color="white" fontSize="10px">
+          掲示板
         </Text>
       </VStack>
 
