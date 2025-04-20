@@ -74,3 +74,6 @@ $router->addController("DELETE", "/users/{userId}/threads/{threadId}", "ThreadCo
 $router->addController("POST", "/users/{userId}/threads/{threadId}/messages", "MessageController@createMessage");
 $router->addController("PATCH", "/users/{userId}/threads/{threadId}/messages/{messageId}", "MessageController@updateMessage");
 $router->addController("DELETE", "/users/{userId}/threads/{threadId}/messages/{messageId}", "MessageController@deleteMessage");
+
+//NOTICE
+$router->addController("GET", "/notices", "NoticeController@getAll");

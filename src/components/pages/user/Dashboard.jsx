@@ -23,15 +23,18 @@ import { FaRegNewspaper } from "react-icons/fa";
 const Dashboard = () => {
   const [competitions, setCompetitions] = useState(null);
   const [threads, setThreads] = useState(null);
+  const [notices, setNotices] = useState(null);
   const userId = useSelector((state) => state.user.info.id);
   const getCompetitions = useApiRequest(`users/${userId}/competitions`).get;
   const getThreads = useApiRequest(`users/${userId}/threads`).get;
+  const getNotices = useApiRequest("notices").get;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     fetchCompetitionIds();
     fetchThreads();
+    fetchNotices();
   }, []);
 
   const fetchCompetitionIds = async () => {
@@ -42,6 +45,12 @@ const Dashboard = () => {
   const fetchThreads = async () => {
     const response = await getThreads();
     if (response.status === "success") setThreads(response.data);
+  };
+
+  const fetchNotices = async () => {
+    const response = await getNotices();
+    console.log(response)
+    if (response.status === "success") setNotices(response.data);
   };
 
   const fetchCompetition = async (competitionId) => {
@@ -64,6 +73,12 @@ const Dashboard = () => {
     setCompetitions(null);
   };
 
+  const noticeColor = {
+    info: "black",
+    warning: "green",
+    alert: "red"
+  }
+
   return (
     <SimpleGrid
       columns={{ base: 1, md: 3 }}
@@ -76,13 +91,17 @@ const Dashboard = () => {
         <SimpleGrid gap="20px">
           <GridItem>
             <Text>Notice</Text>
-            <Box layerStyle="userHomeContainer">notice area</Box>
+            <Stack layerStyle="userHomeContainer">
+              {!!notices && notices.map(notice => (
+                <Text key={notice.id} color={noticeColor[notice.type]}>{notice.message}</Text>
+              ))}
+            </Stack>
           </GridItem>
           <GridItem>
             <a href="/system/message/">Open Messages</a>
 
             <Stack layerStyle="userHomeContainer" gap="1" p="2">
-              {!!threads && Object.entries(threads)?.map(([key, contents], index) => {
+              {!!threads && Object.entries(threads).map(([key, contents], index) => {
                 return (
                   index < 10 && (
                     <Text key={contents.thread.id}>
