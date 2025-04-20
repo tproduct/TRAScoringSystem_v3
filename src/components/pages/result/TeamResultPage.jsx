@@ -57,16 +57,18 @@ const TeamResultPage = () => {
         ];
   }, []);
 
+  const categoryName = categoryId ? competition?.categories.find( category => category.id === categoryId ).name : "";
+
   return (
     <Box h="100svh" overflow="auto" fontSize="12px">
       <Stack p="5">
         <HStack>
           <ResultTitle competitionInfo={competition?.info} />
-          <DownloadCSVButton tableRef={tableRef} fileName={`団体${genderLabels[gender]}`}/>
+          <DownloadCSVButton tableRef={tableRef} fileName={`団体${genderLabels[gender]}${categoryName}`}/>
         </HStack>
 
         <Heading size="md" mb="2">
-          {`団体${genderLabels[gender]}`}
+          {`団体${genderLabels[gender]}${categoryName}`}
         </Heading>
 
         <table style={{ fontSize: "14px" }} ref={tableRef}>
