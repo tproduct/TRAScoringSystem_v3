@@ -1,12 +1,13 @@
 import { useResult } from "@hooks/useResult";
 
-const ResultFirstRow = ({ type, round, player, category, rule, routine }) => {
+const ResultFirstRow = ({ type, round, player, category, rule, routine, withPhonetic = false }) => {
   const { skillFields, scoreFields } = useResult(type);
+  console.log(withPhonetic)
 
   return (
     <tr style={{ height: "25px" }}>
       <td>{player.rank}</td>
-      <td style={{ textAlign: "left" }}>{player.name}</td>
+      <td style={{ textAlign: "left" }}>{player.name}{withPhonetic && `(${player.phonetic})`}</td>
       <td>{player.label_1}</td>
       {skillFields?.map((field) => (
         <td key={field}>{player[field]}</td>

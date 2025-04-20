@@ -18,6 +18,7 @@ const ResultPage = () => {
     `/result/${competitionId}/${type}/${gender}/${categoryId}/${round}/${routine}`
   );
   const [data, setData] = useState(null);
+  const [withPhonetic, setWithPhonetic] = useState(false);
   const { competition, fetchCompetition } = useCompetition(competitionId);
   const tableRef = useRef(null);
 
@@ -67,6 +68,8 @@ const ResultPage = () => {
               (routine ? `${routine}本目` : "")
             }
           />
+          <label htmlFor="phonetic" className="no-print">ふりがな</label>
+          <input type="checkbox" className="no-print" id="phonetic" onChange={() => { setWithPhonetic(prev => !prev)}}/>
         </HStack>
 
         <Heading size="md" mb="2">
@@ -89,6 +92,7 @@ const ResultPage = () => {
                   category={category}
                   rule={rule}
                   routine={routine}
+                  withPhonetic={withPhonetic}
                 />
                 <ResultSecondRow
                   type={competitionType}
