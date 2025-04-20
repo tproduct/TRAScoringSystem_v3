@@ -10,11 +10,10 @@ import {
 import { useApiRequest } from "@hooks/useApiRequest";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FiDatabase, FiEdit } from "react-icons/fi";
+import { FiDatabase } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { setCompetition, resetCompetition } from "@store/competitionSlice";
 import AddButton from "@parts/AddButton";
-import { FaDatabase, FaGear, FaNewspaper } from "react-icons/fa6";
 import { LuMonitor } from "react-icons/lu";
 
 import { PiGearSixBold } from "react-icons/pi";
@@ -74,7 +73,7 @@ const Dashboard = () => {
             <Box layerStyle="userHomeContainer">notice area</Box>
           </GridItem>
           <GridItem>
-            <Text>Message</Text>
+            <a href="/system/message/">Message</a>
             <Box layerStyle="userHomeContainer">Message area</Box>
           </GridItem>
         </SimpleGrid>

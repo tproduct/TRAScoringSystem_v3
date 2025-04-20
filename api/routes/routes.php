@@ -64,3 +64,10 @@ $router->addController("POST", "/pusher/{competitionId}/monitor", "PusherControl
 //MONITOR
 $router->addController("POST", "/users/{userId}/monitors", "MonitorController@createMonitor");
 $router->addController("PATCH", "/users/{userId}/monitors/{monitorId}", "MonitorController@updateMonitor");
+
+//MESSAGE
+$router->addController("GET", "/threads", "MessageController@getAll");
+$router->addController("GET", "/threads/{userId}", "MessageController@getByUserId");
+$router->addController("POST", "/threads", "MessageController@createThread");
+$router->addController("PATCH", "/threads/{threadId}", "MessageController@updateThread");
+$router->addController("DELETE", "/threads/{threadId}", "MessageController@deleteThread");

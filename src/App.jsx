@@ -15,6 +15,7 @@ import ResultListPage from "@pages/result/ResultListPage";
 import JudgePage from "@pages/judge/JudgePage";
 import MonitorRootPage from "@pages/monitor/MonitorRootPage";
 import MonitorPage from "@pages/monitor/MonitorPage";
+import MessagePage from "@pages/message/MessagePage";
 
 function App() {
   useEffect(() => {
@@ -64,6 +65,7 @@ function App() {
               <Route path="score/" element={<ScorePage />} />
               <Route path="result/" element={<ResultListPage />} />
               <Route path="monitor/" element={<MonitorPage />} />
+              <Route path="message/" element={<MessagePage />} />
             </Route>
           </Routes>
         </BrowserRouter>
