@@ -41,7 +41,9 @@ const SystemBlock = ({
   routine,
   pusherData,
 }) => {
-  const userId = useSelector((state) => state.user.info.id);
+  const user = useSelector((state) => state.user);
+  const userId = user?.info.id;
+  const switchTime = user?.monitor.switch_time;
   const competition = useSelector((state) => state.competition);
   const [isReading, setIsReading] = useState(false);
   const [errors, setErrors] = useState(null);
@@ -219,14 +221,37 @@ const SystemBlock = ({
     const postToPusher = useApiRequest(
       `/pusher/${competition?.info.id}/monitor`
     ).post;
-    await postToPusher({
-      monitorType,
-      type,
-      categoryId,
-      round,
-      routine,
-      player,
-    });
+
+    if( monitorType === "consecutive" ){
+      await postToPusher({
+        monitorType : "score",
+        type,
+        categoryId,
+        round,
+        routine,
+        player,
+      });
+
+      setTimeout(async () => {
+        await postToPusher({
+          monitorType : "rank",
+          type,
+          categoryId,
+          round,
+          routine,
+          player,
+        });
+      }, switchTime * 1000);
+    }else{
+      await postToPusher({
+        monitorType,
+        type,
+        categoryId,
+        round,
+        routine,
+        player,
+      });
+    }
   };
 
   return (
