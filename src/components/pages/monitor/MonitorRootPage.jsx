@@ -82,6 +82,14 @@ const MonitorRootPage = () => {
           result={result}
         />
       );
+    case "player":
+      return (
+        <ScoreMonitor
+          competition={competition}
+          pusherData={pusherData}
+          rank="-1"
+        />
+      )
   }
 };
 

@@ -26,57 +26,69 @@ const ScoreMonitor = ({ competition, pusherData, rank }) => {
         </Heading>
       </Flex>
 
-      <table>
-        <thead>
-          <tr style={{ borderBottom: "1px solid" }}>
-            {Array(maxSkill)
-              .fill(0)
-              .map((val, index) => (
-                <th width="9%" key={`escoreheader${index}`}>
-                  {index + 1}
-                </th>
-              ))}
-            <th width="10%">L</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style={{ height: "80px", color: "yellow", fontWeight: "bold" }}>
-            {Array(maxSkill)
-              .fill(0)
-              .map((val, index) => (
-                <th key={`escore${index}`}>{eScore[`s${index + 1}`]}</th>
-              ))}
-            <th>{eScore.lnd}</th>
-          </tr>
-        </tbody>
-      </table>
+      {rank === "-1" ? (
+        ""
+      ) : (
+        <>
+          <table>
+            <thead>
+              <tr style={{ borderBottom: "1px solid" }}>
+                {Array(maxSkill)
+                  .fill(0)
+                  .map((val, index) => (
+                    <th width="9%" key={`escoreheader${index}`}>
+                      {index + 1}
+                    </th>
+                  ))}
+                <th width="10%">L</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                style={{ height: "80px", color: "yellow", fontWeight: "bold" }}
+              >
+                {Array(maxSkill)
+                  .fill(0)
+                  .map((val, index) => (
+                    <th key={`escore${index}`}>{eScore[`s${index + 1}`]}</th>
+                  ))}
+                <th>{eScore.lnd}</th>
+              </tr>
+            </tbody>
+          </table>
 
-      <table>
-        <thead>
-          <tr style={{ borderBottom: "1px solid" }}>
-            <th width="14%">Exe</th>
-            <th width="14%">Diff</th>
-            <th width="14%">Time</th>
-            <th width="14%">HD</th>
-            <th width="14%">Pen</th>
-            <th width="14%">Sum</th>
-            <th width="16%">Rank</th>
-          </tr>
-        </thead>
-        <tbody align="center">
-          <tr style={{ height: "80px", color: "yellow", fontWeight: "bold" }}>
-            <td>{score.exe.toFixed(2)}</td>
-            <td style={score.is_changed ? { color: "red" } : {}}>
-              {score.diff.toFixed(1)}
-            </td>
-            <td>{score.time.toFixed(2)}</td>
-            <td>{score.hd.toFixed(2)}</td>
-            <td style={{ color: "red" }}>{score.pen !== 0 && score.pen.toFixed(1)}</td>
-            <td>{score.sum.toFixed(2)}</td>
-            <td>{rank}</td>
-          </tr>
-        </tbody>
-      </table>
+          <table>
+            <thead>
+              <tr style={{ borderBottom: "1px solid" }}>
+                <th width="14%">Exe</th>
+                <th width="14%">Diff</th>
+                <th width="14%">Time</th>
+                <th width="14%">HD</th>
+                <th width="14%">Pen</th>
+                <th width="14%">Sum</th>
+                <th width="16%">Rank</th>
+              </tr>
+            </thead>
+            <tbody align="center">
+              <tr
+                style={{ height: "80px", color: "yellow", fontWeight: "bold" }}
+              >
+                <td>{score.exe.toFixed(2)}</td>
+                <td style={score.is_changed ? { color: "red" } : {}}>
+                  {score.diff.toFixed(1)}
+                </td>
+                <td>{score.time.toFixed(2)}</td>
+                <td>{score.hd.toFixed(2)}</td>
+                <td style={{ color: "red" }}>
+                  {score.pen !== 0 && score.pen.toFixed(1)}
+                </td>
+                <td>{score.sum.toFixed(2)}</td>
+                <td>{rank}</td>
+              </tr>
+            </tbody>
+          </table>
+        </>
+      )}
     </Stack>
   );
 };

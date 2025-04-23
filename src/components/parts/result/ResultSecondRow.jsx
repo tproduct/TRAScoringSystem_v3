@@ -4,9 +4,19 @@ const ResultSecondRow = ({ type, round, player, category, rule }) => {
   const { skillFields, scoreFields } = useResult(type);
 
   return (
-    <tr style={(round !== "final" || (round === "final" && rule?.refresh)) && { borderBottom: "1px solid", height: "30px" }}>
+    <tr
+      style={
+        (round !== "final" || (round === "final" && rule?.refresh)) && {
+          borderBottom: "1px solid",
+          height: "30px",
+        }
+      }
+    >
       <td>{round !== "final" && player?.rank <= rule?.nextround ? "Q" : ""}</td>
-      <td style={{ textAlign: "left" }}>{(round !== "final" || (round === "final" && rule?.refresh)) && player.team}</td>
+      <td style={{ textAlign: "left" }}>
+        {(round !== "final" || (round === "final" && rule?.refresh)) &&
+          player.team + (player.team2 ? "/" + player.team2 : "")}
+      </td>
       <td>{player.label_2}</td>
       {skillFields?.map((field) => (
         <td key={field}>

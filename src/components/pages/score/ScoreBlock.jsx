@@ -8,10 +8,7 @@ import {
   HStack,
   Stat,
   ButtonGroup,
-  Button,
-  Stack,
   SegmentGroup,
-  Float,
 } from "@chakra-ui/react";
 import { TiCancel } from "react-icons/ti";
 import { LuDownload, LuUpload } from "react-icons/lu";
@@ -32,6 +29,7 @@ import { TiSortNumerically } from "react-icons/ti";
 import ScoreButton from "@parts/score/ScoreButton";
 import { FiDatabase } from "react-icons/fi";
 import { Spinner } from "@chakra-ui/react";
+import { GoPerson } from "react-icons/go";
 
 const SystemBlock = ({
   type = "individual",
@@ -425,6 +423,7 @@ const SystemBlock = ({
                   handler={cancelReading}
                   disabled={!isReading}
                 />
+                
               </HStack>
             </BoxWithTitle>
             <BoxWithTitle title="Publish" icon={<LuUpload />} h="65px">
@@ -452,6 +451,13 @@ const SystemBlock = ({
                   icon={<HiNumberedList />}
                   handler={() => {
                     handleMonitor("rank");
+                  }}
+                />
+                <ScoreButton
+                  label="Player"
+                  icon={<GoPerson />}
+                  handler={() => {
+                    handleMonitor("player");
                   }}
                 />
               </HStack>

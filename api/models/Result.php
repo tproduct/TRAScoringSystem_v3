@@ -34,7 +34,6 @@ use errorhandler\ErrorHandler;
 
 class Result extends Model
 {
-
   private static function generateTieBreakStmtOfQualify($compType)
   {
     return $compType === "TRA"
@@ -119,6 +118,13 @@ class Result extends Model
       )";
   }
 
+  private static function generateColumnNameOfPlayer($type)
+  {
+    return $type === "individual"
+      ? "p.name, p.phonetic, team"
+      : "p.name, p.phonetic, team, p.name2, p.phonetic2, team2";
+  }
+
   public static function getQualifyResult($compType, $type, $gender, $categoryId, $isTotal)
   {
     $db = new DataSource();
@@ -135,8 +141,10 @@ class Result extends Model
 
     $joinStmt = self::generateJoinStmt($compType);
 
+    $playerStmt = self::generateColumnNameOfPlayer($type);
+
     $result = $db->select(
-      "SELECT p.name, p.phonetic, team, o1.player_id, q1.exe, q1.diff, q1.hd, q1.time, q1.sum, q1.dns,
+      "SELECT {$playerStmt}, o1.player_id, q1.exe, q1.diff, q1.hd, q1.time, q1.sum, q1.dns,
             e1.s1, e1.s2, e1.s3, e1.s4, e1.s5, e1.s6, e1.s7, e1.s8, e1.s9, e1.s10, e1.lnd,
             q2.exe AS exe_2, q2.diff AS diff_2, q2.hd AS hd_2, q2.time AS time_2, q2.sum AS sum_2, q2.dns AS dns_2,
             e2.s1 AS s1_2, e2.s2 AS s2_2, e2.s3 AS s3_2, e2.s4 AS s4_2, e2.s5 AS s5_2,
@@ -176,9 +184,10 @@ class Result extends Model
   public static function getSemifinalResultOfTRA($type, $gender, $categoryId)
   {
     $db = new DataSource();
+    $playerStmt = self::generateColumnNameOfPlayer($type);
 
     $result = $db->select(
-      "SELECT p.name, p.phonetic, team, o.player_id, s.exe, s.diff, s.hd, s.time, s.sum, s.dns,
+      "SELECT {$playerStmt}, o.player_id, s.exe, s.diff, s.hd, s.time, s.sum, s.dns,
               e1.s1, e1.s2, e1.s3, e1.s4, e1.s5, e1.s6, e1.s7, e1.s8, e1.s9, e1.s10, e1.lnd,
               'Q2' AS label_1,
               RANK() OVER (
@@ -202,11 +211,12 @@ class Result extends Model
     $db = new DataSource();
 
     $qualifyRankCTE = self::generateCTEOfQualifyRank();
+    $playerStmt = self::generateColumnNameOfPlayer($type);
 
     $result = $db->select(
       "{$qualifyRankCTE}
             SELECT
-            p.name, p.phonetic, team, sf.player_id, sf.exe, sf.diff, sf.hd, sf.time, sf.sum, sf.dns,
+            {$playerStmt}, sf.player_id, sf.exe, sf.diff, sf.hd, sf.time, sf.sum, sf.dns,
             e1.s1, e1.s2, e1.s3, e1.s4, e1.s5, e1.s6, e1.s7, e1.s8, e1.s9, e1.s10, e1.lnd,
             sf.player_id,
             q.rank AS qualify_rank,
@@ -236,9 +246,10 @@ class Result extends Model
   public static function getFinalResultOfTRA($type, $gender, $categoryId, $refresh)
   {
     $db = new DataSource();
+    $playerStmt = self::generateColumnNameOfPlayer($type);
 
     $result = $refresh ? $db->select(
-      "SELECT p.name, p.phonetic, team, o.player_id, s.exe, s.diff, s.hd, s.time, s.sum, s.dns,
+      "SELECT {$playerStmt}, o.player_id, s.exe, s.diff, s.hd, s.time, s.sum, s.dns,
               e1.s1, e1.s2, e1.s3, e1.s4, e1.s5, e1.s6, e1.s7, e1.s8, e1.s9, e1.s10, e1.lnd,
               'F' AS label_1,
               RANK() OVER (
@@ -254,7 +265,7 @@ class Result extends Model
       ["categoryId" => $categoryId, "gender" => $gender]
     )
       : $db->select(
-        "SELECT p.name, p.phonetic, team, o1.player_id, q1.exe, q1.diff, q1.hd, q1.time, q1.sum, q1.dns,
+        "SELECT {$playerStmt}, o1.player_id, q1.exe, q1.diff, q1.hd, q1.time, q1.sum, q1.dns,
             e1.s1, e1.s2, e1.s3, e1.s4, e1.s5, e1.s6, e1.s7, e1.s8, e1.s9, e1.s10, e1.lnd,
             q2.exe AS exe_2, q2.diff AS diff_2, q2.hd AS hd_2, q2.time AS time_2, q2.sum AS sum_2, q2.dns AS dns_2,
             e2.s1 AS s1_2, e2.s2 AS s2_2, e2.s3 AS s3_2, e2.s4 AS s4_2, e2.s5 AS s5_2,
@@ -293,12 +304,13 @@ class Result extends Model
 
     $semifinalRankCTE = self::generateCTEOfSemifinalRank();
     $finalRankCTE = self::generateCTEOfFinalRank();
+    $playerStmt = self::generateColumnNameOfPlayer($type);
 
     $result = $routine === "1"
       ? $db->select(
         "{$semifinalRankCTE}
             SELECT
-              p.name, p.phonetic, team, f1.player_id, f1.exe, f1.diff, f1.hd, f1.time, f1.sum, f1.dns,
+              {$playerStmt}, f1.player_id, f1.exe, f1.diff, f1.hd, f1.time, f1.sum, f1.dns,
               e1.s1, e1.s2, e1.s3, e1.s4, e1.s5, e1.s6, e1.s7, e1.s8, e1.s9, e1.s10, e1.lnd,
               sf.rank AS semifinal_rank,
               'F1' AS label_1,
@@ -320,7 +332,7 @@ class Result extends Model
       )
       : $db->select(
         "{$finalRankCTE}
-            SELECT p.name, p.phonetic, team, f2.player_id, s.exe, s.diff, s.hd, s.time, s.sum, s.dns,
+            SELECT {$playerStmt}, f2.player_id, s.exe, s.diff, s.hd, s.time, s.sum, s.dns,
                   e.s1, e.s2, e.s3, e.s4, e.s5, e.s6, e.s7, e.s8, e.s9, e.s10, e.lnd,
                   f1.s1 AS s1_1, f1.s2 AS s2_1, f1.s3 AS s3_1, f1.s4 AS s4_1, f1.s5 AS s5_1,
                   f1.s6 AS s6_1, f1.s7 AS s7_1, f1.s8 AS s8_1, f1.s9 AS s9_1, f1.s10 AS s10_1, f1.lnd AS lnd_1,
