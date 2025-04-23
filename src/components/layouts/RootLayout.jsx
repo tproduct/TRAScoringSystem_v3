@@ -1,7 +1,7 @@
 import { Outlet, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Box,HStack } from "@chakra-ui/react";
-import Sidebar from "@parts/SideBar";
+import Sidebar from "@parts/navbar/Sidebar";
 
 const RootLayout = () => {
   // const isLoggedIn = useSelector(state => state.user.isLoggedIn);
