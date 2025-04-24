@@ -5,6 +5,7 @@ import Alert from "@parts/Alert";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import BaseDrawer from "@parts/BaseDrawer";
 import { order_desc } from "@descriptions/order_desc"; 
+import StartListLinks from "../startlist/StartListLinks";
 
 const OrderPage = () => {
   const categories = useSelector((state) => state.competition.categories);
@@ -26,6 +27,8 @@ const OrderPage = () => {
         <p>試技順を設定するカテゴリー・ラウンドにチェックを入れて「確定」を押してください</p>
         <br />
       <OrderForm />
+
+      <StartListLinks />
     </Box>
   );
 };

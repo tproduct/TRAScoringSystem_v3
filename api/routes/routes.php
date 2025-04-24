@@ -43,6 +43,7 @@ $router->addController("POST", "/users/{id}/competitions/{id}/teams", "TeamContr
 $router->addController("DELETE", "/users/{id}/competitions/{id}/teams", "TeamController@deleteAll");
 
 //ORDER
+$router->addController("GET", "/users/{id}/competitions/{id}/orders/{type}/{gender}/{categoryId}/{round}", "OrderController@getOrder");
 $router->addController("POST", "/users/{id}/competitions/{id}/orders", "OrderController@syncOrder");
 
 //SCORE

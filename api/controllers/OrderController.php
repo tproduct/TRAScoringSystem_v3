@@ -21,13 +21,13 @@ class OrderController extends BaseController
     $this->error = new ErrorHandler();
   }
 
-  public function getOrders($userId, $competitionId)
+  public function getOrder($userId, $competitionId, $type, $gender, $categoryId, $round)
   {
     $this->checkUserAndCompetition($userId, $competitionId);
 
-    // $result = Order::getAll($userId);
+    $result = Order::getOrder($categoryId, $type, $round, $gender);
 
-    // echo json_encode(["status" => "success", "data" => $result]);
+    echo json_encode(["status" => "success", "data" => $result]);
   }
 
   public function syncOrder($userId, $competitionId)
