@@ -30,7 +30,7 @@ class Score extends Model
     $roundsStmt2 = str_replace("-", "' OR o2.round = '",$rounds);
 
     return parent::fetchAll(
-      "SELECT s.id, s.{$scoreType}, p.name, p.team, o.round, p.gender 
+      "SELECT s.id, s.{$scoreType}, p.name, p.team, o.round, p.gender, p.phonetic 
             FROM scores s
             JOIN orders o ON s.order_id = o.id
             JOIN individual_players p ON o.player_id = p.id

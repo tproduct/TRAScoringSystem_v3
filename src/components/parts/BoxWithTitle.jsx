@@ -1,9 +1,9 @@
 import { Box, Float } from "@chakra-ui/react";
-const BoxWithTitle = ({ title, icon, w="100%", h, children }) => {
+const BoxWithTitle = ({ title, icon, w, h, children }) => {
   return (
     <Box
       position="relative"
-      w="fit-content"
+      w={w ? w : "fit-content"}
       h={h}
       border="1px solid"
       borderColor="gray.400"
