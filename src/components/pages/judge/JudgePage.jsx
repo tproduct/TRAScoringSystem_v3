@@ -6,6 +6,7 @@ import JudgeForm from "./JudgeForm";
 import Pusher from "pusher-js";
 import { maxSkills } from "@libs/constants";
 import { useCompetition } from "@hooks/useCompetition";
+import SelectPanel from "@parts/select/SelectPanel";
 
 const JudgePage = () => {
   const competitionId = useParams().competitionId;
@@ -15,6 +16,7 @@ const JudgePage = () => {
   const type = competition?.info.type;
   const [maxMark, setMaxMark] = useState(competition ? maxSkills[type] : 10);
   const [isReading, setIsReading] = useState(false);
+  const [panel, setPanel] = useState("A");
 
   useEffect(() => {
     fetchCompetition();
@@ -25,7 +27,7 @@ const JudgePage = () => {
       activityTimeout: 10 * 60 * 10000,
     });
 
-    const channel = pusher.subscribe(import.meta.env.VITE_PUSHER_CHANNEL+competitionId);
+    const channel = pusher.subscribe(import.meta.env.VITE_PUSHER_CHANNEL + competitionId + panel);
 
     channel.bind("sendMaxMark", (data) => {
       setMaxMark(data);
@@ -42,7 +44,11 @@ const JudgePage = () => {
     channel.bind("pusher:subscription_error", (data) => {
       setError("サーバーとの通信が確立できませんでした");
     });
-  }, []);
+
+    return () => {
+      pusher.unsubscribe(import.meta.env.VITE_PUSHER_CHANNEL + competitionId + panel);
+    }
+  }, [panel]);
 
   const numE = Number(competition?.info.num_e) || 6;
 
@@ -61,6 +67,10 @@ const JudgePage = () => {
       <HStack>
         <Text>Judge</Text>
         <SelectJudge handler={handleSelect} numE={numE} />
+        <SelectPanel
+            panels={competition?.info.panels}
+            handler={(_, val) => setPanel(val)}
+          />
       </HStack>
 
       <Text fontSize="2xl">有効本数：{maxMark}</Text>
@@ -71,6 +81,7 @@ const JudgePage = () => {
         maxMark={maxMark}
         isReading={isReading}
         readFullSkill={judge.at(0) === "e" ? true : !!readFullSkill}
+        panel={panel}
       />
     </Stack>
   );

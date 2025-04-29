@@ -94,7 +94,7 @@ const ScorePage = () => {
     });
 
     const channel = pusher.subscribe(
-      import.meta.env.VITE_PUSHER_CHANNEL + competition?.info.id
+      import.meta.env.VITE_PUSHER_CHANNEL + competition?.info.id + selectValues.panel
     );
 
     channel.bind("sendScore", (data) => {
@@ -108,7 +108,11 @@ const ScorePage = () => {
     channel.bind("pusher:subscription_error", (data) => {
       setErrors("サーバーとの通信が確立できませんでした");
     });
-  }, []);
+
+    return () => {
+      pusher.unsubscribe(import.meta.env.VITE_PUSHER_CHANNEL + competition?.info.id + selectValues.panel);
+    }
+  }, [selectValues]);
 
   const handleSelect = (key, val) => {
     setSelectValues((prev) => {
@@ -118,7 +122,6 @@ const ScorePage = () => {
       };
     });
   };
-  console.log(selectValues)
 
   const rounds = competition.categories.find(
     (category) => category.id === selectValues.categoryId
@@ -168,7 +171,7 @@ const ScorePage = () => {
           <SelectCategory handler={handleSelect} />
           <SelectRound rounds={rounds} handler={handleSelect} />
           <SelectRoutine routines={routines} handler={handleSelect} />
-          <SelectPanel handler={handleSelect} />
+          <SelectPanel panels={competition?.info.panels} handler={handleSelect} />
         </Flex>
 
         {/* player area */}
@@ -217,6 +220,7 @@ const ScorePage = () => {
           round={selectValues.round}
           routine={selectValues.routine}
           pusherData={pusherData}
+          panel={selectValues.panel}
         />
       </Stack>
     </HStack>

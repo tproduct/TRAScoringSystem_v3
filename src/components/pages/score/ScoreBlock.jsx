@@ -38,6 +38,7 @@ const SystemBlock = ({
   round,
   routine,
   pusherData,
+  panel
 }) => {
   const user = useSelector((state) => state.user);
   const userId = user?.info.id;
@@ -177,7 +178,7 @@ const SystemBlock = ({
 
   const handleSegmentChange = async (e) => {
     const postToPusher = useApiRequest(
-      `/pusher/${competition?.info.id}/system/maxMark`
+      `/pusher/${competition?.info.id}/${panel}/system/maxMark`
     ).post;
 
     handleMaxMarkChange(e.value, handleScoreChange);
@@ -186,7 +187,7 @@ const SystemBlock = ({
 
   const cancelReading = async () => {
     const postToPusher = useApiRequest(
-      `/pusher/${competition?.info.id}/system/isReading`
+      `/pusher/${competition?.info.id}/${panel}/system/isReading`
     ).post;
 
     await postToPusher({ isReading: false });
@@ -195,7 +196,7 @@ const SystemBlock = ({
 
   const startReading = async () => {
     const postToPusher = useApiRequest(
-      `/pusher/${competition?.info.id}/system/isReading`
+      `/pusher/${competition?.info.id}/${panel}/system/isReading`
     ).post;
 
     setIsReading(true);
@@ -217,7 +218,7 @@ const SystemBlock = ({
 
   const handleMonitor = async (monitorType) => {
     const postToPusher = useApiRequest(
-      `/pusher/${competition?.info.id}/monitor`
+      `/pusher/${competition?.info.id}/${panel}/monitor`
     ).post;
 
     if( monitorType === "consecutive" ){

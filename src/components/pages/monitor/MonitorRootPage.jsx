@@ -5,6 +5,7 @@ import Pusher from "pusher-js";
 import { useApiRequest } from "@hooks/useApiRequest";
 import { useCompetition } from "@hooks/useCompetition";
 import RankMonitor from "./RankMonitor";
+import SelectPanel from "@parts/select/SelectPanel";
 
 const MonitorRootPage = () => {
   const [monitorType, setMonitorType] = useState("score");
@@ -13,6 +14,7 @@ const MonitorRootPage = () => {
   const [result, setResult] = useState(null);
   const { competitionId } = useParams();
   const { competition, fetchCompetition } = useCompetition(competitionId);
+  const [panel, setPanel] = useState("A");
 
   useEffect(() => {
     document.body.style.backgroundColor = "#0c142e";
@@ -27,7 +29,7 @@ const MonitorRootPage = () => {
     });
 
     const channel = pusher.subscribe(
-      import.meta.env.VITE_PUSHER_CHANNEL + competitionId
+      import.meta.env.VITE_PUSHER_CHANNEL + competitionId + panel
     );
 
     channel.bind("sendMonitor", (data) => {
@@ -49,8 +51,9 @@ const MonitorRootPage = () => {
     return () => {
       document.body.style.backgroundColor = "white";
       document.body.style.color = "#0c142e";
-    }
-  }, []);
+      pusher.unsubscribe(import.meta.env.VITE_PUSHER_CHANNEL + competitionId + panel);
+    };
+  }, [panel]);
 
   const fetchResult = async (type, gender, categoryId, round, routine) => {
     const getResult = useApiRequest(
@@ -63,33 +66,54 @@ const MonitorRootPage = () => {
   switch (monitorType) {
     case "score":
       return (
-        <ScoreMonitor
-          competition={competition}
-          pusherData={pusherData}
-          rank={
-            result
-              ? result.find((item) => item.player_id === pusherData.player.id)
-                  ?.rank
-              : ""
-          }
-        />
+        <>
+          <SelectPanel
+            panels={competition?.info.panels}
+            bg="myBlue.950"
+            handler={(_, val) => setPanel(val)}
+          />
+          <ScoreMonitor
+            competition={competition}
+            pusherData={pusherData}
+            rank={
+              result
+                ? result.find((item) => item.player_id === pusherData.player.id)
+                    ?.rank
+                : ""
+            }
+          />
+        </>
       );
     case "rank":
       return (
-        <RankMonitor
-          competition={competition}
-          pusherData={pusherData}
-          result={result}
-        />
+        <>
+          <SelectPanel
+            panels={competition?.info.panels}
+            bg="myBlue.950"
+            handler={(_, val) => setPanel(val)}
+          />
+          <RankMonitor
+            competition={competition}
+            pusherData={pusherData}
+            result={result}
+          />
+        </>
       );
     case "player":
       return (
-        <ScoreMonitor
-          competition={competition}
-          pusherData={pusherData}
-          rank="-1"
-        />
-      )
+        <>
+          <SelectPanel
+            panels={competition?.info.panels}
+            bg="myBlue.950"
+            handler={(_, val) => setPanel(val)}
+          />
+          <ScoreMonitor
+            competition={competition}
+            pusherData={pusherData}
+            rank="-1"
+          />
+        </>
+      );
   }
 };
 

@@ -32,24 +32,24 @@ class PusherController extends BaseController
     $this->error = new ErrorHandler();
   }
 
-  public function sendScoreFromJudge($competitionId)
+  public function sendScoreFromJudge($competitionId, $panel)
   {
-    $this->pusher->trigger($_ENV['PUSHER_CHANNEL'].$competitionId, 'sendScore', $this->data);
+    $this->pusher->trigger($_ENV['PUSHER_CHANNEL'].$competitionId.$panel, 'sendScore', $this->data);
     echo json_encode(["status" => "success"]);
   }
 
-  public function sendMaxMarkFromSystem($competitionId)
+  public function sendMaxMarkFromSystem($competitionId, $panel)
   {
-    $this->pusher->trigger($_ENV['PUSHER_CHANNEL'].$competitionId, 'sendMaxMark', $this->data["maxMark"]);
+    $this->pusher->trigger($_ENV['PUSHER_CHANNEL'].$competitionId.$panel, 'sendMaxMark', $this->data["maxMark"]);
   }
 
-  public function sendIsReadingFromSystem($competitionId)
+  public function sendIsReadingFromSystem($competitionId, $panel)
   {
-    $this->pusher->trigger($_ENV['PUSHER_CHANNEL'].$competitionId, 'sendIsReading', $this->data["isReading"]);
+    $this->pusher->trigger($_ENV['PUSHER_CHANNEL'].$competitionId.$panel, 'sendIsReading', $this->data["isReading"]);
   }
 
-  public function sendMonitorFromSystem($competitionId)
+  public function sendMonitorFromSystem($competitionId, $panel)
   {
-    $this->pusher->trigger($_ENV['PUSHER_CHANNEL'].$competitionId, 'sendMonitor', $this->data);
+    $this->pusher->trigger($_ENV['PUSHER_CHANNEL'].$competitionId.$panel, 'sendMonitor', $this->data);
   }
 }

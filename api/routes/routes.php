@@ -58,10 +58,10 @@ $router->addController("GET", "/result/{competitionId}/team/{gender}", "ResultCo
 $router->addController("GET", "/result/{competitionId}/team/{gender}/{categoryId}", "ResultController@getTeamResultByCategory");
 
 //PUSHER
-$router->addController("POST", "/pusher/{competitionId}/judge", "PusherController@sendScoreFromJudge");
-$router->addController("POST", "/pusher/{competitionId}/system/maxMark", "PusherController@sendMaxMarkFromSystem");
-$router->addController("POST", "/pusher/{competitionId}/system/isReading", "PusherController@sendIsReadingFromSystem");
-$router->addController("POST", "/pusher/{competitionId}/monitor", "PusherController@sendMonitorFromSystem");
+$router->addController("POST", "/pusher/{competitionId}/{panel}/judge", "PusherController@sendScoreFromJudge");
+$router->addController("POST", "/pusher/{competitionId}/{panel}/system/maxMark", "PusherController@sendMaxMarkFromSystem");
+$router->addController("POST", "/pusher/{competitionId}/{panel}/system/isReading", "PusherController@sendIsReadingFromSystem");
+$router->addController("POST", "/pusher/{competitionId}/{panel}/monitor", "PusherController@sendMonitorFromSystem");
 
 //MONITOR
 $router->addController("POST", "/users/{userId}/monitors", "MonitorController@createMonitor");

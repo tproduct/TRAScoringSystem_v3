@@ -12,6 +12,7 @@ const JudgeForm = ({
   maxSkills,
   isReading,
   readFullSkill = true,
+  panel
 }) => {
   const [errors, setErrors] = useState(null);
   const [scores, setScores] = useState(null);
@@ -44,7 +45,7 @@ const JudgeForm = ({
   const { createDefaultState, formAsyncAction } = useForm(
     ["judge", ...inputElementHeader],
     {
-      post: `/pusher/${competitionId}/judge`,
+      post: `/pusher/${competitionId}/${panel}/judge`,
     },
     null,
     setErrors

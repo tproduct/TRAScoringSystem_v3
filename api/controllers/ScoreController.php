@@ -24,7 +24,7 @@ class ScoreController extends BaseController
   public function getExtractedScore($competitionId, $gender, $scoreType, $rounds)
   {
     $minScore = $_GET["minScore"];
-    // $this->checkUserAndCompetition($userId, $competitionId);
+
     $result = Score::getScoreAndPlayer($competitionId, $gender, $scoreType, $rounds, $minScore);
 
     if($result){
