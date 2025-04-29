@@ -17,6 +17,7 @@ import MonitorRootPage from "@pages/monitor/MonitorRootPage";
 import MonitorPage from "@pages/monitor/MonitorPage";
 import MessagePage from "@pages/message/MessagePage";
 import StartListPage from "@pages/startlist/StartListPage";
+import SpecialPrizePage from "@pages/result/SpecialPrizePage";
 
 function App() {
   useEffect(() => {
@@ -46,6 +47,10 @@ function App() {
             <Route
               path="result/:competitionId/team/:gender/"
               element={<TeamResultPage />}
+            />
+            <Route
+              path="result/:competitionId/special/"
+              element={<SpecialPrizePage />}
             />
 
             {/* スタートリスト */}

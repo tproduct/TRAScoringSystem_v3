@@ -20,6 +20,7 @@ import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { isNullObject } from "@libs/helper";
 import Alert from "@parts/Alert";
 import Pusher from "pusher-js";
+import SelectPanel from "@parts/select/SelectPanel";
 
 const ScorePage = () => {
   const competition = useSelector((state) => state.competition);
@@ -34,6 +35,7 @@ const ScorePage = () => {
     categoryId: competition.categories[0].id,
     round: "qualify",
     routine: 1,
+    panel: "A",
   });
   const [players, setPlayers] = useState([]);
   const [errors, setErrors] = useState(null);
@@ -116,6 +118,7 @@ const ScorePage = () => {
       };
     });
   };
+  console.log(selectValues)
 
   const rounds = competition.categories.find(
     (category) => category.id === selectValues.categoryId
@@ -165,6 +168,7 @@ const ScorePage = () => {
           <SelectCategory handler={handleSelect} />
           <SelectRound rounds={rounds} handler={handleSelect} />
           <SelectRoutine routines={routines} handler={handleSelect} />
+          <SelectPanel handler={handleSelect} />
         </Flex>
 
         {/* player area */}

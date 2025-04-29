@@ -21,6 +21,17 @@ class ScoreController extends BaseController
     $this->error = new ErrorHandler();
   }
 
+  public function getExtractedScore($competitionId, $gender, $scoreType, $rounds)
+  {
+    // $this->checkUserAndCompetition($userId, $competitionId);
+    $result = Score::getScoreAndPlayer($competitionId, $gender, $scoreType, $rounds);
+
+    if($result){
+      echo json_encode(["status" => "success", "data" => $result]);
+    }
+
+  }
+
   public function createScore($userId, $competitionId)
   {
     $this->checkUserAndCompetition($userId, $competitionId);

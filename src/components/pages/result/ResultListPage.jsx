@@ -24,7 +24,8 @@ const ResultListPage = () => {
   }, []);
 
   if (!competitionId) return <Alert message="大会を選択してください" />;
-  if (!competition?.categories) return <Alert message="カテゴリーを設定してください" />;
+  if (!competition?.categories)
+    return <Alert message="カテゴリーを設定してください" />;
 
   return (
     <Stack>
@@ -48,8 +49,7 @@ const ResultListPage = () => {
                     {Object.entries(genderLabels).map(([gender, genderLabel]) =>
                       competition?.categories?.map((category) =>
                         (round === "semifinal" && category.rounds !== "3") ||
-                        (gender === "mix" &&
-                          !category.has_mix) ? (
+                        (gender === "mix" && !category.has_mix) ? (
                           ""
                         ) : (
                           <List.Item key={gender + category.id} ml="10">
@@ -77,8 +77,7 @@ const ResultListPage = () => {
                 <Heading size="md">{category.name}</Heading>
                 <List.Root>
                   {Object.entries(genderLabels).map(([gender, genderLabel]) =>
-                    gender === "mix" &&
-                    !category.has_mix ? (
+                    gender === "mix" && !category.has_mix ? (
                       ""
                     ) : (
                       <List.Item key={`team${gender}${category.id}`} ml="10">
@@ -108,6 +107,12 @@ const ResultListPage = () => {
               ))}
             </List.Root>
           )}
+          <Heading size="lg">抽出</Heading>
+          <List.Root>
+            <List.Item ml="10">
+              <a href={`/result/${competitionId}/special/`} target="_blank">特別表彰</a>
+            </List.Item>
+          </List.Root>
         </Stack>
       </Flex>
     </Stack>

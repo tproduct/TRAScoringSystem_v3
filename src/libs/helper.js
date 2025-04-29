@@ -42,3 +42,8 @@ export const removeKeys = (obj, keys) => {
     Object.entries(obj).filter(([key]) => !keys.includes(key))
   );
 }
+
+export const maxOfObjArray = ( arr, field ) => {
+  const newArr = arr.map( item => item[field]);
+  return Math.max(...newArr);
+}

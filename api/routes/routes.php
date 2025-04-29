@@ -47,6 +47,7 @@ $router->addController("GET", "/users/{id}/competitions/{id}/orders/{type}/{gend
 $router->addController("POST", "/users/{id}/competitions/{id}/orders", "OrderController@syncOrder");
 
 //SCORE
+$router->addController("GET", "/competitions/{id}/scores/{gender}/{scoreType}/{rounds}", "ScoreController@getExtractedScore");
 $router->addController("POST", "/users/{id}/competitions/{id}/scores", "ScoreController@createScore");
 $router->addController("PATCH", "/users/{id}/competitions/{id}/scores/{id}", "ScoreController@updateScore");
 $router->addController("DELETE", "/users/{id}/competitions/{id}/scores/{id}", "ScoreController@deleteScore");
