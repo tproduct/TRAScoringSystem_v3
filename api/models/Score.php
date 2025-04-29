@@ -24,27 +24,43 @@ class Score extends Model
     return parent::fetchAll("SELECT e.id as id, judge, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, lnd, e.sum, score_id, s.order_id as order_id FROM escores e JOIN scores s ON e.score_id = s.id JOIN orders o ON s.order_id = o.id WHERE type = ? AND category_id = ? AND round = ? AND gender = ? AND routine = ?", [$type, $categoryId, $round, $gender, $routine]);
   }
 
-  public static function getScoreAndPlayer($competitionId, $gender, $scoreType, $rounds)
+  public static function getScoreAndPlayer($competitionId, $gender, $scoreType, $rounds, $minScore)
   {
-    $roundsStmt = str_replace("-", "' OR o.round = '",$rounds);
-    $roundsStmt2 = str_replace("-", "' OR o2.round = '",$rounds);
+    $roundsStmt = str_replace("-", "' OR o.round = '", $rounds);
+    $roundsStmt2 = str_replace("-", "' OR o2.round = '", $rounds);
 
-    return parent::fetchAll(
-      "SELECT s.id, s.{$scoreType}, p.name, p.team, o.round, p.gender, p.phonetic 
-            FROM scores s
-            JOIN orders o ON s.order_id = o.id
-            JOIN individual_players p ON o.player_id = p.id
-            JOIN categories c ON p.category_id = c.id
-            WHERE c.competition_id = ? AND p.gender = ? AND (o.round = '$roundsStmt')
-              AND s.{$scoreType} = (
-                SELECT MAX(s2.{$scoreType})
+    $type1 = $scoreType === "exehd"
+      ? "exe + s.hd"
+      : $scoreType;
+
+      $type2 = $scoreType === "exehd"
+      ? "exe + s2.hd"
+      : $scoreType;
+
+    $min = $minScore === "" ? 0 : $minScore;
+    $maxStmt = !$min
+      ? "AND (s.{$type1}) = (
+                SELECT MAX(s2.{$type2})
                 FROM scores s2
                 JOIN orders o2 ON s2.order_id = o2.id
                 JOIN individual_players p2 ON o2.player_id = p2.id
                 JOIN categories c2 ON p2.category_id = c2.id
                 WHERE c2.competition_id = ? AND p2.gender = ? AND (o2.round = '$roundsStmt2'))"
+      : "";
+    $params = $min
+      ? [$competitionId, $gender]
+      : [$competitionId, $gender, $competitionId, $gender];
+
+    return parent::fetchAll(
+      "SELECT s.id, s.exe, s.diff, s.hd, s.time, s.sum, (s.exe + s.hd) as exehd, p.name, p.team, o.round, p.gender, p.phonetic 
+            FROM scores s
+            JOIN orders o ON s.order_id = o.id
+            JOIN individual_players p ON o.player_id = p.id
+            JOIN categories c ON p.category_id = c.id
+            WHERE c.competition_id = ? AND p.gender = ? AND (o.round = '$roundsStmt') AND s.{$type1} >= {$min} $maxStmt
+            ORDER BY s.{$type1} DESC"
       ,
-      [$competitionId, $gender, $competitionId, $gender]
+      $params
     );
   }
 

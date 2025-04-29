@@ -1,4 +1,13 @@
-import { Box, Heading, Stack, Image, HStack, Table } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Stack,
+  Image,
+  HStack,
+  Table,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { typeLabels, genderLabels, roundLabels } from "@libs/constants";
@@ -8,6 +17,7 @@ import { useCompetition } from "@hooks/useCompetition";
 import { maxOfObjArray } from "@libs/helper";
 import { useApiRequest } from "@hooks/useApiRequest";
 import BoxWithTitle from "@parts/BoxWithTitle";
+import InputField from "@parts/formparts/InputField";
 
 const SpecialPrizePage = () => {
   const { competitionId } = useParams();
@@ -21,6 +31,7 @@ const SpecialPrizePage = () => {
   const [scoreType, setScoreType] = useState("exe");
   const [gender, setGender] = useState("men");
   const [extractedScores, setExtractedScores] = useState(null);
+  const [minScore, setMinScore] = useState(0);
 
   const tableRef = useRef(null);
 
@@ -35,7 +46,7 @@ const SpecialPrizePage = () => {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
     };
-  }, [gender, scoreType, checks]);
+  }, [gender, scoreType, checks, minScore]);
 
   const fetchExtractedScore = async () => {
     const rounds = Object.entries(checks).reduce((acc, [round, value]) => {
@@ -43,9 +54,10 @@ const SpecialPrizePage = () => {
     }, "");
 
     const { get } = useApiRequest(
-      `/competitions/${competitionId}/scores/${gender}/${scoreType}/${rounds}`
+      `/competitions/${competitionId}/scores/${gender}/${scoreType}/${rounds}?minScore=${minScore}`
     );
     const response = await get();
+    console.log(response);
     setExtractedScores(response.data);
   };
 
@@ -62,6 +74,7 @@ const SpecialPrizePage = () => {
     hd: "H",
     time: "T",
     exehd: "E+H",
+    sum: "Sum",
   };
 
   return (
@@ -129,7 +142,7 @@ const SpecialPrizePage = () => {
             </HStack>
           </BoxWithTitle>
 
-          <BoxWithTitle title="抽出" w="33svw">
+          <BoxWithTitle title="スコア" w="33svw">
             <HStack gap="4">
               {Object.entries(scoreLabels).map(([scoreType2, label]) => (
                 <HStack key={scoreType2}>
@@ -149,6 +162,17 @@ const SpecialPrizePage = () => {
             </HStack>
           </BoxWithTitle>
         </HStack>
+
+        <BoxWithTitle title="最低点">
+          <Stack>
+            <Input
+              type="text"
+              value={minScore}
+              onChange={(e) => setMinScore(e.target.value)}
+            />
+            <Text>0指定で最高点を抽出</Text>
+          </Stack>
+        </BoxWithTitle>
 
         <Table.Root ref={tableRef}>
           <Table.Header>
