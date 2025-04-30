@@ -2,7 +2,13 @@ import { useDispatch } from "react-redux";
 import { useApiRequest } from "./useApiRequest";
 import { toaster } from "@ui/toaster";
 
-export const useForm = (fields, endpoints, action, setErrors, middleWare = null) => {
+export const useForm = (
+  fields,
+  endpoints,
+  action,
+  setErrors,
+  middleWare = null
+) => {
   const dispatch = useDispatch();
 
   const createDefaultState = (baseArray = null) => {
@@ -18,16 +24,19 @@ export const useForm = (fields, endpoints, action, setErrors, middleWare = null)
 
     return fields.reduce((acc, key) => {
       const field = index !== null ? `${key}${index}` : key;
-      const fieldData = formData && formData.get(field) !== "" ? {
-        [key]: formData
-          ? formData.get(field) === "on"
-            ? true
-            : formData.get(field)
-          : "",
-      } : {};
+      const fieldData =
+        formData && formData.get(field) !== ""
+          ? {
+              [key]: formData
+                ? formData.get(field) === "on"
+                  ? true
+                  : formData.get(field)
+                : "",
+            }
+          : {};
       return {
         ...acc,
-        ...fieldData
+        ...fieldData,
       };
     }, {});
   };
@@ -41,6 +50,8 @@ export const useForm = (fields, endpoints, action, setErrors, middleWare = null)
         return await updateData(prev, formData, baseArray);
       case "create":
         return await postData(prev, formData, baseArray);
+      case "post":
+        return await postData(prev, formData, baseArray);
       case "sync":
         return await syncData(prev, formData, baseArray);
       case "delete":
@@ -50,7 +61,7 @@ export const useForm = (fields, endpoints, action, setErrors, middleWare = null)
 
   const handleResponse = (response, prev, requestData = null) => {
     console.log(response);
-    
+
     if (response.status !== "success") {
       setErrors(response.errors);
       return prev;
@@ -71,12 +82,13 @@ export const useForm = (fields, endpoints, action, setErrors, middleWare = null)
     const requestData = createRequestData(formData, baseArray);
     const { post } = useApiRequest(endpoints.post);
     const response = await post(requestData);
+    console.log(requestData)
     return handleResponse(response, prev, requestData);
   };
 
   const syncData = async (prev, formData, baseArray) => {
     return postData(prev, formData, baseArray);
-  }
+  };
 
   const updateData = async (prev, formData, baseArray) => {
     const requestData = createRequestData(formData, baseArray);
@@ -86,7 +98,9 @@ export const useForm = (fields, endpoints, action, setErrors, middleWare = null)
   };
 
   const deleteData = async (prev, id) => {
-    const { del } = useApiRequest(id ? `${endpoints.delete}/${id}` : endpoints.delete);
+    const { del } = useApiRequest(
+      id ? `${endpoints.delete}/${id}` : endpoints.delete
+    );
     const response = await del();
 
     return handleResponse(response, prev);

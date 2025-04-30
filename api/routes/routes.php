@@ -7,6 +7,9 @@
  * コントローラー名とバリデーター名のprefixは一致させる
  */
 
+//LOGIN
+$router->addController("POST", "/login", "AuthController@login");
+
 //USER
 $router->addController("GET", "/users/{id}", "UserController@getUserInfo");
 $router->addController("POST", "/users", "UserController@createUser");

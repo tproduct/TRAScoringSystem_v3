@@ -19,7 +19,9 @@ class UserValidator extends Validator
       "name" => ["type" => "string", "max" => 20, "required" => true],
       "email" => ["type" => "email", "required" => true],
       "password" => ["type" => "password", "required" => true],
-      "organization" => ["type" => "string", "required" => false],
+      "confirm" => ["type" => "password", "required" => true],
+      "inviteCode" => ["type" => "string", "required" => true],
+      "organization" => ["type" => "string", "max" => 50,"required" => false],
     ]);
   }
   

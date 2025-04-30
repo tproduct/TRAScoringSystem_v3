@@ -32,16 +32,35 @@ class UserController extends BaseController
 
   public function createUser()
   {
+    if ($this->data["password"] !== $this->data["confirm"]) {
+      $this->error->addStatusAndError("invalid", "message", "確認用パスワードが異なります");
+      $this->error->throwErrors();
+    }
+
+    if ($this->data["inviteCode"] !== "trampoline123") {
+      $this->error->addStatusAndError("invalid", "message", "招待コードが無効です");
+      $this->error->throwErrors();
+    }
+
     $result = User::getByEmail($this->data['email']);
     if ($result) {
       $this->error->addStatusAndError("invalid", "message", "すでに存在しているメールアドレスです[code:302]");
       $this->error->throwErrors();
     }
 
-    $result = User::create($this->data);
-    if($result){
+    $hashedPassword = password_hash($this->data["password"], PASSWORD_DEFAULT);
+    $postData = [
+      "email" => $this->data["email"],
+      "name" => $this->data["name"],
+      "password" => $hashedPassword,
+      "organization" => empty($this->data["organization"]) ? "" : $this->data["organization"],
+      "permission" => "1",
+    ];
+
+    $result = User::create($postData);
+    if ($result) {
       echo json_encode(["status" => "success", "data" => $result]);
-    }else{
+    } else {
       $this->error->throwPostFailure();
     }
   }
@@ -51,9 +70,9 @@ class UserController extends BaseController
     $this->checkUser($userId);
 
     $result = User::patch($this->data, $userId);
-    if($result){
+    if ($result) {
       echo json_encode(["status" => "success", "data" => $result]);
-    }else{
+    } else {
       $this->error->throwPatchFailure();
     }
   }
@@ -62,10 +81,10 @@ class UserController extends BaseController
   {
     $this->checkUser($userId);
 
-    $result = User::del( $userId);
-    if($result){
+    $result = User::del($userId);
+    if ($result) {
       echo json_encode(["status" => "success", "data" => null]);
-    }else{
+    } else {
       $this->error->throwDeleteFailure();
     }
   }

@@ -14,15 +14,29 @@ class User extends Model
   public static function getByEmail($email)
   {
     return parent::fetch("SELECT * FROM users WHERE email = ?", [$email]);
+  }
 
+  public static function getMonitor($userId)
+  {
+    return parent::fetch("SELECT * FROM monitors WHERE user_id = ?", [$userId]);
   }
 
   public static function create($data)
   {
-    $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
     $data['id'] = uniqid("user_");
 
-    return parent::insert("users", $data);
+    return parent::insertToOtherTables(["users" => $data, "monitors" => [
+      "user_id" => $data["id"],
+      "switch_time" => 10,
+      "interval_time" => 2,
+      "group_size" => 10,
+    ]]);
+    // return parent::insert("users", $data);
+  }
+
+  public static function createMonitor($data)
+  {
+
   }
 
   public static function patch($data, $userId){

@@ -24,12 +24,14 @@ const Dashboard = () => {
   const [competitions, setCompetitions] = useState(null);
   const [threads, setThreads] = useState(null);
   const [notices, setNotices] = useState(null);
+  const user = useSelector((state) => state.user);
   const userId = useSelector((state) => state.user.info.id);
   const getCompetitions = useApiRequest(`users/${userId}/competitions`).get;
   const getThreads = useApiRequest(`users/${userId}/threads`).get;
   const getNotices = useApiRequest("notices").get;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  console.log(user)
 
   useEffect(() => {
     fetchCompetitionIds();
@@ -49,7 +51,6 @@ const Dashboard = () => {
 
   const fetchNotices = async () => {
     const response = await getNotices();
-    console.log(response)
     if (response.status === "success") setNotices(response.data);
   };
 

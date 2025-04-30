@@ -18,6 +18,7 @@ import MonitorPage from "@pages/monitor/MonitorPage";
 import MessagePage from "@pages/message/MessagePage";
 import StartListPage from "@pages/startlist/StartListPage";
 import SpecialPrizePage from "@pages/result/SpecialPrizePage";
+import UserInfoPage from "@pages/user/UserInfopage";
 
 function App() {
   useEffect(() => {
@@ -30,6 +31,8 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/login/" element={<LoginPage />} />
+            <Route path="/signup/" element={<UserInfoPage />} />
+            
             {/* リザルト */}
             <Route path="result/:competitionId" element={<ResultListPage />} />
             <Route

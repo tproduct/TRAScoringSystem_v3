@@ -4,8 +4,8 @@ import { Box,HStack } from "@chakra-ui/react";
 import Sidebar from "@parts/navbar/Sidebar";
 
 const RootLayout = () => {
-  // const isLoggedIn = useSelector(state => state.user.isLoggedIn);
-  const isLoggedIn = true;
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+  // const isLoggedIn = true;
 
   return (
       <HStack textStyle="body" layerStyle="body" width="100%">
