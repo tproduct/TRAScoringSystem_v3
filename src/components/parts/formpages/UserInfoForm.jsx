@@ -39,11 +39,6 @@ const UserInfoForm = () => {
     setErrors,
     () => {
       if(!!user) return;
-      toaster.create({
-        title: "成功",
-        description: "送信しました",
-        type: "success",
-      });
       navigate("/login/");
     }
   );

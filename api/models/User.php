@@ -31,12 +31,6 @@ class User extends Model
       "interval_time" => 2,
       "group_size" => 10,
     ]]);
-    // return parent::insert("users", $data);
-  }
-
-  public static function createMonitor($data)
-  {
-
   }
 
   public static function patch($data, $userId){

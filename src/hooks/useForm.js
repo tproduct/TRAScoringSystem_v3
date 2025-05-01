@@ -82,7 +82,6 @@ export const useForm = (
     const requestData = createRequestData(formData, baseArray);
     const { post } = useApiRequest(endpoints.post);
     const response = await post(requestData);
-    console.log(requestData)
     return handleResponse(response, prev, requestData);
   };
 

@@ -4,6 +4,8 @@ namespace controller;
 require_once __DIR__ . "/BaseController.php";
 require_once __DIR__ . "/../models/User.php";
 require_once __DIR__ . "/../error/ErrorHandler.php";
+require_once __DIR__ .'/../token/generateToken.php';
+require_once __DIR__ .'/../token/setToken.php';
 
 use model\User;
 use errorhandler\ErrorHandler;
@@ -23,11 +25,22 @@ class AuthController extends BaseController
   {
     $info = User::getByEmail($this->data["email"]);
 
-    if (!$info) {
-      $this->error->throwUserNotFound();
+    if (!$info || !password_verify($this->data["password"], $info['password']) ){
+      $this->error->addStatusAndError("invalid", "message", "メールアドレスかパスワードが異なります");
+      $this->error->throwErrors();
     }
 
     $monitor = User::getMonitor($info["id"]);
+
+    $accessToken = generateAccessToken($info['id']);
+    $refreshToken = generateRefreshToken($info['id']);
+
+    //セッションにアクセストークンを格納
+    $_SESSION['accessToken'] = $accessToken;
+
+    // トークンを `HttpOnly` クッキーとして保存
+    setAccessToken($accessToken);
+    setRefreshToken($refreshToken);
 
     echo json_encode(["status" => "success", "data" => ["info" => $info, "monitor" => $monitor]]);
   }
