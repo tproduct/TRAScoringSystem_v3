@@ -1,18 +1,22 @@
 <?php
-require_once __DIR__ ."/../../vendor/autoload.php";
-require_once __DIR__ .'/generateToken.php';
-require_once __DIR__ .'/setToken.php';
+require_once __DIR__ . "/../../vendor/autoload.php";
+require_once __DIR__ . '/generateToken.php';
+require_once __DIR__ . '/setToken.php';
+require_once __DIR__ . "/../error/ErrorHandler.php";
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use errorhandler\ErrorHandler;
 
-function verifyToken()
+function verifyToken($requiredRoles)
 {
+  $error = new ErrorHandler();
+
   $accessToken = $_COOKIE["access_token"] ?? null;
 
   if ($accessToken === null || $accessToken !== $_SESSION["accessToken"]) {
-    http_response_code(401);
-    echo json_encode(["error" => "this Unauthorized"]);
+    $error->addStatusAndError("unauthorized", "message", "トークンが無効です");
+    $error->throwErrors();
     exit;
   }
 
@@ -21,15 +25,19 @@ function verifyToken()
 
     //期限の確認
     if ($decoded->exp < time()) {
-      throw new Exception('Token expired');
+      $error->addStatusAndError("unauthorized", "message", "トークンの期限が切れています");
+      $error->throwErrors();
     }
 
-    $user = [
-      "user_id" => $decoded->userId
-    ];
+    // ロール確認
+    if ($requiredRoles && !in_array($decoded->role,$requiredRoles)) {
+      $error->addStatusAndError("unauthorized", "message", "権限がありません");
+      $error->throwErrors();
+      exit;
+    }
   } catch (Exception $e) {
-    http_response_code(401);
-    echo json_encode(["error" => "Unauthorized"]);
+    $error->addStatusAndError("unauthorized", "message", "認証できません");
+    $error->throwErrors();
     exit;
   }
 }

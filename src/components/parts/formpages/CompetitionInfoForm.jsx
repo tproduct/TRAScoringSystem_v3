@@ -29,6 +29,7 @@ const CompetitionInfoForm = () => {
       "full_d",
       "full_h",
       "full_t",
+      "judge_password",
     ],
     {
       post: `/users/${userId}/competitions`,

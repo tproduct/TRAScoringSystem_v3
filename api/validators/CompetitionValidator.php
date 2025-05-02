@@ -30,6 +30,7 @@ class CompetitionValidator extends Validator
       "full_d" => ["type" => "boolean"],
       "full_h" => ["type" => "boolean"],
       "full_t" => ["type" => "boolean"],
+      "judge_password" => ["type" => "password" ,"required" => true],
     ]);
   }
 
@@ -50,6 +51,7 @@ class CompetitionValidator extends Validator
       "full_d" => ["type" => "boolean"],
       "full_h" => ["type" => "boolean"],
       "full_t" => ["type" => "boolean"],
+      "judge_password" => ["type" => "password" ,"required" => true],
     ]);
   }
 

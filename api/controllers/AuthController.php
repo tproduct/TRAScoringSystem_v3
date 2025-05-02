@@ -32,8 +32,8 @@ class AuthController extends BaseController
 
     $monitor = User::getMonitor($info["id"]);
 
-    $accessToken = generateAccessToken($info['id']);
-    $refreshToken = generateRefreshToken($info['id']);
+    $accessToken = generateAccessToken($info['id'], $info['role']);
+    $refreshToken = generateRefreshToken($info['id'], $info['role']);
 
     //セッションにアクセストークンを格納
     $_SESSION['accessToken'] = $accessToken;

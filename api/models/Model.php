@@ -48,8 +48,7 @@ class Model
     } catch (\Exception $e) {
       $db->rollback();
       $error = new ErrorHandler();
-      // $error->addStatusAndError("DBError", "message", "登録に失敗しました[code:101]");
-      $error->addStatusAndError("DBError", "message", $e->getMessage());
+      $error->addStatusAndError("DBError", "message", "登録に失敗しました[code:101]");
       $error->throwErrors();
     }
   }

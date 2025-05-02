@@ -1,7 +1,7 @@
 <?php
 namespace validator;
 
-require_once __DIR__ . "/../../error/ErrorHandler.php";
+require_once __DIR__ . "/../error/ErrorHandler.php";
 use errorhandler\ErrorHandler;
 use DateTime;
 

@@ -5,27 +5,29 @@ require_once __DIR__ . "/../models/Auth.php";
 use Firebase\JWT\JWT;
 use model\Auth;
 
-function generateAccessToken($userId)
+function generateAccessToken($userId, $role)
 {
   $payload = [
     'iss' => $_ENV["JWT_ISS"], // 発行者
     'aud' => $_ENV["JWT_AUD"], // 対象者
     'iat' => time(),            // 発行日時
     'exp' => time() + 60 * 60,     // 1時間後に有効期限切れ
-    'userId' => $userId
+    'userId' => $userId,
+    'role' => $role
   ];
 
   return JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');
 }
 
-function generateRefreshToken($userId)
+function generateRefreshToken($userId, $role)
 {
   $payload = [
     'iss' => $_ENV["JWT_ISS"],
     'aud' => $_ENV["JWT_AUD"],
     'iat' => time(),
     'exp' => time() + 604800, // 1週間後に有効期限切れ
-    'userId' => $userId
+    'userId' => $userId,
+    'role' => $role
   ];
 
   $refreshToken = JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');
