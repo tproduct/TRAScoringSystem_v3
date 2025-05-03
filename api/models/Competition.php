@@ -11,22 +11,29 @@ class Competition extends Model
     return parent::fetch("SELECT * FROM competitions WHERE id = ?", [$competitionId]);
   }
 
-  public static function getAll($userId){
+  public static function getAll($userId)
+  {
     return parent::fetchAll("SELECT * FROM competitions WHERE user_id = ?", [$userId]);
   }
 
   public static function create($data)
   {
     $data['id'] = uniqid("comp_");
+    $data['judge_password'] = password_hash($data["judge_password"], PASSWORD_DEFAULT);
 
     return parent::insert("competitions", $data);
   }
 
-  public static function patch($data, $competitionId){
+  public static function patch($data, $competitionId)
+  {
+    if (isset($data["judge_password"])) {
+      $data['judge_password'] = password_hash($data["judge_password"], PASSWORD_DEFAULT);
+    }
     return parent::update("competitions", $data, $competitionId);
   }
 
-  public static function del($competitionId){
+  public static function del($competitionId)
+  {
     return parent::delete("competitions", $competitionId);
   }
 }

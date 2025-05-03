@@ -12,13 +12,13 @@ import ScorePage from "@pages/score/ScorePage";
 import ResultPage from "@pages/result/ResultPage";
 import TeamResultPage from "@pages/result/TeamResultPage";
 import ResultListPage from "@pages/result/ResultListPage";
-import JudgePage from "@pages/judge/JudgePage";
 import MonitorRootPage from "@pages/monitor/MonitorRootPage";
 import MonitorPage from "@pages/monitor/MonitorPage";
 import MessagePage from "@pages/message/MessagePage";
 import StartListPage from "@pages/startlist/StartListPage";
 import SpecialPrizePage from "@pages/result/SpecialPrizePage";
 import UserInfoPage from "@pages/user/UserInfopage";
+import JudgeRoot from "@pages/judge/JudgeRoot";
 
 function App() {
   useEffect(() => {
@@ -31,6 +31,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/login/" element={<LoginPage />} />
+            <Route path="/login/:competitionId" element={<LoginPage />} />
             <Route path="/signup/" element={<UserInfoPage />} />
             
             {/* リザルト */}
@@ -69,7 +70,7 @@ function App() {
             />
 
             {/* 審判 */}
-            <Route path="/judge/:competitionId" element={<JudgePage />} />
+            <Route path="/judge/:competitionId" element={<JudgeRoot />} />
 
             <Route key="root" path="system/" element={<RootLayout />}>
               {/* ユーザーダッシュボード */}

@@ -94,6 +94,7 @@ class CompetitionController extends BaseController
     $this->checkUser($userId);
 
     $this->data["user_id"] = $userId;
+    
     $result = Competition::create($this->data);
     if ($result) {
       echo json_encode(["status" => "success", "data" => $result]);

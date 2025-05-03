@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
 import InputField from "@parts/formparts/InputField";
 import RadioField from "@parts/formparts/RadioField";
 import SubmitButton from "@parts/formparts/SubmitButton";
@@ -12,32 +12,37 @@ const CompetitionInfoForm = () => {
   const [errors, setErrors] = useState(null);
   const userId = useSelector((state) => state.user.info.id);
   const competition = useSelector((state) => state.competition.info);
+  const [isEditable, setIsEditable] = useState(false);
+  const fields = [
+    "type",
+    "name",
+    "date_from",
+    "date_to",
+    "venue",
+    "panels",
+    "num_e",
+    "team_by_cat",
+    "team_routines",
+    "read_d",
+    "read_h",
+    "read_t",
+    "full_d",
+    "full_h",
+    "full_t",
+  ];
+  if(!competition || isEditable) fields.push("judge_password");
   const { createDefaultState, formAsyncAction } = useForm(
-    [
-      "type",
-      "name",
-      "date_from",
-      "date_to",
-      "venue",
-      "panels",
-      "num_e",
-      "team_by_cat",
-      "team_routines",
-      "read_d",
-      "read_h",
-      "read_t",
-      "full_d",
-      "full_h",
-      "full_t",
-      "judge_password",
-    ],
+    fields,
     {
       post: `/users/${userId}/competitions`,
       patch: `/users/${userId}/competitions/${competition?.id}`,
       delete: `/users/${userId}/competitions/${competition?.id}`,
     },
     setCompetitionInfo,
-    setErrors
+    setErrors,
+    () => {
+      setIsEditable(false);
+    }
   );
 
   const [state, formAction, isPending] = useActionState(
@@ -211,17 +216,27 @@ const CompetitionInfoForm = () => {
             )
           )}
         </HStack>
-        <InputField
-          type="password"
-          label="審判用ログインパスワード"
-          name="judge_password"
-          defaultValue={
-            state?.judge_password
-              ? state.judge_password
-              : competition?.judge_password
-          }
-          errorText={errors?.judge_password}
-        />
+        
+        {!competition || isEditable ? (
+           <InputField
+           type="password"
+           name="judge_password"
+           label="審判用パスワード"
+           defaultValue={
+             state?.["judge_password"]
+               ? state["judge_password"]
+               : ""
+           }
+           errorText={errors?.["judge_password"]}
+           required
+         />
+        ) : (
+           <HStack>
+           <Text color="orange">審判用パスワード設定済</Text>
+           <Button size="sm" variant="outline" bg="white" color="black" onClick={() => {setIsEditable(true)}}>変更</Button>
+         </HStack>
+        )}
+
         <Flex justifyContent="end" p="2">
           {competition ? (
             <HStack gap="2">

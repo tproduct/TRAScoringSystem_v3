@@ -13,10 +13,18 @@ class AuthValidator extends Validator
     parent::__construct();
   }
 
-  public function login()
+  public function userLogin()
   {
     parent::setRules([
       "email" => ["type" => "email", "required" => true],
+      "password" => ["type" => "password", "required" => true],
+    ]);
+  }
+
+  public function judgeLogin()
+  {
+    parent::setRules([
+      "competitionId" => ["type" => "string", "required" => true],
       "password" => ["type" => "password", "required" => true],
     ]);
   }

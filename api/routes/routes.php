@@ -8,7 +8,8 @@
  */
 
 //LOGIN
-$router->addController("POST", "/login", "AuthController@login");
+$router->addController("POST", "/login", "AuthController@userLogin");
+$router->addController("POST", "/login/judge", "AuthController@judgeLogin");
 
 //USER
 $router->addController("GET", "/users/{id}", "UserController@getUserInfo");

@@ -8,12 +8,12 @@ class User extends Model
 {
   public static function getById($userId)
   {
-    return parent::fetch("SELECT * FROM users WHERE id = ?", [$userId]);
+    return parent::fetch("SELECT id, email, name, organization, role FROM users WHERE id = ?", [$userId]);
   }
 
   public static function getByEmail($email)
   {
-    return parent::fetch("SELECT * FROM users WHERE email = ?", [$email]);
+    return parent::fetch("SELECT id, email, name, organization, role FROM users WHERE email = ?", [$email]);
   }
 
   public static function getMonitor($userId)

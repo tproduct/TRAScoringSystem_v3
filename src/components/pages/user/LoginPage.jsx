@@ -1,22 +1,33 @@
-import { Box, Button, Center, Flex, Heading, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Stack,
+  Switch,
+} from "@chakra-ui/react";
 import InputField from "@parts/formparts/InputField";
 import SubmitButton from "@parts/formparts/SubmitButton";
 import { useActionState, useState } from "react";
 import { login } from "@store/userSlice";
 import { useForm } from "@hooks/useForm";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const LoginPage = () => {
+  const {competitionId} = useParams();
   const [errors, setErrors] = useState(null);
   const navigate = useNavigate();
+  const fields = competitionId ? ["competitionId", "password"] : ["email", "password"];
+  const endpoint = competitionId ? { post: "/login/judge" } : { post: "/login" };
 
   const { createDefaultState, formAsyncAction } = useForm(
-    ["email", "password"],
-    { post: "/login" },
+    fields,
+    endpoint,
     login,
     setErrors,
     () => {
-      navigate("/system/user/home/");
+      competitionId ? navigate(`/judge/${competitionId}/`) : navigate("/system/user/home/");
     }
   );
 
@@ -35,9 +46,9 @@ const LoginPage = () => {
           <Stack gap="2">
             <InputField
               type="text"
-              name="email"
-              label="Email"
-              defaultValue={state.email}
+              name={competitionId ? "competitionId" : "email"}
+              label={competitionId ? "大会ID" : "Email"}
+              defaultValue={competitionId ? competitionId : ""}
               errorText=""
               required
             />
@@ -45,7 +56,6 @@ const LoginPage = () => {
               type="password"
               name="password"
               label="Password"
-              defaultValue={state.password}
               errorText=""
               required
             />

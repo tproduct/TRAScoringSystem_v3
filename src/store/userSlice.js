@@ -3,14 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 // const initialState = {
 //   isLoggedIn: true,
 //   info: {
-//     id: "user_67a156827ff8a",
+//     id: "user_6813675d31179",
 //     name: "test3234",
 //     email: "tes@test.com",
 //     organization: "",
 //   },
 //   monitor: {
 //     id: "mnt_111111",
-//     user_id: "user_67a156827ff8a",
+//     user_id: "user_6813675d31179",
 //     switch_time: 10,
 //     interval_time: 5,
 //     group_size: 10,

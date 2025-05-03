@@ -11,5 +11,5 @@
 // $router->addAuthMiddleware("POST", "/login", "user");
 // $router->addAuthMiddleware("POST", "/users/{userId}/monitors", "user");
 // $router->addAuthMiddleware("POST", "/users/{id}/competitions", "user");
-$router->addAuthMiddleware("PATCH", "/users/{id}/competitions/{id}", ["user"]);
+$router->addAuthMiddleware("PATCH", "/users/{id}/competitions/{id}", ["user", "admin"]);
 

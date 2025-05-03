@@ -30,7 +30,7 @@ class Router
     }
 
     //権限の確認
-    if ($method !== "GET") {
+    if (isset($this->authRoutes[$method])) {
       //静的パス
       if (isset($this->authRoutes[$method][$requestUri])) {
         $roles = $this->authRoutes[$method][$requestUri];
