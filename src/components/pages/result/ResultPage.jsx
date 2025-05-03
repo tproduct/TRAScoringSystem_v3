@@ -50,6 +50,7 @@ const ResultPage = () => {
 
   const fetchResult = async () => {
     const response = await get();
+    console.log(response)
     setData(response.data);
   };
 

@@ -43,6 +43,20 @@ export const layerStyles = defineLayerStyles({
       boxShadow:"md",
     }
   },
+  boxHalf :{
+    description: '横幅２分の１',
+    value: {
+      border:"1px solid",
+      borderColor:"gray.400",
+      borderRadius:"md",
+      width:{
+        base:"100%", md:"50%"
+      },
+      p:"2",
+      mb:"2",
+      boxShadow:"md",
+    }
+  },
   boxThird :{
     description: '横幅３分の１',
     value: {

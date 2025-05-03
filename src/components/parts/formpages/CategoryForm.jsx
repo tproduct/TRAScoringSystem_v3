@@ -22,7 +22,7 @@ const CategoryForm = () => {
   );
 
   const { createDefaultState, formAsyncAction, createRequestData } = useForm(
-    ["id", "competition_id", "name", "rounds", "has_mix"],
+    ["id", "competition_id", "name", "rounds", "has_mix", "is_random"],
     {
       post: `/users/${userId}/competitions/${competitionId}/categories`,
       delete: `/users/${userId}/competitions/${competitionId}/categories`,
@@ -124,6 +124,17 @@ const CategoryForm = () => {
                     state[index]?.has_mix
                       ? !!state[index].has_mix
                       : !!categories[index].has_mix
+                  }
+                />
+              </Flex>
+              <Flex mt="2">
+                <CheckboxField
+                  name={`is_random${index}`}
+                  label="試技順抽選"
+                  defaultChecked={
+                    state[index]?.is_random
+                      ? !!state[index].is_random
+                      : !!categories[index].is_random
                   }
                 />
               </Flex>

@@ -6,6 +6,7 @@ import CheckboxField from "@parts/formparts/CheckboxField";
 import { useSelector } from "react-redux";
 import { flattenArray } from "@libs/helper";
 import { setOrders } from "@store/competitionSlice";
+import { roundLabels } from "@libs/constants";
 
 const OrderForm = () => {
   const [errors, setErrors] = useState([]);
@@ -40,22 +41,6 @@ const OrderForm = () => {
     <Stack w="100%">
       <form action={formAction}>
         <Table.Root variant="outline">
-          <Table.Header>
-            <Table.Row textAlign="center">
-              <Table.ColumnHeader textAlign="center" w="25%">
-                カテゴリー
-              </Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="center" w="25%">
-                予選
-              </Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="center" w="25%">
-                準決勝
-              </Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="center" w="25%">
-                決勝
-              </Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
           <Table.Body>
             {categories.map((category) => (
               <Table.Row key={category.id}>
@@ -65,7 +50,7 @@ const OrderForm = () => {
                     {rules[round]?.find(
                       (rule) => rule.category_id === category.id
                     ) ? (
-                        <CheckboxField name={`${category.id}-${round}`} />
+                        <CheckboxField name={`${category.id}-${round}`} label={roundLabels[round]}/>
                     ) : (
                       ""
                     )}

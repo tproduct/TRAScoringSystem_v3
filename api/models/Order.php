@@ -58,6 +58,10 @@ class Order extends Model
             $categoryId = $target[0];
             $round = $target[1];
 
+            $category = Category::getById($categoryId);
+            $rounds = $category["rounds"];
+            $isRandom = $category["is_random"];
+
             //試技順を設定する選手の抽出
             switch ($round) {
               case "qualify":
@@ -65,44 +69,52 @@ class Order extends Model
                 break;
               case "semifinal":
                 $rule = Rule::getByRoundAndCategory($competitionId, "qualify", $categoryId);
-                
+
                 $result = $rule["is_total"]
                   ? Result::getQualifyResultByTotal($compType, $type, $gender, $categoryId)
                   : Result::getQualifyResultByBest($compType, $type, $gender, $categoryId);
 
                 $nextround = $rule["nextround"];
+                $median = floor($nextround / 2);
 
                 $players = array_values(array_filter($result, function ($player) use ($nextround) {
                   return $player["rank"] <= $nextround;
                 }));
 
+                $randomOrder = generateUniqueRandomArray(count($players));
+
                 foreach ($players as $key => $player) {
-                  $players[$key]["number"] = count($players) - intval($key);
-                  $players[$key]["grp"] = 1;
+                  $players[$key]["number"] = $isRandom 
+                    ? ($randomOrder[$key] > $median ? $randomOrder[$key] - $median : $randomOrder[$key])
+                    : count($players) - intval($key);
+                  $players[$key]["grp"] = 1 + floor(($randomOrder[$key] - 1) / $median);
                 }
                 break;
               case "final":
-                $category = Category::getById($categoryId);
-                $round = $category["rounds"];
-
-                if($rounds === "1"){
-                  //ラウンド数が１なら予選と同じ処理（未実装）
+                if ($rounds === "1") {
+                  //ラウンド数が１なら予選と同じ処理
                   $players = $db->select("SELECT p.id AS player_id, number, gender, p.category_id as category_id, grp FROM {$type}_players p JOIN categories c ON p.category_id = c.id WHERE competition_id = ? and c.id = ? and gender = ?", [$competitionId, $categoryId, $gender]);
-                }else{
+                } else {
                   //ラウンド数が２以上
                   $rule = Rule::getByRoundAndCategory($competitionId, "semifinal", $categoryId);
-                  $result = $compType === "TRA" 
+                  $result = $compType === "TRA"
                     ? Result::getSemifinalResultOfTRA($type, $gender, $categoryId)
                     : Result::getSemifinalResultOfDMT($type, $gender, $categoryId);
 
                   $nextround = $rule["nextround"];
+                  $median = floor($nextround / 2);
 
                   $players = array_values(array_filter($result, function ($player) use ($nextround) {
                     return $player["rank"] <= $nextround;
                   }));
 
+                  $randomOrder1 = generateUniqueRandomArray($median);
+                  $randomOrder2 = generateUniqueRandomArray(count($players), $median + 1);
+
                   foreach ($players as $key => $player) {
-                    $players[$key]["number"] = count($players) - intval($key);
+                    $players[$key]["number"] = $isRandom
+                      ? (intval($key) < $median ? $randomOrder2[$key] : $randomOrder1[intval($key) - $median])
+                      : $players[$key]["number"] = count($players) - intval($key);
                     $players[$key]["grp"] = 1;
                   }
                 }

@@ -40,7 +40,7 @@ const LoginPage = () => {
 
   return (
     <Center h="100svh">
-      <Stack layerStyle="boxThird">
+      <Stack layerStyle="boxHalf">
         <Heading>TRA ScoringSystem V3</Heading>
         <form action={formAction}>
           <Stack gap="2">

@@ -60,6 +60,7 @@ const SystemBlock = ({
     handleEScoreChange,
     handleMaxMarkChange,
     handleEScoreChangeByPusher,
+    alertColor,
   } = useEScore(type, numE, maxSkill);
 
   useEffect(() => {
@@ -311,6 +312,7 @@ const SystemBlock = ({
                             );
                             handleScoreChange("exe", newEScores.med.sum);
                           }}
+                          bg={alertColor[index-1]}
                           readOnly={maxMark < maxSkill && index > maxMark}
                         />
                       )}

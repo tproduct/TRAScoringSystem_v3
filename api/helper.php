@@ -104,3 +104,13 @@ function setValuesToNull($array) {
   }
   return $array;
 }
+
+function generateUniqueRandomArray($max, $min = 1) {
+  // 範囲内のすべての整数を配列にする
+  $range = range($min, $max);
+
+  // 配列をシャッフルして順番をランダムに
+  shuffle($range);
+
+  return $range;
+}

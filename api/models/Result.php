@@ -152,6 +152,7 @@ class Result extends Model
             '1' AS label_1, '2' AS label_2,
             $totalStmt,
             RANK() OVER (
+              PARTITION BY (CASE WHEN p.is_open = NULL THEN 1 ELSE NULL END)
               ORDER BY
                 $baseElement DESC,
                 $tieBreakStmt

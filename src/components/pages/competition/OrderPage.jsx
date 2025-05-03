@@ -24,7 +24,7 @@ const OrderPage = () => {
         <Text textStyle="title">試技順設定</Text>
         <BaseDrawer description={order_desc} />
       </Flex>
-        <p>試技順を設定するカテゴリー・ラウンドにチェックを入れて「確定」を押してください</p>
+        <p>試技順を設定するカテゴリーのラウンドにチェックを入れて「確定」を押してください</p>
         <br />
       <OrderForm />
 

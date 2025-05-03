@@ -11,7 +11,7 @@ const CheckboxField = ({ label, name, defaultChecked, ref }) => {
         id={`check${uuid}`}
         ref={ref}
       />
-      <label htmlFor={`check${uuid}`}>{label}</label>
+      <label htmlFor={`check${uuid}`} style={{ whiteSpace: 'nowrap' }}>{label}</label>
     </HStack>
   );
 };

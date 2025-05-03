@@ -177,6 +177,28 @@ export const useEScore = (type, numE, maxSkill) => {
     return newEScores;
   };
 
+  const calcGap = () => {
+    const newEScore = {...eScores.e1};
+    delete newEScore.sum;
+
+    return Object.entries(newEScore).map( ([skill, score]) => {
+      const newEScores = {...eScores};
+      delete newEScores.med;
+      const eEScoresOfSkill = Object.entries(newEScores).map(([judge, eScore]) => {
+        return eScores[judge][skill];
+      })
+      return Math.max(...eEScoresOfSkill) - Math.min(...eEScoresOfSkill);
+    });
+  }
+
+  const alertColor = calcGap().map( gap => {
+    if( gap >= 5 ) return "#dc2626";
+    if( gap >= 4 ) return "#fb923c";
+    if( gap >= 3 ) return "#fbcfe8";
+    if( gap >= 2 ) return "#dbeafe";
+    return "white";
+  });
+
   return {
     eScores,
     defaultEScores,
@@ -188,5 +210,6 @@ export const useEScore = (type, numE, maxSkill) => {
     handleMaxMarkChange,
     maxSkills,
     handleEScoreChangeByPusher,
+    alertColor,
   };
 };

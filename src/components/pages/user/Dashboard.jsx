@@ -31,7 +31,6 @@ const Dashboard = () => {
   const getNotices = useApiRequest("notices").get;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log(user)
 
   useEffect(() => {
     fetchCompetitionIds();

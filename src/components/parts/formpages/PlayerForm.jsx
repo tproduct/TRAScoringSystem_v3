@@ -287,10 +287,10 @@ const PlayerForm = ({ type }) => {
                 <Table.Body>
                   {!!players.length &&
                     players.map((player, playerIndex) => (
-                      <Table.Row key={`${category_id}player${playerIndex}`}>
+                      <Table.Row key={`${category_id}player${player.name}${player.team}`}>
                         {Object.entries(header).map(([field, width]) => (
                           <Table.Cell
-                            key={`${category_id}player_${field}${playerIndex}`}
+                            key={`${category_id}player_${field}${player.name}${player.team}`}
                           >
                             {field === "is_open" ? (
                               <CheckboxField
