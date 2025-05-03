@@ -15,7 +15,6 @@ $router->addController("POST", "/login/judge", "AuthController@judgeLogin");
 $router->addController("GET", "/users/{id}", "UserController@getUserInfo");
 $router->addController("POST", "/users", "UserController@createUser");
 $router->addController("PATCH", "/users/{id}", "UserController@updateUser");
-$router->addController("PATCH", "/users", "UserController@updateAllUser");
 $router->addController("DELETE", "/users/{id}", "UserController@deleteUser");
 
 //COMPETITION

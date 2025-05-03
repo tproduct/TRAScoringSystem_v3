@@ -6,9 +6,9 @@ use model\Model;
 
 class Auth extends Model
 {
-  public static function getByUserId($userId)
+  public static function getByToken($refreshToken)
   {
-    return parent::fetch("SELECT * FROM refresh_tokens WHERE user_id = ?", [$userId]);
+    return parent::fetch("SELECT user_id FROM refresh_tokens WHERE token = :token AND expires_at > NOW()", [":token" => $refreshToken]);
   }
 
   public static function create($data)

@@ -24,12 +24,6 @@ class CompetitionValidator extends Validator
       "panels" => ["type" => "integer" ,"required" => true],
       "num_e" => ["type" => "integer" ,"required" => true],
       "team_by_cat" => ["type" => "boolean"],
-      "read_d" => ["type" => "boolean"],
-      "read_h" => ["type" => "boolean"],
-      "read_t" => ["type" => "boolean"],
-      "full_d" => ["type" => "boolean"],
-      "full_h" => ["type" => "boolean"],
-      "full_t" => ["type" => "boolean"],
       "judge_password" => ["type" => "password" ,"required" => true],
     ]);
   }
@@ -45,12 +39,6 @@ class CompetitionValidator extends Validator
       "panels" => ["type" => "enum", "list" => [1,2,3], "required" => true],
       "num_e" => ["type" => "enum", "list" => [1,2,3,4,5,6], "required" => true],
       "team_by_cat" => ["type" => "boolean"],
-      "read_d" => ["type" => "boolean"],
-      "read_h" => ["type" => "boolean"],
-      "read_t" => ["type" => "boolean"],
-      "full_d" => ["type" => "boolean"],
-      "full_h" => ["type" => "boolean"],
-      "full_t" => ["type" => "boolean"],
       "judge_password" => ["type" => "password"],
     ]);
   }

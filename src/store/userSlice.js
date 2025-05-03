@@ -7,9 +7,10 @@ import { createSlice } from "@reduxjs/toolkit";
 //     name: "test3234",
 //     email: "tes@test.com",
 //     organization: "",
+//     role:"user"
 //   },
 //   monitor: {
-//     id: "mnt_111111",
+//     id: 5,
 //     user_id: "user_6813675d31179",
 //     switch_time: 10,
 //     interval_time: 5,

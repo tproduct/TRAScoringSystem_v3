@@ -7,7 +7,7 @@ const StartListLinks = () => {
 
   return (
     <Stack>
-      <Heading>設定済み試技順</Heading>
+      <Heading>スタートリスト</Heading>
     <Flex>
       {Object.entries(competition?.orders).map(([type, genders]) => (
         <Stack key={type}>

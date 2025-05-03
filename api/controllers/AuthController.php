@@ -37,7 +37,7 @@ class AuthController extends BaseController
   }
 
   public function userLogin(){
-    $info = User::getByEmail($this->data["email"]);
+    $info = User::getAllByEmail($this->data["email"]);
 
     if (!$info || !password_verify($this->data["password"], $info['password']) ){
       $this->error->addStatusAndError("invalid", "message", "メールアドレスかパスワードが異なります");
@@ -48,8 +48,8 @@ class AuthController extends BaseController
 
     $this->handleLogin($info["id"], $info["role"]);
 
+    unset($info["password"]);
     echo json_encode(["status" => "success", "data" => ["info" => $info, "monitor" => $monitor]]);
-
   }
 
   public function judgeLogin() {

@@ -11,12 +11,13 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   (response) => response, // 成功時はそのまま返す
   async (error) => {
+    console.log(error);
     //トークン
     if( error.response && error.response.status === 401 && !error.config.__isRetryRequest ){
       error.config.__isRetryRequest = true;
       try {
         const refreshResponse = await axios.post(
-          import.meta.env.VITE_API_BASE_URL + "/clicker_app_api/",
+          import.meta.env.VITE_API_BASE_URL + "refresh_token/",
           {type:"refresh_token"},
           { withCredentials: true }
         );

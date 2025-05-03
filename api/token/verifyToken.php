@@ -25,8 +25,7 @@ function verifyToken($requiredRoles)
 
     //期限の確認
     if ($decoded->exp < time()) {
-      $error->addStatusAndError("unauthorized", "message", "トークンの期限が切れています");
-      $error->throwErrors();
+      throw new Exception('Token expired');
     }
 
     // ロール確認
@@ -36,6 +35,7 @@ function verifyToken($requiredRoles)
       exit;
     }
   } catch (Exception $e) {
+    http_response_code(401);
     $error->addStatusAndError("unauthorized", "message", "認証できません");
     $error->throwErrors();
     exit;

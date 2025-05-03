@@ -23,12 +23,6 @@ const CompetitionInfoForm = () => {
     "num_e",
     "team_by_cat",
     "team_routines",
-    "read_d",
-    "read_h",
-    "read_t",
-    "full_d",
-    "full_h",
-    "full_t",
   ];
   if(!competition || isEditable) fields.push("judge_password");
   const { createDefaultState, formAsyncAction } = useForm(
@@ -165,7 +159,7 @@ const CompetitionInfoForm = () => {
                 ? state.team_routines
                 : competition?.team_routines
                 ? competition.team_routines
-                : "TRA"
+                : "1"
             }
             items={items.team_routines}
             errorText={errors?.team_routines}
@@ -182,41 +176,6 @@ const CompetitionInfoForm = () => {
           />
         </HStack>
 
-        <HStack gap="1" mt="2">
-          <Box w="100%">
-            <Text>端末で操作する得点</Text>
-          </Box>
-          {Object.entries({ read_d: "D", read_h: "H", read_t: "T" }).map(
-            ([key, label]) => (
-              <CheckboxField
-                label={label}
-                key={key}
-                name={key}
-                defaultChecked={
-                  state?.[key] ? !!state[key] : !!competition?.[key]
-                }
-              />
-            )
-          )}
-        </HStack>
-        <HStack gap="1">
-          <Box w="100%">
-            <Text>種目ごとに得点を入力</Text>
-          </Box>
-          {Object.entries({ full_d: "D", full_h: "H", full_t: "T" }).map(
-            ([key, label]) => (
-              <CheckboxField
-                label={label}
-                key={key}
-                name={key}
-                defaultChecked={
-                  state?.[key] ? !!state[key] : !!competition?.[key]
-                }
-              />
-            )
-          )}
-        </HStack>
-        
         {!competition || isEditable ? (
            <InputField
            type="password"

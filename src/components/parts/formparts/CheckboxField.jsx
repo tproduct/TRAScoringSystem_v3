@@ -1,20 +1,18 @@
-import { Center, Field, Flex, HStack } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 
 const CheckboxField = ({ label, name, defaultChecked, ref }) => {
   const uuid = self.crypto.randomUUID();
   return (
-    <Center>
-      <HStack>
-        <input
-          type="checkbox"
-          name={name}
-          defaultChecked={defaultChecked}
-          id={`check${uuid}`}
-          ref={ref}
-        />
-        <label htmlFor={`check${uuid}`}>{label}</label>
-      </HStack>
-    </Center>
+    <HStack w="100%">
+      <input
+        type="checkbox"
+        name={name}
+        defaultChecked={defaultChecked}
+        id={`check${uuid}`}
+        ref={ref}
+      />
+      <label htmlFor={`check${uuid}`}>{label}</label>
+    </HStack>
   );
 };
 

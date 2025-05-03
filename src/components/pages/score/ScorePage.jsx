@@ -49,9 +49,9 @@ const ScorePage = () => {
     const orders =
       competition.orders[type][gender][round][categoryId][routine - 1];
     const scores =
-      competition.scores[type][gender][round][categoryId][routine].scores;
+      competition.scores[type][gender][round][categoryId][routine]?.scores;
     const eScores =
-      competition.scores[type][gender][round][categoryId][routine].eScores;
+      competition.scores[type][gender][round][categoryId][routine]?.eScores;
     const currentPlayers =
       competition.players[type]?.find((item) => item.category_id === categoryId)
         ?.players || [];
