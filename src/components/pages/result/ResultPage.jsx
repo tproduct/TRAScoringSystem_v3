@@ -54,7 +54,7 @@ const ResultPage = () => {
   };
 
   const rankOfOpens = data ? data.filter( player => player.is_open)?.map( player => player.rank ) : [];
-  const countIsOpen = rankOfOpens?.filter( rank => rank <= rule.nextround ).length;
+  const countIsOpen = rule ? rankOfOpens?.filter( rank => rank <= rule.nextround ).length : 0;
 
   return (
     <Box w="100svw" fontSize="12px">

@@ -15,7 +15,6 @@ const MonitorRootPage = () => {
   const { competitionId } = useParams();
   const { competition, fetchCompetition } = useCompetition(competitionId);
   const [panel, setPanel] = useState("A");
-  const [ws, setWs] = useState(null);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#0c142e";
@@ -23,36 +22,36 @@ const MonitorRootPage = () => {
 
     fetchCompetition();
 
-    const socket = new WebSocket("ws://localhost:8080");
-
-    // 接続成功時
-    socket.addEventListener("open", function (event) {
-      socket.send(
-        JSON.stringify({
-          type: "join",
-          competitionId: competitionId,
-          panel,
-          role: "monitor",
-        })
-      );
-      console.log("サーバーに接続しました");
+    const pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
+      cluster: import.meta.env.VITE_PUSHER_CLUSTER,
+      forceTLS: true,
+      activityTimeout: 10 * 60 * 10000,
     });
 
-    socket.addEventListener("message", function (event) {
-      const data = JSON.parse(event.data);
-      if (data.type === "monitorStateFromSystem") {
-        const { monitorType, playerType, player, categoryId, round, routine } = data;
+    const channel = pusher.subscribe(
+      import.meta.env.VITE_PUSHER_CHANNEL + competitionId + panel
+    );
 
-        setMonitorType(monitorType);
-        setPusherData(data);
-        fetchResult(playerType, player.gender, categoryId, round, routine);
-      }
+    channel.bind("sendMonitor", (data) => {
+      const { monitorType, type, player, categoryId, round, routine } = data;
+
+      setMonitorType(monitorType);
+      setPusherData(data);
+      fetchResult(type, player.gender, categoryId, round, routine);
     });
-    setWs(socket);
+
+    //エラーハンドリング
+    pusher.connection.bind("error", (error) => {
+      setError("リアルタイム通信に接続できませんでした");
+    });
+    channel.bind("pusher:subscription_error", (data) => {
+      setError("サーバーとの通信が確立できませんでした");
+    });
 
     return () => {
-      socket.close();
-      setWs(null);
+      document.body.style.backgroundColor = "white";
+      document.body.style.color = "#0c142e";
+      pusher.unsubscribe(import.meta.env.VITE_PUSHER_CHANNEL + competitionId + panel);
     };
   }, [panel]);
 

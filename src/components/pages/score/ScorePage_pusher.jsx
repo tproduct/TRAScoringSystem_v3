@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { isNullObject } from "@libs/helper";
 import Alert from "@parts/Alert";
+import Pusher from "pusher-js";
 import SelectPanel from "@parts/select/SelectPanel";
 
 const ScorePage = () => {
@@ -38,6 +39,7 @@ const ScorePage = () => {
   });
   const [players, setPlayers] = useState([]);
   const [errors, setErrors] = useState(null);
+  const [pusherData, setPusherData] = useState(null);
 
   useEffect(() => {
     if (Object.values(selectValues).some((val) => val === null)) return;
@@ -76,10 +78,40 @@ const ScorePage = () => {
     );
 
     setPage((prev) => prev);
+    setPusherData(null);
   }, [selectValues, competition]);
 
   useEffect(() => {
     setPage(1);
+    setPusherData(null);
+  }, [selectValues]);
+
+  useEffect(() => {
+    const pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
+      cluster: import.meta.env.VITE_PUSHER_CLUSTER,
+      forceTLS: true,
+      activityTimeout: 10 * 60 * 10000,
+    });
+
+    const channel = pusher.subscribe(
+      import.meta.env.VITE_PUSHER_CHANNEL + competition?.info.id + selectValues.panel
+    );
+
+    channel.bind("sendScore", (data) => {
+      setPusherData(data);
+    });
+
+    //エラーハンドリング
+    pusher.connection.bind("error", (error) => {
+      setErrors("リアルタイム通信に接続できませんでした");
+    });
+    channel.bind("pusher:subscription_error", (data) => {
+      setErrors("サーバーとの通信が確立できませんでした");
+    });
+
+    return () => {
+      pusher.unsubscribe(import.meta.env.VITE_PUSHER_CHANNEL + competition?.info.id + selectValues.panel);
+    }
   }, [selectValues]);
 
   const handleSelect = (key, val) => {
@@ -187,6 +219,7 @@ const ScorePage = () => {
           categoryId={selectValues.categoryId}
           round={selectValues.round}
           routine={selectValues.routine}
+          pusherData={pusherData}
           panel={selectValues.panel}
         />
       </Stack>

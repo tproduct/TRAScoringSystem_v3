@@ -37,6 +37,7 @@ const SystemBlock = ({
   categoryId,
   round,
   routine,
+  pusherData,
   panel
 }) => {
   const user = useSelector((state) => state.user);
@@ -51,8 +52,6 @@ const SystemBlock = ({
   const scoreElement = createScoreElement(categoryId, round, routine);
   const numE = Number(competition.info.num_e);
   const maxSkill = maxSkills[competition?.info?.type];
-  const [ws, setWs] = useState(null);
-
   const {
     eScores,
     defaultEScores,
@@ -104,42 +103,15 @@ const SystemBlock = ({
       is_changed: player?.score ? !!player.score.is_changed : false,
     });
 
-  }, [type, player, competition]);
-
-  useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080");
-
-    // 接続成功時
-    socket.addEventListener("open", function (event) {
-      socket.send(
-        JSON.stringify({
-          type: "join",
-          competitionId: competition.info.id,
-          panel,
-          role:"system",
-        })
-      );
-      console.log("サーバーに接続しました");
-    });
-
-    socket.addEventListener("message", function (event) {
-      const data = JSON.parse(event.data);
-      if(data.type === "scoreFromJudge"){
-        if (data.judge.at(0) === "e") {
-          const newEScores = handleEScoreChangeByPusher({judge:data.judge, ...data.scores});
-          handleScoreChange("exe", newEScores.med.sum);
-        } else {
-          handleScoreChange(data.judge, data.scores.score);
-        }
+    if (pusherData) {
+      if (pusherData.judge.at(0) === "e") {
+        const newEScores = handleEScoreChangeByPusher(pusherData);
+        handleScoreChange("exe", newEScores.med.sum);
+      } else {
+        handleScoreChange(pusherData.judge, pusherData.score);
       }
-    });
-    setWs(socket);
-
-    return () => {
-      socket.close();
-      setWs(null);
-    };
-  },[panel])
+    }
+  }, [type, player, competition, pusherData]);
 
   const maxMarkArray = Array(maxSkill)
     .fill(0)
@@ -206,34 +178,31 @@ const SystemBlock = ({
   );
 
   const handleSegmentChange = async (e) => {
+    const postToPusher = useApiRequest(
+      `/pusher/${competition?.info.id}/${panel}/system/maxMark`
+    ).post;
+
     handleMaxMarkChange(e.value, handleScoreChange);
-    ws.send(JSON.stringify({
-      type: "sendMaxMark",
-      competitionId: competition.info.id,
-      panel,
-      maxMark: e.value
-    }));
+    await postToPusher({ maxMark: e.value });
   };
 
   const cancelReading = async () => {
-    ws.send(JSON.stringify({
-      type: "sendIsReading",
-      competitionId: competition.info.id,
-      panel,
-      isReading: false
-    }));
+    const postToPusher = useApiRequest(
+      `/pusher/${competition?.info.id}/${panel}/system/isReading`
+    ).post;
+
+    await postToPusher({ isReading: false });
     setIsReading(false);
   };
 
   const startReading = async () => {
-    ws.send(JSON.stringify({
-      type: "sendIsReading",
-      competitionId: competition.info.id,
-      panel,
-      isReading: true
-    }));
+    const postToPusher = useApiRequest(
+      `/pusher/${competition?.info.id}/${panel}/system/isReading`
+    ).post;
 
     setIsReading(true);
+    const response = await postToPusher({ isReading: true });
+    console.log(response)
     setTimeout(async () => {
       await cancelReading();
     }, 1000 * 60 * 3);
@@ -249,31 +218,39 @@ const SystemBlock = ({
   };
 
   const handleMonitor = async (monitorType) => {
-    const data = {
-      type: "sendMonitorState",
-        competitionId: competition.info.id,
-        panel,
-        playerType: type,
+    const postToPusher = useApiRequest(
+      `/pusher/${competition?.info.id}/${panel}/monitor`
+    ).post;
+
+    if( monitorType === "consecutive" ){
+      await postToPusher({
+        monitorType : "score",
+        type,
         categoryId,
         round,
         routine,
         player,
-    };
-
-    if( monitorType === "consecutive" ){
-      ws.send(JSON.stringify({
-        ...data, monitorType : "score"
-      }));
+      });
 
       setTimeout(async () => {
-        ws.send(JSON.stringify({
-          ...data, monitorType : "rank"
-        }));
+        await postToPusher({
+          monitorType : "rank",
+          type,
+          categoryId,
+          round,
+          routine,
+          player,
+        });
       }, switchTime * 1000);
     }else{
-      ws.send(JSON.stringify({
-        ...data, monitorType
-      }));
+      await postToPusher({
+        monitorType,
+        type,
+        categoryId,
+        round,
+        routine,
+        player,
+      });
     }
   };
 
