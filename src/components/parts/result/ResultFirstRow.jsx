@@ -2,21 +2,30 @@ import { useResult } from "@hooks/useResult";
 
 const ResultFirstRow = ({
   type,
-  round,
   player,
-  category,
-  rule,
-  routine,
   withPhonetic = false,
+  rankOfOpens = null,
 }) => {
   const { skillFields, scoreFields } = useResult(type);
 
   return (
     <tr style={{ height: "25px" }}>
-      <td>{player.is_open ? `(op_${player.rank})` : player.rank}</td>
+      <td>
+        {player.is_open
+          ? "OP"
+          : rankOfOpens
+          ? player.rank -
+            rankOfOpens.reduce((acc, rank) => {
+              return rank < player.rank ? acc + 1 : acc;
+            }, 0)
+          : player.rank}
+      </td>
       <td style={{ textAlign: "left" }}>
         {player.name + (player.name2 ? "/" + player.name2 : "")}
-        {withPhonetic && `(${player.phonetic + (player.phonetic2 ? "/" + player.phonetic2 : "")})`}
+        {withPhonetic &&
+          `(${
+            player.phonetic + (player.phonetic2 ? "/" + player.phonetic2 : "")
+          })`}
       </td>
       <td>{player.label_1}</td>
       {skillFields?.map((field) => (

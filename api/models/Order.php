@@ -69,21 +69,14 @@ class Order extends Model
                 break;
               case "semifinal":
                 $rule = Rule::getByRoundAndCategory($competitionId, "qualify", $categoryId);
-
+                $nextround = $rule["nextround"];
+                
                 $result = $rule["is_total"]
                   ? Result::getQualifyResultByTotal($compType, $type, $gender, $categoryId)
                   : Result::getQualifyResultByBest($compType, $type, $gender, $categoryId);
 
-                $nextround = $rule["nextround"];
-                $players = self::filterPlayersForNextRound($result, $nextround);
+                $players = self::createOrderedPlayers("semifinal", $result, $nextround, $isRandom);
 
-                $median = floor(count($players) / 2);
-                $randomOrder = generateUniqueRandomArray(count($players) - 1, 0);
-
-                foreach ($players as $key => $player) {
-                  $players[$key]["number"] = self::createOrderNumber($isRandom ? $randomOrder[$key] : intval($key), count($players));
-                  $players[$key]["grp"] = self::createOrderGroup($isRandom ? $randomOrder[$key] : intval($key), count($players));
-                }
                 break;
               case "final":
                 if ($rounds === "1") {
@@ -92,26 +85,13 @@ class Order extends Model
                 } else {
                   //ラウンド数が２以上
                   $rule = Rule::getByRoundAndCategory($competitionId, "semifinal", $categoryId);
+                  $nextround = $rule["nextround"];
+
                   $result = $compType === "TRA"
                     ? Result::getSemifinalResultOfTRA($type, $gender, $categoryId)
                     : Result::getSemifinalResultOfDMT($type, $gender, $categoryId);
 
-                  $nextround = $rule["nextround"];
-                  
-                  $players = self::filterPlayersForNextRound($result, $nextround);
-                  $median = floor(count($players) / 2);
-
-                  $randomOrder1 = generateUniqueRandomArray($median - 1, 0);
-                  $randomOrder2 = generateUniqueRandomArray(count($players) - 1, $median);
-                  $randomOrder = array_merge($randomOrder1, $randomOrder2);
-
-                  foreach ($players as $key => $player) {
-                    $players[$key]["number"] = self::createOrderNumber($isRandom ? $randomOrder[$key] : intval($key), count($players));
-                    // $players[$key]["number"] = $isRandom
-                    //   ? (intval($key) < $median ? $randomOrder2[$key] : $randomOrder1[intval($key) - $median])
-                    //   : $players[$key]["number"] = count($players) - intval($key);
-                    $players[$key]["grp"] = self::createOrderGroup($isRandom ? $randomOrder[$key] : intval($key), count($players));
-                  }
+                  $players = self::createOrderedPlayers("final", $result, $nextround, $isRandom);
                 }
                 break;
             }
@@ -191,7 +171,30 @@ class Order extends Model
       $error->throwErrors();
     }
   }
-  
+
+  private static function createOrderedPlayers($round, $result, $nextround, $isRandom)
+  {
+    $players = self::filterPlayersForNextRound($result, $nextround);
+    $playersCount = count($players);
+
+    if ($isRandom) {
+      if ($round === "semifinal") {
+        $randomOrder = generateUniqueRandomArray(count($players) - 1, 0);
+      } else {
+        $median = floor($playersCount / 2);
+        $randomOrder1 = generateUniqueRandomArray($median - 1, 0);
+        $randomOrder2 = generateUniqueRandomArray(count($players) - 1, $median);
+        $randomOrder = array_merge($randomOrder1, $randomOrder2);
+      }
+    }
+
+    foreach ($players as $key => $player) {
+      $players[$key]["number"] = self::createOrderNumber($isRandom ? $randomOrder[$key] : intval($key), $playersCount);
+      $players[$key]["grp"] = self::createOrderGroup($isRandom ? $randomOrder[$key] : intval($key), $playersCount);
+    }
+    return $players;
+  }
+
   private static function filterPlayersForNextRound($result, $nextround)
   {
     $tempPlayers = array_values(array_filter($result, function ($player) use ($nextround) {
@@ -206,12 +209,14 @@ class Order extends Model
     }));
   }
 
-  private static function createOrderNumber($number, $playersCount){
+  private static function createOrderNumber($number, $playersCount)
+  {
     $median = floor($playersCount / 2);
     return $number < $median ? $median - $number : $playersCount - $number;
   }
 
-  private static function createOrderGroup($number, $playersCount){
+  private static function createOrderGroup($number, $playersCount)
+  {
     $median = floor($playersCount / 2);
     return $number < $median ? 2 : 1;
   }

@@ -53,10 +53,8 @@ const ResultPage = () => {
     setData(response.data);
   };
 
-  const countIsOpen = data && rule ? data.reduce( (acc, player) => {
-    return player.is_open && player.rank <= rule.nextround ? acc + 1 : acc;
-  },0) : 0;
-  console.log(countIsOpen)
+  const rankOfOpens = data ? data.filter( player => player.is_open)?.map( player => player.rank ) : [];
+  const countIsOpen = rankOfOpens?.filter( rank => rank <= rule.nextround ).length;
 
   return (
     <Box w="100svw" fontSize="12px">
@@ -92,12 +90,9 @@ const ResultPage = () => {
               <Fragment key={player.player_id}>
                 <ResultFirstRow
                   type={competitionType}
-                  round={round}
                   player={player}
-                  category={category}
-                  rule={rule}
-                  routine={routine}
                   withPhonetic={withPhonetic}
+                  rankOfOpens={rankOfOpens}
                 />
                 <ResultSecondRow
                   type={competitionType}
