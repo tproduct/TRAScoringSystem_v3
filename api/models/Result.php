@@ -121,8 +121,8 @@ class Result extends Model
   private static function generateColumnNameOfPlayer($type)
   {
     return $type === "individual"
-      ? "p.name, p.phonetic, team"
-      : "p.name, p.phonetic, team, p.name2, p.phonetic2, team2";
+      ? "p.name, p.phonetic, team, p.is_open"
+      : "p.name, p.phonetic, team, p.name2, p.phonetic2, team2, p.is_open";
   }
 
   public static function getQualifyResult($compType, $type, $gender, $categoryId, $isTotal)

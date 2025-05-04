@@ -75,19 +75,14 @@ class Order extends Model
                   : Result::getQualifyResultByBest($compType, $type, $gender, $categoryId);
 
                 $nextround = $rule["nextround"];
-                $median = floor($nextround / 2);
+                $players = self::filterPlayersForNextRound($result, $nextround);
 
-                $players = array_values(array_filter($result, function ($player) use ($nextround) {
-                  return $player["rank"] <= $nextround;
-                }));
-
-                $randomOrder = generateUniqueRandomArray(count($players));
+                $median = floor(count($players) / 2);
+                $randomOrder = generateUniqueRandomArray(count($players) - 1, 0);
 
                 foreach ($players as $key => $player) {
-                  $players[$key]["number"] = $isRandom 
-                    ? ($randomOrder[$key] > $median ? $randomOrder[$key] - $median : $randomOrder[$key])
-                    : count($players) - intval($key);
-                  $players[$key]["grp"] = 1 + floor(($randomOrder[$key] - 1) / $median);
+                  $players[$key]["number"] = self::createOrderNumber($isRandom ? $randomOrder[$key] : intval($key), count($players));
+                  $players[$key]["grp"] = self::createOrderGroup($isRandom ? $randomOrder[$key] : intval($key), count($players));
                 }
                 break;
               case "final":
@@ -102,20 +97,20 @@ class Order extends Model
                     : Result::getSemifinalResultOfDMT($type, $gender, $categoryId);
 
                   $nextround = $rule["nextround"];
-                  $median = floor($nextround / 2);
+                  
+                  $players = self::filterPlayersForNextRound($result, $nextround);
+                  $median = floor(count($players) / 2);
 
-                  $players = array_values(array_filter($result, function ($player) use ($nextround) {
-                    return $player["rank"] <= $nextround;
-                  }));
-
-                  $randomOrder1 = generateUniqueRandomArray($median);
-                  $randomOrder2 = generateUniqueRandomArray(count($players), $median + 1);
+                  $randomOrder1 = generateUniqueRandomArray($median - 1, 0);
+                  $randomOrder2 = generateUniqueRandomArray(count($players) - 1, $median);
+                  $randomOrder = array_merge($randomOrder1, $randomOrder2);
 
                   foreach ($players as $key => $player) {
-                    $players[$key]["number"] = $isRandom
-                      ? (intval($key) < $median ? $randomOrder2[$key] : $randomOrder1[intval($key) - $median])
-                      : $players[$key]["number"] = count($players) - intval($key);
-                    $players[$key]["grp"] = 1;
+                    $players[$key]["number"] = self::createOrderNumber($isRandom ? $randomOrder[$key] : intval($key), count($players));
+                    // $players[$key]["number"] = $isRandom
+                    //   ? (intval($key) < $median ? $randomOrder2[$key] : $randomOrder1[intval($key) - $median])
+                    //   : $players[$key]["number"] = count($players) - intval($key);
+                    $players[$key]["grp"] = self::createOrderGroup($isRandom ? $randomOrder[$key] : intval($key), count($players));
                   }
                 }
                 break;
@@ -195,6 +190,30 @@ class Order extends Model
       $error->addStatusAndError("DBError", "message", "登録に失敗しました[code:308]");
       $error->throwErrors();
     }
+  }
+  
+  private static function filterPlayersForNextRound($result, $nextround)
+  {
+    $tempPlayers = array_values(array_filter($result, function ($player) use ($nextround) {
+      return $player["rank"] <= $nextround;
+    }));
+
+    //オープン参加が次のラウンドに進む場合を計算
+    $opens = countByKeyValue($tempPlayers, "is_open", 1);
+
+    return array_values(array_filter($result, function ($player) use ($nextround, $opens) {
+      return $player["rank"] <= $nextround + $opens;
+    }));
+  }
+
+  private static function createOrderNumber($number, $playersCount){
+    $median = floor($playersCount / 2);
+    return $number < $median ? $median - $number : $playersCount - $number;
+  }
+
+  private static function createOrderGroup($number, $playersCount){
+    $median = floor($playersCount / 2);
+    return $number < $median ? 2 : 1;
   }
 
   public static function del($competitionId)

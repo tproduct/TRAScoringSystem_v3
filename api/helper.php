@@ -114,3 +114,9 @@ function generateUniqueRandomArray($max, $min = 1) {
 
   return $range;
 }
+
+function countByKeyValue(array $array, string $key, $value): int {
+  return count(array_filter($array, function($item) use ($key, $value) {
+      return isset($item[$key]) && $item[$key] === $value;
+  }));
+}
