@@ -50,9 +50,13 @@ const ResultPage = () => {
 
   const fetchResult = async () => {
     const response = await get();
-    console.log(response)
     setData(response.data);
   };
+
+  const countIsOpen = data && rule ? data.reduce( (acc, player) => {
+    return player.is_open && player.rank <= rule.nextround ? acc + 1 : acc;
+  },0) : 0;
+  console.log(countIsOpen)
 
   return (
     <Box w="100svw" fontSize="12px">
@@ -101,6 +105,7 @@ const ResultPage = () => {
                   player={player}
                   category={category}
                   rule={rule}
+                  countIsOpen={countIsOpen}
                 />
                 {round === "final" &&
                   category?.rounds > 1 &&

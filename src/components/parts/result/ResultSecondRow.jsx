@@ -1,6 +1,6 @@
 import { useResult } from "@hooks/useResult";
 
-const ResultSecondRow = ({ type, round, player, category, rule }) => {
+const ResultSecondRow = ({ type, round, player, category, rule, countIsOpen = 0 }) => {
   const { skillFields, scoreFields } = useResult(type);
 
   return (
@@ -12,7 +12,7 @@ const ResultSecondRow = ({ type, round, player, category, rule }) => {
         }
       }
     >
-      <td>{round !== "final" && player?.rank <= rule?.nextround ? "Q" : ""}</td>
+      <td>{round !== "final" && player?.rank <= rule?.nextround + countIsOpen ? "Q" : ""}</td>
       <td style={{ textAlign: "left" }}>
         {(round !== "final" || (round === "final" && rule?.refresh)) &&
           player.team + (player.team2 ? "/" + player.team2 : "")}
