@@ -22,7 +22,6 @@ import SubmitButton from "@parts/formparts/SubmitButton";
 import { setScores as setStoredScores } from "@store/competitionSlice";
 import EInput from "@parts/formparts/EInput";
 import { maxSkills } from "@libs/constants";
-import { useApiRequest } from "@hooks/useApiRequest";
 import { HiNumberedList } from "react-icons/hi2";
 import BoxWithTitle from "@parts/BoxWithTitle";
 import { TiSortNumerically } from "react-icons/ti";
@@ -30,6 +29,7 @@ import ScoreButton from "@parts/score/ScoreButton";
 import { FiDatabase } from "react-icons/fi";
 import { Spinner } from "@chakra-ui/react";
 import { GoPerson } from "react-icons/go";
+import { toaster } from "@ui/toaster";
 
 const SystemBlock = ({
   type = "individual",
@@ -37,7 +37,7 @@ const SystemBlock = ({
   categoryId,
   round,
   routine,
-  panel
+  panel,
 }) => {
   const user = useSelector((state) => state.user);
   const userId = user?.info.id;
@@ -103,7 +103,6 @@ const SystemBlock = ({
       dns: player?.score ? !!player.score.dns : false,
       is_changed: player?.score ? !!player.score.is_changed : false,
     });
-
   }, [type, player, competition]);
 
   useEffect(() => {
@@ -117,7 +116,7 @@ const SystemBlock = ({
           type: "join",
           competitionId: competition.info.id,
           panel,
-          role:"system",
+          role: "system",
         })
       );
       console.log("サーバーに接続しました");
@@ -125,9 +124,12 @@ const SystemBlock = ({
 
     socket.addEventListener("message", function (event) {
       const data = JSON.parse(event.data);
-      if(data.type === "scoreFromJudge"){
+      if (data.type === "scoreFromJudge") {
         if (data.judge.at(0) === "e") {
-          const newEScores = handleEScoreChangeByPusher({judge:data.judge, ...data.scores});
+          const newEScores = handleEScoreChangeByPusher({
+            judge: data.judge,
+            ...data.scores,
+          });
           handleScoreChange("exe", newEScores.med.sum);
         } else {
           handleScoreChange(data.judge, data.scores.score);
@@ -140,7 +142,7 @@ const SystemBlock = ({
       socket.close();
       setWs(null);
     };
-  },[panel])
+  }, [panel]);
 
   const maxMarkArray = Array(maxSkill)
     .fill(0)
@@ -208,31 +210,37 @@ const SystemBlock = ({
 
   const handleSegmentChange = async (e) => {
     handleMaxMarkChange(e.value, handleScoreChange);
-    ws.send(JSON.stringify({
-      type: "sendMaxMark",
-      competitionId: competition.info.id,
-      panel,
-      maxMark: e.value
-    }));
+    ws.send(
+      JSON.stringify({
+        type: "sendMaxMark",
+        competitionId: competition.info.id,
+        panel,
+        maxMark: e.value,
+      })
+    );
   };
 
   const cancelReading = async () => {
-    ws.send(JSON.stringify({
-      type: "sendIsReading",
-      competitionId: competition.info.id,
-      panel,
-      isReading: false
-    }));
+    ws.send(
+      JSON.stringify({
+        type: "sendIsReading",
+        competitionId: competition.info.id,
+        panel,
+        isReading: false,
+      })
+    );
     setIsReading(false);
   };
 
   const startReading = async () => {
-    ws.send(JSON.stringify({
-      type: "sendIsReading",
-      competitionId: competition.info.id,
-      panel,
-      isReading: true
-    }));
+    ws.send(
+      JSON.stringify({
+        type: "sendIsReading",
+        competitionId: competition.info.id,
+        panel,
+        isReading: true,
+      })
+    );
 
     setIsReading(true);
     setTimeout(async () => {
@@ -252,30 +260,44 @@ const SystemBlock = ({
   const handleMonitor = async (monitorType) => {
     const data = {
       type: "sendMonitorState",
-        competitionId: competition.info.id,
-        panel,
-        playerType: type,
-        categoryId,
-        round,
-        routine,
-        player,
+      competitionId: competition.info.id,
+      panel,
+      playerType: type,
+      categoryId,
+      round,
+      routine,
+      player,
     };
 
-    if( monitorType === "consecutive" ){
-      ws.send(JSON.stringify({
-        ...data, monitorType : "score"
-      }));
+    if (monitorType === "consecutive") {
+      ws.send(
+        JSON.stringify({
+          ...data,
+          monitorType: "score",
+        })
+      );
 
       setTimeout(async () => {
-        ws.send(JSON.stringify({
-          ...data, monitorType : "rank"
-        }));
+        ws.send(
+          JSON.stringify({
+            ...data,
+            monitorType: "rank",
+          })
+        );
       }, switchTime * 1000);
-    }else{
-      ws.send(JSON.stringify({
-        ...data, monitorType
-      }));
+    } else {
+      ws.send(
+        JSON.stringify({
+          ...data,
+          monitorType,
+        })
+      );
     }
+    toaster.create({
+      title: "成功",
+      description: "送信しました",
+      type: "success",
+    });
   };
 
   return (
@@ -336,7 +358,7 @@ const SystemBlock = ({
                             );
                             handleScoreChange("exe", newEScores.med.sum);
                           }}
-                          bg={alertColor[index-1]}
+                          bg={alertColor[index - 1]}
                           readOnly={maxMark < maxSkill && index > maxMark}
                         />
                       )}
@@ -450,7 +472,6 @@ const SystemBlock = ({
                   handler={cancelReading}
                   disabled={!isReading}
                 />
-                
               </HStack>
             </BoxWithTitle>
             <BoxWithTitle title="Publish" icon={<LuUpload />} h="65px">

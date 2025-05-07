@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import ScoreMonitor from "./ScoreMonitor";
 import { useParams } from "react-router-dom";
-import Pusher from "pusher-js";
 import { useApiRequest } from "@hooks/useApiRequest";
 import { useCompetition } from "@hooks/useCompetition";
 import RankMonitor from "./RankMonitor";
@@ -10,7 +9,6 @@ import SelectPanel from "@parts/select/SelectPanel";
 const MonitorRootPage = () => {
   const [monitorType, setMonitorType] = useState("score");
   const [pusherData, setPusherData] = useState(null);
-  const [error, setError] = useState([]);
   const [result, setResult] = useState(null);
   const { competitionId } = useParams();
   const { competition, fetchCompetition } = useCompetition(competitionId);

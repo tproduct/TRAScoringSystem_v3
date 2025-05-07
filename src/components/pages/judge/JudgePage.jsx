@@ -11,7 +11,6 @@ const JudgePage = () => {
   const competitionId = useParams().competitionId;
   const { competition, fetchCompetition } = useCompetition(competitionId);
   const [judge, setJudge] = useState("diff");
-  const [error, setError] = useState("");
   const type = competition ? competition.info.type : "TRA";
 
   const [panel, setPanel] = useState("A");
