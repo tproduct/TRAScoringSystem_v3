@@ -38,7 +38,9 @@ const JudgeForm = ({ judge, maxSkills, panel }) => {
   }, [judge]);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080");
+    // const socket = new WebSocket("wss://ws.tproduct.net/");
+    const socket = new WebSocket("http://localhost:8080");
+
 
     // 接続成功時
     socket.addEventListener("open", function (event) {
@@ -54,12 +56,14 @@ const JudgeForm = ({ judge, maxSkills, panel }) => {
     });
 
     socket.addEventListener("message", function (event) {
+      console.log("messageを受信しました")
       const data = JSON.parse(event.data);
       switch (data.type) {
         case "maxMarkFromSystem":
           setMaxMark(data.maxMark);
           break;
         case "isReadingFromSystem":
+          console.log(data.isReading);
           setIsReading(data.isReading);
           break;
       }

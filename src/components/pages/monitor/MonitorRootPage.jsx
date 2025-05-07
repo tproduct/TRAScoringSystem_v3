@@ -23,7 +23,8 @@ const MonitorRootPage = () => {
 
     fetchCompetition();
 
-    const socket = new WebSocket("ws://localhost:8080");
+    // const socket = new WebSocket("wss://ws.tproduct.net/");
+    const socket = new WebSocket("http://localhost:8080");
 
     // 接続成功時
     socket.addEventListener("open", function (event) {
@@ -41,7 +42,8 @@ const MonitorRootPage = () => {
     socket.addEventListener("message", function (event) {
       const data = JSON.parse(event.data);
       if (data.type === "monitorStateFromSystem") {
-        const { monitorType, playerType, player, categoryId, round, routine } = data;
+        const { monitorType, playerType, player, categoryId, round, routine } =
+          data;
 
         setMonitorType(monitorType);
         setPusherData(data);
@@ -64,6 +66,37 @@ const MonitorRootPage = () => {
     setResult(response.data);
   };
 
+  const rankOfOpens = result
+    ? result.filter((player) => player.is_open)?.map((player) => player.rank)
+    : [];
+  const rule = pusherData
+    ? competition?.rules[pusherData.round].find(
+        (rule) => rule.category_id === pusherData.categoryId
+      )
+    : null;
+  const countIsOpen = rule
+    ? rankOfOpens?.filter((rank) => rank <= rule.nextround).length
+    : 0;
+
+  const calcRank = (player, rankOfOpens) => {
+    return player
+      ? player.is_open
+        ? "OP"
+        : rankOfOpens
+        ? player.rank -
+          rankOfOpens.reduce((acc, rank) => {
+            return rank < player.rank ? acc + 1 : acc;
+          }, 0)
+        : player.rank
+      : "";
+  };
+
+  const player = result?.find(
+    (item) => item.player_id === pusherData.player.id
+  );
+  // const rank = calcRank(player, rankOfOpens) + (calcRank(player, rankOfOpens) !== player.rank ? `(${player.rank})` : "");
+  const rank = calcRank(player, rankOfOpens);
+
   switch (monitorType) {
     case "score":
       return (
@@ -76,12 +109,7 @@ const MonitorRootPage = () => {
           <ScoreMonitor
             competition={competition}
             pusherData={pusherData}
-            rank={
-              result
-                ? result.find((item) => item.player_id === pusherData.player.id)
-                    ?.rank
-                : ""
-            }
+            rank={rank}
           />
         </>
       );
@@ -97,6 +125,7 @@ const MonitorRootPage = () => {
             competition={competition}
             pusherData={pusherData}
             result={result}
+            rankOfOpens={rankOfOpens}
           />
         </>
       );

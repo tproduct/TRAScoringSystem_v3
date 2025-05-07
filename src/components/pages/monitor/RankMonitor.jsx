@@ -3,9 +3,9 @@ import { genderLabels, roundLabels } from "@libs/constants";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const RankMonitor = ({ competition, pusherData, result }) => {
+const RankMonitor = ({ competition, pusherData, result, rankOfOpens }) => {
   const [startIndex, setStartIndex] = useState(0);
-  const monitor = useSelector(state => state.user.monitor);
+  const monitor = useSelector((state) => state.user.monitor);
   const groupSize = monitor?.groupSize || 10;
   const intervalTime = monitor?.interval_time * 1000 || 5000;
 
@@ -43,9 +43,20 @@ const RankMonitor = ({ competition, pusherData, result }) => {
                 height="70px"
                 style={player.id === item.player_id ? { color: "yellow" } : {}}
               >
-                <td width="15%">{item.rank}</td>
+                <td width="15%">
+                  {item.is_open
+                    ? "OP"
+                    : rankOfOpens
+                    ? item.rank -
+                      rankOfOpens.reduce((acc, rank) => {
+                        return rank < item.rank ? acc + 1 : acc;
+                      }, 0)
+                    : item.rank}
+                </td>
                 <td width="30%">{item.name}</td>
-                <td width="30%" style={{fontSize:"24px"}}>{item.team}</td>
+                <td width="30%" style={{ fontSize: "24px" }}>
+                  {item.team}
+                </td>
                 <td width="25%">
                   {item.total ? item.total.toFixed(2) : item.best.toFixed(2)}
                 </td>
