@@ -4,7 +4,9 @@ namespace controller;
 require_once __DIR__ . "/BaseController.php";
 require_once __DIR__ . "/../models/Notice.php";
 require_once __DIR__ . "/../error/ErrorHandler.php";
+require_once __DIR__ . "/../log/Log.php";
 
+use Log;
 use model\Notice;
 use errorhandler\ErrorHandler;
 

@@ -5,7 +5,9 @@ require_once __DIR__ . "/BaseController.php";
 require_once __DIR__ . "/../models/Score.php";
 require_once __DIR__ . "/../models/Category.php";
 require_once __DIR__ . "/../error/ErrorHandler.php";
+require_once __DIR__ . "/../log/Log.php";
 
+use Log;
 use model\Category;
 use model\Score;
 use errorhandler\ErrorHandler;
@@ -48,6 +50,8 @@ class ScoreController extends BaseController
       $scores = $this->generateResponseData($competitionId);
       echo json_encode(["status" => "success", "data" => $scores]);
     } else {
+      Log::system("create error[score]", $competitionId);
+
       $this->error->throwPostFailure();
     }
   }
@@ -73,6 +77,8 @@ class ScoreController extends BaseController
       $scores = $this->generateResponseData($competitionId);
       echo json_encode(["status" => "success", "data" => $scores]);
     } else {
+      Log::system("update error[score]", $competitionId);
+
       $this->error->throwPatchFailure();
     }
   }
@@ -86,6 +92,8 @@ class ScoreController extends BaseController
       $response = $this->generateResponseData($competitionId);
       echo json_encode(["status" => "success", "data" => $response]);
     } else {
+      Log::system("delete error[score]", $competitionId);
+
       $this->error->throwDeleteFailure();
     }
   }

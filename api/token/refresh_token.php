@@ -1,10 +1,12 @@
 <?php
 require_once __DIR__ . "/../../vendor/autoload.php";
 require_once __DIR__ . '/../models/Auth.php';
+require_once __DIR__ . '/../lgo/Log.php';
 require_once __DIR__ . '/generateToken.php';
 require_once __DIR__ . '/setToken.php';
 
 use model\Auth;
+use Log;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -16,6 +18,7 @@ function refreshToken()
   $refreshToken = $_COOKIE["refresh_token"] ?? null;
 
   if (!$refreshToken) {
+    Log::auth("No refresh token");
     http_response_code(401);
     echo json_encode(["error" => "No refresh token"]);
     exit;
@@ -35,6 +38,7 @@ function refreshToken()
 
     echo json_encode(["access_token" => $newAccessToken]);
   } else {
+    Log::auth("Invalid refresh token");
     http_response_code(401);
     echo json_encode(["error" => "Invalid refresh token"]);
   }

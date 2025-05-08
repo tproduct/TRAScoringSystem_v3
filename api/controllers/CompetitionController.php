@@ -12,7 +12,9 @@ require_once __DIR__ . "/../models/Order.php";
 require_once __DIR__ . "/../models/Score.php";
 require_once __DIR__ . "/../models/User.php";
 require_once __DIR__ . "/../error/ErrorHandler.php";
+require_once __DIR__ . "/../log/Log.php";
 
+use Log;
 use model\Competition;
 use model\Category;
 use model\Rule;
@@ -99,6 +101,8 @@ class CompetitionController extends BaseController
     if ($result) {
       echo json_encode(["status" => "success", "data" => $result]);
     } else {
+      Log::event("system","create error[competition]", ["userId" => $userId]);
+
       $this->error->throwPostFailure();
     }
   }
@@ -111,6 +115,8 @@ class CompetitionController extends BaseController
     if ($result) {
       echo json_encode(["status" => "success", "data" => $result]);
     } else {
+      Log::system("update error[competition]", $competitionId);
+
       $this->error->throwPatchFailure();
     }
   }
@@ -123,6 +129,8 @@ class CompetitionController extends BaseController
     if ($result) {
       echo json_encode(["status" => "success", "data" => $result]);
     } else {
+      Log::system("delete error[competition]", $competitionId);
+
       $this->error->throwDeleteFailure();
     }
   }

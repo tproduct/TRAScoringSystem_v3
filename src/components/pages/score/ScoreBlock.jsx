@@ -106,9 +106,8 @@ const SystemBlock = ({
   }, [type, player, competition]);
 
   useEffect(() => {
-    // const socket = new WebSocket("wss://ws.tproduct.net/");
-    const socket = new WebSocket("http://localhost:8080");
-
+    const socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
+    
     // 接続成功時
     socket.addEventListener("open", function (event) {
       socket.send(
@@ -119,7 +118,7 @@ const SystemBlock = ({
           role: "system",
         })
       );
-      console.log("サーバーに接続しました");
+      // console.log("サーバーに接続しました");
     });
 
     socket.addEventListener("message", function (event) {

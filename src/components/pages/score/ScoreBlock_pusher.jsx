@@ -202,7 +202,6 @@ const SystemBlock = ({
 
     setIsReading(true);
     const response = await postToPusher({ isReading: true });
-    console.log(response)
     setTimeout(async () => {
       await cancelReading();
     }, 1000 * 60 * 3);

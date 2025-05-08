@@ -3,9 +3,11 @@
 namespace controller;
 require_once __DIR__ . "/BaseController.php";
 require_once __DIR__ . "/../models/User.php";
+require_once __DIR__ . "/../log/Log.php";
 require_once __DIR__ . "/../error/ErrorHandler.php";
 
 use model\User;
+use Log;
 use errorhandler\ErrorHandler;
 
 class UserController extends BaseController
@@ -38,6 +40,7 @@ class UserController extends BaseController
     }
 
     if ($this->data["inviteCode"] !== "trampoline123") {
+      Log::event("user","Invalid invite code");
       $this->error->addStatusAndError("invalid", "message", "招待コードが無効です");
       $this->error->throwErrors();
     }
@@ -59,8 +62,11 @@ class UserController extends BaseController
 
     $result = User::create($postData);
     if ($result) {
+      Log::event("user","Create user", ["name" => $this->data["name"]]);
       echo json_encode(["status" => "success", "data" => $result]);
     } else {
+      Log::event("user","create error[user]");
+
       $this->error->throwPostFailure();
     }
   }
@@ -73,6 +79,8 @@ class UserController extends BaseController
     if ($result) {
       echo json_encode(["status" => "success", "data" => $result]);
     } else {
+      Log::event("user","update error[user]", ["userId" => $userId]);
+
       $this->error->throwPatchFailure();
     }
   }
@@ -83,8 +91,11 @@ class UserController extends BaseController
 
     $result = User::del($userId);
     if ($result) {
+      Log::event("user","Delete user", ["userId" => $userId]);
       echo json_encode(["status" => "success", "data" => null]);
     } else {
+      Log::event("user","delete error[user]", ["userId" => $userId]);
+
       $this->error->throwDeleteFailure();
     }
   }

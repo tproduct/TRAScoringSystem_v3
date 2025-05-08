@@ -28,4 +28,5 @@ class AuthValidator extends Validator
       "password" => ["type" => "password", "required" => true],
     ]);
   }
+
 }

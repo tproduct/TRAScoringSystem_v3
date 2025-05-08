@@ -6,7 +6,9 @@ require_once __DIR__ . "/../models/User.php";
 require_once __DIR__ . "/../models/Thread.php";
 require_once __DIR__ . "/../models/Message.php";
 require_once __DIR__ . "/../error/ErrorHandler.php";
+require_once __DIR__ . "/../log/Log.php";
 
+use Log;
 use model\User;
 use model\Thread;
 use model\Message;
@@ -51,6 +53,8 @@ class ThreadController extends BaseController
     if($result){
       echo json_encode(["status" => "success", "data" => $result]);
     }else{
+      Log::event("system","create error[thread]", ["userId" => $userId]);
+
       $this->error->throwPostFailure();
     }
   }
@@ -64,6 +68,8 @@ class ThreadController extends BaseController
     if($result){
       echo json_encode(["status" => "success", "data" => $result]);
     }else{
+      Log::event("system","update error[thread]", ["threadId" => $threadId]);
+
       $this->error->throwPatchFailure();
     }
   }
@@ -76,6 +82,8 @@ class ThreadController extends BaseController
     if($result){
       echo json_encode(["status" => "success", "data" => null]);
     }else{
+      Log::event("system","delete error[thread]", ["threadId" => $threadId]);
+
       $this->error->throwDeleteFailure();
     }
   }

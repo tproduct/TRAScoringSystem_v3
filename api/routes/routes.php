@@ -9,6 +9,7 @@
 
 //LOGIN
 $router->addController("POST", "/login", "AuthController@userLogin");
+$router->addController("GET", "/logout/{id}", "AuthController@logout");
 $router->addController("POST", "/login/judge", "AuthController@judgeLogin");
 
 //USER

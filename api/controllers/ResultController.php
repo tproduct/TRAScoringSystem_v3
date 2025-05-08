@@ -7,7 +7,9 @@ require_once __DIR__ . "/../models/Category.php";
 require_once __DIR__ . "/../models/Rule.php";
 require_once __DIR__ . "/../models/Result.php";
 require_once __DIR__ . "/../error/ErrorHandler.php";
+require_once __DIR__ . "/../log/Log.php";
 
+use Log;
 use model\Competition;
 use model\Category;
 use model\Rule;
@@ -63,6 +65,8 @@ class ResultController extends BaseController
     }
 
     if (!$result) {
+      Log::system("get error[result]", $competitionId);
+
       $this->error->throwResultNotFound();
     }
 

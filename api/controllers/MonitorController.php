@@ -4,7 +4,9 @@ namespace controller;
 require_once __DIR__ . "/BaseController.php";
 require_once __DIR__ . "/../models/Monitor.php";
 require_once __DIR__ . "/../error/ErrorHandler.php";
+require_once __DIR__ . "/../log/Log.php";
 
+use Log;
 use model\Monitor;
 use errorhandler\ErrorHandler;
 
@@ -40,6 +42,8 @@ class MonitorController extends BaseController
     if($result){
       echo json_encode(["status" => "success", "data" => $result]);
     }else{
+      Log::event("system","create error[monitor]", ["userId" => $userId]);
+
       $this->error->throwPostFailure();
     }
   }
@@ -53,6 +57,8 @@ class MonitorController extends BaseController
     if($result){
       echo json_encode(["status" => "success", "data" => $result]);
     }else{
+      Log::event("system","update error[monitor]", ["monitorId" => $monitorId]);
+
       $this->error->throwPatchFailure();
     }
   }

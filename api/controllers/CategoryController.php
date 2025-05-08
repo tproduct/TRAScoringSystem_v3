@@ -4,7 +4,9 @@ namespace controller;
 require_once __DIR__ . "/BaseController.php";
 require_once __DIR__ . "/../models/Category.php";
 require_once __DIR__ . "/../error/ErrorHandler.php";
+require_once __DIR__ . "/../log/Log.php";
 
+use Log;
 use model\Category;
 use controller\BaseController;
 use errorhandler\ErrorHandler;
@@ -37,6 +39,7 @@ class CategoryController extends BaseController
     if($result){
       echo json_encode(["status" => "success", "data" => $result]);
     }else{
+      Log::system("sync error[category]", $competitionId);
       $this->error->throwSyncFailure();
     }
   }
@@ -49,6 +52,7 @@ class CategoryController extends BaseController
     if($result){
       echo json_encode(["status" => "success", "data" => null]);
     }else{
+      Log::system("delete error[category]", $competitionId);
       $this->error->throwDeleteFailure();
     }
   }

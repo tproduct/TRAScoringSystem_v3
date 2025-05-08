@@ -4,7 +4,9 @@ namespace controller;
 require_once __DIR__ . "/BaseController.php";
 require_once __DIR__ . "/../models/Rule.php";
 require_once __DIR__ . "/../error/ErrorHandler.php";
+require_once __DIR__ . "/../log/Log.php";
 
+use Log;
 use model\Rule;
 use controller\BaseController;
 use errorhandler\ErrorHandler;
@@ -28,6 +30,8 @@ class RuleController extends BaseController
     if($result){
       echo json_encode(["status" => "success", "data" => $result]);
     }else{
+      Log::system("sync error[rule]", $competitionId);
+
       $this->error->throwSyncFailure();
     }
   }

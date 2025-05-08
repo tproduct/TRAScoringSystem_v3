@@ -40,7 +40,6 @@ const Dashboard = () => {
 
   const fetchCompetitionIds = async () => {
     const response = await getCompetitions();
-    console.log(response)
     if (response.status === "success") setCompetitions(response.data);
   };
 

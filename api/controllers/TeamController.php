@@ -4,7 +4,9 @@ namespace controller;
 require_once __DIR__ . "/BaseController.php";
 require_once __DIR__ . "/../models/Team.php";
 require_once __DIR__ . "/../error/ErrorHandler.php";
+require_once __DIR__ . "/../log/Log.php";
 
+use Log;
 use model\Team;
 use controller\BaseController;
 use errorhandler\ErrorHandler;
@@ -37,6 +39,8 @@ class TeamController extends BaseController
     if($result){
       echo json_encode(["status" => "success", "data" => $result]);
     }else{
+      Log::system("sync error[team by cateogry]", $competitionId);
+
       $this->error->throwSyncFailure();
     }
   }
@@ -49,6 +53,8 @@ class TeamController extends BaseController
     if($result){
       echo json_encode(["status" => "success", "data" => $result]);
     }else{
+      Log::system("sync error[team]", $competitionId);
+
       $this->error->throwSyncFailure();
     }
   }
@@ -61,6 +67,8 @@ class TeamController extends BaseController
     if($result){
       echo json_encode(["status" => "success", "data" => null]);
     }else{
+      Log::system("delete error[team]", $competitionId);
+
       $this->error->throwDeleteFailure();
     }
   }
