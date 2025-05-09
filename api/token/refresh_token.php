@@ -1,12 +1,11 @@
 <?php
 require_once __DIR__ . "/../../vendor/autoload.php";
 require_once __DIR__ . '/../models/Auth.php';
-require_once __DIR__ . '/../lgo/Log.php';
+require_once __DIR__ . '/../log/Log.php';
 require_once __DIR__ . '/generateToken.php';
 require_once __DIR__ . '/setToken.php';
 
 use model\Auth;
-use Log;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 

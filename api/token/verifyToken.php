@@ -8,7 +8,6 @@ require_once __DIR__ . "/../log/Log.php";
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use errorhandler\ErrorHandler;
-use Log;
 
 function verifyToken($requiredRoles)
 {

@@ -1,4 +1,5 @@
 import { Button, Flex, Stack, Table, Text } from "@chakra-ui/react";
+import { useWebSocket } from "@hooks/useWebSocket";
 import Keyboard from "@parts/Keyboard";
 import { toaster } from "@ui/toaster";
 import { useEffect, useState } from "react";
@@ -10,10 +11,10 @@ const JudgeForm = ({ judge, maxSkills, panel }) => {
   const competitionId = useParams().competitionId;
   const [maxMark, setMaxMark] = useState(maxSkills);
   const [isReading, setIsReading] = useState(false);
-  const [ws, setWs] = useState(null);
   const [prevScores, setPrevScores] = useState(null);
   const [tempScore, setTempScore] = useState("");
-
+  const { socket, isConnetcted, joinRoom, setMessageHandler } = useWebSocket();
+  
   const isExe = judge.at(0) === "e";
 
   const inputElementHeader = isExe
@@ -39,22 +40,9 @@ const JudgeForm = ({ judge, maxSkills, panel }) => {
   }, [judge]);
 
   useEffect(() => {
-    const socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
+    joinRoom(competitionId, panel, "judge");
 
-    // 接続成功時
-    socket.addEventListener("open", function (event) {
-      socket.send(
-        JSON.stringify({
-          type: "join",
-          competitionId,
-          panel,
-          role: "judge",
-        })
-      );
-      // console.log("サーバーに接続しました");
-    });
-
-    socket.addEventListener("message", function (event) {
+    setMessageHandler((event) => {
       const data = JSON.parse(event.data);
       switch (data.type) {
         case "maxMarkFromSystem":
@@ -64,14 +52,8 @@ const JudgeForm = ({ judge, maxSkills, panel }) => {
           setIsReading(data.isReading);
           break;
       }
-    });
-    setWs(socket);
-
-    return () => {
-      socket.close();
-      setWs(null);
-    };
-  }, [panel]);
+    })
+  }, [panel, isConnetcted]);
 
   const keys = isExe
     ? { 0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", "◀": "◀", "▶": "▶" }
@@ -158,7 +140,7 @@ const JudgeForm = ({ judge, maxSkills, panel }) => {
   };
 
   const handleSend = () => {
-    ws.send(
+    socket.send(
       JSON.stringify({
         type: "sendScoreFromJudge",
         competitionId,

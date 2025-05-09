@@ -30,6 +30,7 @@ import { FiDatabase } from "react-icons/fi";
 import { Spinner } from "@chakra-ui/react";
 import { GoPerson } from "react-icons/go";
 import { toaster } from "@ui/toaster";
+import { useWebSocket } from "@hooks/useWebSocket";
 
 const SystemBlock = ({
   type = "individual",
@@ -51,7 +52,7 @@ const SystemBlock = ({
   const scoreElement = createScoreElement(categoryId, round, routine);
   const numE = Number(competition.info.num_e);
   const maxSkill = maxSkills[competition?.info?.type];
-  const [ws, setWs] = useState(null);
+  const { socket, isConnetcted, joinRoom, setMessageHandler } = useWebSocket();
 
   const {
     eScores,
@@ -106,22 +107,8 @@ const SystemBlock = ({
   }, [type, player, competition]);
 
   useEffect(() => {
-    const socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
-    
-    // 接続成功時
-    socket.addEventListener("open", function (event) {
-      socket.send(
-        JSON.stringify({
-          type: "join",
-          competitionId: competition.info.id,
-          panel,
-          role: "system",
-        })
-      );
-      // console.log("サーバーに接続しました");
-    });
-
-    socket.addEventListener("message", function (event) {
+    joinRoom(competition.info.id, panel, "system");
+    setMessageHandler((event) => {
       const data = JSON.parse(event.data);
       if (data.type === "scoreFromJudge") {
         if (data.judge.at(0) === "e") {
@@ -134,14 +121,8 @@ const SystemBlock = ({
           handleScoreChange(data.judge, data.scores.score);
         }
       }
-    });
-    setWs(socket);
-
-    return () => {
-      socket.close();
-      setWs(null);
-    };
-  }, [panel]);
+    })
+  }, [panel, isConnetcted]);
 
   const maxMarkArray = Array(maxSkill)
     .fill(0)
@@ -209,7 +190,7 @@ const SystemBlock = ({
 
   const handleSegmentChange = async (e) => {
     handleMaxMarkChange(e.value, handleScoreChange);
-    ws.send(
+    socket.send(
       JSON.stringify({
         type: "sendMaxMark",
         competitionId: competition.info.id,
@@ -220,7 +201,7 @@ const SystemBlock = ({
   };
 
   const cancelReading = async () => {
-    ws.send(
+    socket.send(
       JSON.stringify({
         type: "sendIsReading",
         competitionId: competition.info.id,
@@ -232,7 +213,7 @@ const SystemBlock = ({
   };
 
   const startReading = async () => {
-    ws.send(
+    socket.send(
       JSON.stringify({
         type: "sendIsReading",
         competitionId: competition.info.id,
@@ -269,7 +250,7 @@ const SystemBlock = ({
     };
 
     if (monitorType === "consecutive") {
-      ws.send(
+      socket.send(
         JSON.stringify({
           ...data,
           monitorType: "score",
@@ -277,7 +258,7 @@ const SystemBlock = ({
       );
 
       setTimeout(async () => {
-        ws.send(
+        socket.send(
           JSON.stringify({
             ...data,
             monitorType: "rank",
@@ -285,7 +266,7 @@ const SystemBlock = ({
         );
       }, switchTime * 1000);
     } else {
-      ws.send(
+      socket.send(
         JSON.stringify({
           ...data,
           monitorType,

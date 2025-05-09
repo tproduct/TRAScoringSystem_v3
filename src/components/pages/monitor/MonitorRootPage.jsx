@@ -5,6 +5,7 @@ import { useApiRequest } from "@hooks/useApiRequest";
 import { useCompetition } from "@hooks/useCompetition";
 import RankMonitor from "./RankMonitor";
 import SelectPanel from "@parts/select/SelectPanel";
+import { useWebSocket } from "@hooks/useWebSocket";
 
 const MonitorRootPage = () => {
   const [monitorType, setMonitorType] = useState("score");
@@ -13,30 +14,17 @@ const MonitorRootPage = () => {
   const { competitionId } = useParams();
   const { competition, fetchCompetition } = useCompetition(competitionId);
   const [panel, setPanel] = useState("A");
-  const [ws, setWs] = useState(null);
+  const { isConnetcted, joinRoom, setMessageHandler } = useWebSocket();
 
   useEffect(() => {
     document.body.style.backgroundColor = "#0c142e";
     document.body.style.color = "white";
 
     fetchCompetition();
-    
-    const socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
 
-    // 接続成功時
-    socket.addEventListener("open", function (event) {
-      socket.send(
-        JSON.stringify({
-          type: "join",
-          competitionId: competitionId,
-          panel,
-          role: "monitor",
-        })
-      );
-      // console.log("サーバーに接続しました");
-    });
+    joinRoom(competitionId, panel, "monitor");
 
-    socket.addEventListener("message", function (event) {
+    setMessageHandler((event) => {
       const data = JSON.parse(event.data);
       if (data.type === "monitorStateFromSystem") {
         const { monitorType, playerType, player, categoryId, round, routine } =
@@ -47,13 +35,7 @@ const MonitorRootPage = () => {
         fetchResult(playerType, player.gender, categoryId, round, routine);
       }
     });
-    setWs(socket);
-
-    return () => {
-      socket.close();
-      setWs(null);
-    };
-  }, [panel]);
+  }, [panel, isConnetcted]);
 
   const fetchResult = async (type, gender, categoryId, round, routine) => {
     const getResult = useApiRequest(

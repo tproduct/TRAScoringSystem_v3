@@ -60,7 +60,7 @@ export const useForm = (
   };
 
   const handleResponse = (response, prev, requestData = null) => {
-    // console.log(response);
+    console.log(response);
 
     if (response.status !== "success") {
       setErrors(response.errors);
