@@ -19,6 +19,7 @@ import { PiGearSixBold } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setCompetition } from "@store/competitionSlice";
+import LogViewer from "./LogViewer";
 
 const AdminPage = () => {
   const navigate = useNavigate();
@@ -72,109 +73,140 @@ const AdminPage = () => {
       </Text>
 
       <HStack gap="1">
-      <Box layerStyle="userHomeContainer" h="90svh" overflow="auto">
-        <Heading>ログイン状況</Heading>
-        <Table.Root>
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeader>User</Table.ColumnHeader>
-              <Table.ColumnHeader>Last_login_at</Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {users?.map((user) => (
-              <Table.Row key={user.id}>
-                <Table.Cell>{user.name}</Table.Cell>
-                <Table.Cell>{user.last_login_at}</Table.Cell>
+        <Box layerStyle="userHomeContainer" h="90svh" w="15svw" overflow="auto">
+          <Heading>ログイン状況</Heading>
+          <Table.Root>
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader>User</Table.ColumnHeader>
+                <Table.ColumnHeader>Last_login_at</Table.ColumnHeader>
               </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Root>
-      </Box>
-      <Box layerStyle="userHomeContainer" h="90svh" overflow="auto">
-        <Heading>大会状況</Heading>
-        <Table.Root>
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeader>大会名</Table.ColumnHeader>
-              <Table.ColumnHeader>実施日</Table.ColumnHeader>
-              <Table.ColumnHeader>ユーザー</Table.ColumnHeader>
-              <Table.ColumnHeader></Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {competitions?.map((competition) => (
-              <Table.Row key={competition.id}>
-                <Table.Cell>
-                  <Text
-                    _hover={{ color: "myBlue.400", cursor: "pointer" }}
-                    fontSize="16px"
-                    mt="2"
-                    onClick={() => {
-                      handleIconClick(competition.id, "competition");
-                    }}
-                  >
-                    {competition.name}
-                  </Text>
-                </Table.Cell>
-                <Table.Cell>{competition.date_from}</Table.Cell>
-                <Table.Cell>
-                  {users?.find((user) => user.id === competition.user_id)?.name}
-                </Table.Cell>
-                <Table.Cell>
-                  <Flex justifyContent="flex-start">
-                    <IconButton
-                      bg="white"
-                      color="myBlue.800"
+            </Table.Header>
+            <Table.Body>
+              {users?.map((user) => (
+                <Table.Row key={user.id}>
+                  <Table.Cell>{user.name}</Table.Cell>
+                  <Table.Cell>{user.last_login_at}</Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Box>
+        <Box layerStyle="userHomeContainer" h="90svh" w="35svw" overflow="auto">
+          <Heading>大会状況</Heading>
+          <Table.Root>
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader>大会名</Table.ColumnHeader>
+                <Table.ColumnHeader>実施日</Table.ColumnHeader>
+                <Table.ColumnHeader>ユーザー</Table.ColumnHeader>
+                <Table.ColumnHeader></Table.ColumnHeader>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {competitions?.map((competition) => (
+                <Table.Row key={competition.id}>
+                  <Table.Cell>
+                    <Text
+                      _hover={{ color: "myBlue.400", cursor: "pointer" }}
+                      fontSize="16px"
+                      mt="2"
                       onClick={() => {
                         handleIconClick(competition.id, "competition");
                       }}
                     >
-                      <PiGearSixBold />
-                    </IconButton>
+                      {competition.name}
+                    </Text>
+                  </Table.Cell>
+                  <Table.Cell>{competition.date_from}</Table.Cell>
+                  <Table.Cell>
+                    {
+                      users?.find((user) => user.id === competition.user_id)
+                        ?.name
+                    }
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Flex justifyContent="flex-start">
+                      <IconButton
+                        bg="white"
+                        color="myBlue.800"
+                        onClick={() => {
+                          handleIconClick(competition.id, "competition");
+                        }}
+                      >
+                        <PiGearSixBold />
+                      </IconButton>
 
-                    <IconButton
-                      bg="white"
-                      color="myBlue.800"
-                      onClick={() => {
-                        handleIconClick(competition.id, "score");
-                      }}
-                    >
-                      <FiDatabase />
-                    </IconButton>
+                      <IconButton
+                        bg="white"
+                        color="myBlue.800"
+                        onClick={() => {
+                          handleIconClick(competition.id, "score");
+                        }}
+                      >
+                        <FiDatabase />
+                      </IconButton>
 
-                    <IconButton
-                      bg="white"
-                      color="myBlue.800"
-                      onClick={() => {
-                        handleIconClick(competition.id, "result");
-                      }}
-                    >
-                      <FaRegNewspaper />
-                    </IconButton>
+                      <IconButton
+                        bg="white"
+                        color="myBlue.800"
+                        onClick={() => {
+                          handleIconClick(competition.id, "result");
+                        }}
+                      >
+                        <FaRegNewspaper />
+                      </IconButton>
 
-                    <IconButton
-                      bg="white"
-                      color="myBlue.800"
-                      onClick={() => {
-                        handleIconClick(competition.id, "monitor");
-                      }}
-                    >
-                      <LuMonitor />
-                    </IconButton>
-                    <LinkDialog
-                      linkType="judge"
-                      competitionId={competition.id}
-                    />
-                  </Flex>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Root>
-      </Box>
+                      <IconButton
+                        bg="white"
+                        color="myBlue.800"
+                        onClick={() => {
+                          handleIconClick(competition.id, "monitor");
+                        }}
+                      >
+                        <LuMonitor />
+                      </IconButton>
+                      <LinkDialog
+                        linkType="judge"
+                        competitionId={competition.id}
+                      />
+                    </Flex>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Box>
+        <VStack>
+          <Box
+            layerStyle="userHomeContainer"
+            h="30svh"
+            w="47svw"
+            overflow="auto"
+          >
+            <Heading>認証ログ</Heading>
+            <LogViewer category="auth" />
+          </Box>
+          <Box
+            layerStyle="userHomeContainer"
+            h="30svh"
+            w="47svw"
+            overflow="auto"
+          >
+            <Heading>システムログ</Heading>
+            <LogViewer category="system" />
+          </Box>
+          <Box
+            layerStyle="userHomeContainer"
+            h="30svh"
+            w="47svw"
+            overflow="auto"
+          >
+            <Heading>ユーザーログ</Heading>
+            <LogViewer category="user" />
+          </Box>
+        </VStack>
       </HStack>
-
     </Stack>
   );
 };

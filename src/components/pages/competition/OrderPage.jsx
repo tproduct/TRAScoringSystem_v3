@@ -1,4 +1,4 @@
-import { isNullObject } from "@libs/helper";
+import { isConfigIncomplete, isNullObject } from "@libs/helper";
 import OrderForm from "@parts/formpages/OrderForm";
 import { useSelector } from "react-redux";
 import Alert from "@parts/Alert";
@@ -14,8 +14,8 @@ const OrderPage = () => {
   const players = useSelector((state) => state.competition.players);
 
   if (!categories) return <Alert message="カテゴリーを設定してください" />;
-  if (isNullObject(rules)) return <Alert message="ルールを設定してください" />;
-  if (isNullObject(routines)) return <Alert message="得点設定をしてください" />;
+  if (isConfigIncomplete(categories, rules)) return <Alert message="ルールを設定してください" />;
+  if (isConfigIncomplete(categories, routines)) return <Alert message="得点設定をしてください" />;
   if (isNullObject(players)) return <Alert message="選手登録をしてください" />;
 
   return (

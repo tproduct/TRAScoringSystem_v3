@@ -3,7 +3,7 @@ import BaseDrawer from "@parts/BaseDrawer";
 import RoutineForm from "@parts/formpages/RoutineForm";
 import { routine_desc } from "@descriptions/routine_desc";
 import { useSelector } from "react-redux";
-import { isNullObject } from "@libs/helper";
+import { isConfigIncomplete } from "@libs/helper";
 import Alert from "@parts/Alert";
 
 const RoutinePage = () => {
@@ -11,7 +11,8 @@ const RoutinePage = () => {
   const rules = useSelector((state) => state.competition.rules);
 
   if (!categories) return <Alert message="カテゴリーを設定してください" />;
-  if (isNullObject(rules)) return <Alert message="ルールを設定してください" />;
+
+  if (isConfigIncomplete(categories, rules)) return <Alert message="ルールを設定してください" />;
   
   return (
     <Box>

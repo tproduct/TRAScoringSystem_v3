@@ -17,14 +17,19 @@ import SelectRound from "@parts/select/SelectRound";
 import SelectRoutine from "@parts/select/SelectRoutine";
 import { useSelector } from "react-redux";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
-import { isNullObject } from "@libs/helper";
+import { isConfigIncomplete, isNullObject } from "@libs/helper";
 import Alert from "@parts/Alert";
 import SelectPanel from "@parts/select/SelectPanel";
 
 const ScorePage = () => {
   const competition = useSelector((state) => state.competition);
+  
   if (!competition.info) return <Alert message="大会情報を設定してください" />;
-  if (isNullObject(competition.orders))
+  if (!competition.categories) return <Alert message="カテゴリーを設定してください" />;
+  if (isConfigIncomplete(competition.categories, competition?.rules)) return <Alert message="ルールを設定してください" />;
+  if (isConfigIncomplete(competition.categories, competition?.routines)) return <Alert message="得点設定をしてください" />;
+  if (isNullObject(competition?.players)) return <Alert message="選手登録をしてください" />;
+  if (isNullObject(competition?.orders))
     return <Alert message="試技順を確定してください" />;
 
   const [page, setPage] = useState(1);

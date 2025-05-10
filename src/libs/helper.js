@@ -47,3 +47,23 @@ export const maxOfObjArray = ( arr, field ) => {
   const newArr = arr.map( item => item[field]);
   return Math.max(...newArr);
 }
+
+export const isConfigIncomplete = (categories, config) => {
+  if(!config) return true;
+
+  const roundLabels = {
+    "1" : ["final"],
+    "2" : ["qualify", "final"],
+    "3" : ["qualify", "semifinal", "final"]
+  };
+
+  const roundArrays = categories.map( category => roundLabels[category.rounds] );
+  const needs = {qualify:0, semifinal:0, final:0};
+  roundArrays.forEach( roundArray => {
+    roundArray.forEach( round => {
+      needs[round] += 1;
+    });
+  });
+
+  return !Object.entries(config).every( ([key, value]) => value.length === needs[key] );
+}

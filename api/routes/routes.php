@@ -85,3 +85,6 @@ $router->addController("DELETE", "/users/{userId}/threads/{threadId}/messages/{m
 
 //NOTICE
 $router->addController("GET", "/notices", "NoticeController@getAll");
+
+//LOGS
+$router->addController("GET", "/logs/{id}/{category}/{year}/{month}/{date}", "LogController@getAll");

@@ -9,7 +9,7 @@ export const useScore = () => {
 
   const createScoreElement = (categoryId, round, routine) => {
     const { has_d, has_h, has_t } =
-      competition?.routines[round].find(
+      competition?.routines[round]?.find(
         ({ category_id, number }) =>
           category_id === categoryId && Number(number) === routine
       ) || {};
