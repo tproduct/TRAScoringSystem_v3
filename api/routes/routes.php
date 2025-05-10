@@ -14,12 +14,14 @@ $router->addController("POST", "/login/judge", "AuthController@judgeLogin");
 
 //USER
 $router->addController("GET", "/users/{id}", "UserController@getUserInfo");
+$router->addController("GET", "/users/{id}", "UserController@getAllUser");
 $router->addController("POST", "/users", "UserController@createUser");
 $router->addController("PATCH", "/users/{id}", "UserController@updateUser");
 $router->addController("DELETE", "/users/{id}", "UserController@deleteUser");
 
 //COMPETITION
 $router->addController("GET", "/competitions/{id}", "CompetitionController@getCompetition");
+$router->addController("GET", "/competitions/bulk/{id}", "CompetitionController@getAllCompetitions");
 $router->addController("GET", "/users/{id}/competitions", "CompetitionController@getCompetitions");
 $router->addController("POST", "/users/{id}/competitions", "CompetitionController@createCompetition");
 $router->addController("PATCH", "/users/{id}/competitions/{id}", "CompetitionController@updateCompetition");

@@ -52,6 +52,9 @@ class AuthController extends BaseController
 
     $monitor = User::getMonitor($info["id"]);
 
+    $now = date('Y-m-d H:i:s');
+    User::patch(["last_login_at" => $now],$info["id"]);
+
     $this->handleLogin($info["id"], $info["role"]);
 
     unset($info["password"]);

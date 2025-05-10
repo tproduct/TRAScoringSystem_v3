@@ -56,10 +56,9 @@ const ThreadForm = ({ contents, fetchAllMessages }) => {
               style={{ fontSize: "24px", fontWeight: "bold" }}
             />
           ) : (
-            <Heading size="2xl">{contents.thread.title}</Heading>
+            <Heading>{contents.thread.title}</Heading>
           )}
-          <Spacer />
-          <Text fontSize="lg">{contents.thread.name}</Text>
+          <Text>{contents.thread.name}</Text>
           <Spacer />
 
           <Text>{contents.thread.created_at}投稿</Text>

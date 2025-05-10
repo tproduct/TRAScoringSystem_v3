@@ -16,6 +16,11 @@ class Competition extends Model
     return parent::fetchAll("SELECT * FROM competitions WHERE user_id = ?", [$userId]);
   }
 
+  public static function getAllByAdmin(){
+    return parent::fetchAll("SELECT id, name, date_from, user_id FROM competitions ORDER BY date_from DESC", []);
+
+  }
+
   public static function create($data)
   {
     $data['id'] = uniqid("comp_");

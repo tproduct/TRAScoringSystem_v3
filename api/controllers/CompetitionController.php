@@ -2,6 +2,7 @@
 
 namespace controller;
 require_once __DIR__ . "/BaseController.php";
+require_once __DIR__ . "/../models/User.php";
 require_once __DIR__ . "/../models/Competition.php";
 require_once __DIR__ . "/../models/Category.php";
 require_once __DIR__ . "/../models/Rule.php";
@@ -15,6 +16,7 @@ require_once __DIR__ . "/../error/ErrorHandler.php";
 require_once __DIR__ . "/../log/Log.php";
 
 use Log;
+use model\User;
 use model\Competition;
 use model\Category;
 use model\Rule;
@@ -89,6 +91,25 @@ class CompetitionController extends BaseController
     }
 
     echo json_encode(["status" => "success", "data" => $competitions]);
+  }
+
+  public function getAllCompetitions($userId){
+    $user = User::getById($userId);
+
+    if (!$user) {
+      $this->error->throwUserNotFound();
+    }
+
+    if($user["role"] !== "admin"){
+      Log::auth("Invalid role",$userId);
+      $this->error->addStatusAndError("unauthorized", "message", "権限がありません");
+      $this->error->throwErrors();
+    }
+
+    $result = Competition::getAllByAdmin();
+    Log::event("user","Get all competitions", ["userId" => $userId]);
+
+    echo json_encode($result);
   }
 
   public function createCompetition($userId)

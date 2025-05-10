@@ -19,6 +19,7 @@ import StartListPage from "@pages/startlist/StartListPage";
 import SpecialPrizePage from "@pages/result/SpecialPrizePage";
 import UserInfoPage from "@pages/user/UserInfopage";
 import JudgeRoot from "@pages/judge/JudgeRoot";
+import AdminPage from "@pages/admin/AdminPage";
 
 function App() {
   useEffect(() => {
@@ -30,6 +31,8 @@ function App() {
       <ChakraProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/admin/" element={<AdminPage />} />
             <Route path="/login/" element={<LoginPage />} />
             <Route path="/login/:competitionId" element={<LoginPage />} />
             <Route path="/signup/" element={<UserInfoPage />} />

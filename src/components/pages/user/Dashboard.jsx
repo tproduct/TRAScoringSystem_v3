@@ -89,8 +89,19 @@ const Dashboard = () => {
     <Stack overflow="auto">
       <HStack gap="2">
         <Image src="/src/images/logo.png" w="30px" />
-        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-1</Heading>
+        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-2</Heading>
         <BaseDrawer description={dashboard_desc} />
+        {user?.info.role === "admin" && (
+          <Text
+            onClick={() => {
+              navigate("/admin/");
+            }}
+            color="blue"
+            style={{ cursor: "pointer" }}
+          >
+            管理ページへ
+          </Text>
+        )}
       </HStack>
 
       <SimpleGrid
@@ -117,7 +128,15 @@ const Dashboard = () => {
               </Stack>
             </GridItem>
             <GridItem>
-              <a href="/system/message/">Open Messages</a>
+              <Text
+                onClick={() => {
+                  navigate("/system/message/");
+                }}
+                color="blue"
+                style={{ cursor: "pointer" }}
+              >
+                Open Messages
+              </Text>
 
               <Stack layerStyle="userHomeContainer" gap="1" p="2">
                 {!!threads &&
@@ -189,7 +208,7 @@ const Dashboard = () => {
                 >
                   <LuMonitor />
                 </IconButton>
-                <LinkDialog linkType="judge" competitionId={competition.id}/>
+                <LinkDialog linkType="judge" competitionId={competition.id} />
               </Flex>
             ))}
             <br />

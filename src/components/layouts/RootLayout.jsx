@@ -2,10 +2,10 @@ import { Outlet, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Box,HStack } from "@chakra-ui/react";
 import Sidebar from "@parts/navbar/Sidebar";
+import AdminPage from "@pages/admin/AdminPage";
 
 const RootLayout = () => {
   const isLoggedIn = useSelector(state => state.user.isLoggedIn);
-  // const isLoggedIn = true;
 
   return (
       <HStack textStyle="body" layerStyle="body" width="100%">

@@ -21,6 +21,11 @@ class User extends Model
     return parent::fetch("SELECT * FROM users WHERE email = ?", [$email]);
   }
 
+  public static function getAll()
+  {
+    return parent::fetchAll("SELECT id, name, last_login_at FROM users ORDER BY last_login_at DESC", []);
+  }
+
   public static function getMonitor($userId)
   {
     return parent::fetch("SELECT * FROM monitors WHERE user_id = ?", [$userId]);

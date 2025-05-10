@@ -32,6 +32,25 @@ class UserController extends BaseController
     echo json_encode(["status" => "success", "data" => $result]);
   }
 
+  public function getAllUser($userId){
+    $user = User::getById($userId);
+
+    if (!$user) {
+      $this->error->throwUserNotFound();
+    }
+
+    if($user["role"] !== "admin"){
+      Log::auth("Invalid role",$userId);
+      $this->error->addStatusAndError("unauthorized", "message", "権限がありません");
+      $this->error->throwErrors();
+    }
+
+    $result = User::getAll();
+    Log::event("user","Get all users", ["userId" => $userId]);
+
+    echo json_encode($result);
+  }
+
   public function createUser()
   {
     if ($this->data["password"] !== $this->data["confirm"]) {
@@ -57,7 +76,6 @@ class UserController extends BaseController
       "name" => $this->data["name"],
       "password" => $hashedPassword,
       "organization" => empty($this->data["organization"]) ? "" : $this->data["organization"],
-      "permission" => "1",
     ];
 
     $result = User::create($postData);

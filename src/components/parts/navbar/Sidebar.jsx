@@ -28,7 +28,7 @@ const Sidebar = () => {
       <NavButton icon={<LuMonitor />} label="速報" href="/system/monitor/"/>
       <NavButton icon={<FaUser />} label="ユーザー" href="/system/user/info/"/>
       <NavButton icon={<TbMessageFilled />} label="掲示板" href="/system/message/"/>
-      <NavButton icon={<MdLogout />} label="ログアウト" href="/login/" handler={handleLogout}/>
+      <NavButton icon={<MdLogout />} label="LOGOUT" href="/login/" handler={handleLogout}/>
     </VStack>
   );
 };
