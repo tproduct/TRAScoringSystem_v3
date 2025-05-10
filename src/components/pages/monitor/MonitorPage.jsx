@@ -2,6 +2,7 @@ import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import Alert from "@parts/Alert";
 import BaseDrawer from "@parts/BaseDrawer";
 import MonitorForm from "@parts/formpages/MonitorForm";
+import LinkDialog from "@parts/LinkDialog";
 import { useSelector } from "react-redux";
 
 const MonitorPage = () => {
@@ -15,6 +16,7 @@ const MonitorPage = () => {
         <Flex alignItems="center">
           <Text textStyle="title">速報設定</Text>
           {/* <BaseDrawer description={""} /> */}
+          <LinkDialog linkType="monitor" competitionId={competitionInfo.id}/>
         </Flex>
         <MonitorForm />
         {competitionInfo ? (

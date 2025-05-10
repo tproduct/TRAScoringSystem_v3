@@ -25,6 +25,7 @@ import EditableField from "@parts/formparts/EditableField";
 import { TiDeleteOutline } from "react-icons/ti";
 import { FaRegSquarePlus } from "react-icons/fa6";
 import SelectGender from "@parts/select/SelectGender";
+import TemplateDownloadButton from "@parts/TemplateDownloadButton";
 
 const PlayerForm = ({ type }) => {
   const [allPlayers, setAllPlayers] = useState([]);
@@ -229,18 +230,21 @@ const PlayerForm = ({ type }) => {
 
       <form action={formAction}>
         <Flex justifyContent="space-between" p="2">
-          <FileUpload.Root
-            accept={["text/csv"]}
-            maxFiles="1"
-            onFileAccept={(e) => handleAccept(e)}
-          >
-            <FileUpload.HiddenInput />
-            <FileUpload.Trigger asChild>
-              <Button variant="outline" size="sm" border="1px solid">
-                <HiUpload /> Upload
-              </Button>
-            </FileUpload.Trigger>
-          </FileUpload.Root>
+          <HStack>
+            <FileUpload.Root
+              accept={["text/csv"]}
+              maxFiles="1"
+              onFileAccept={(e) => handleAccept(e)}
+            >
+              <FileUpload.HiddenInput />
+              <FileUpload.Trigger asChild>
+                <Button variant="outline" size="sm" border="1px solid">
+                  <HiUpload /> CSVアップロード
+                </Button>
+              </FileUpload.Trigger>
+            </FileUpload.Root>
+            <TemplateDownloadButton type={type}/>
+          </HStack>
           <Spacer />
           <HStack gap="2">
             <SubmitButton label="Update" value="sync" disabled={isPending} />
@@ -287,7 +291,9 @@ const PlayerForm = ({ type }) => {
                 <Table.Body>
                   {!!players.length &&
                     players.map((player, playerIndex) => (
-                      <Table.Row key={`${category_id}player${player.name}${player.team}`}>
+                      <Table.Row
+                        key={`${category_id}player${player.name}${player.team}`}
+                      >
                         {Object.entries(header).map(([field, width]) => (
                           <Table.Cell
                             key={`${category_id}player_${field}${player.name}${player.team}`}

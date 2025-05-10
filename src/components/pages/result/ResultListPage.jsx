@@ -5,11 +5,11 @@ import { useParams } from "react-router-dom";
 import { Heading, List, Stack, HStack, Flex, Box } from "@chakra-ui/react";
 import { typeLabels, genderLabels, roundLabels } from "@libs/constants";
 import Alert from "@parts/Alert";
-import ResultLinkDialog from "@parts/result/ResultLinkDialog";
 import ResultTitle from "@parts/result/ResultTitle";
 import BaseDrawer from "@parts/BaseDrawer";
 import { result_desc } from "@descriptions/result_desc";
 import { useCompetition } from "@hooks/useCompetition";
+import LinkDialog from "@parts/LinkDialog";
 
 const ResultListPage = () => {
   const registeredCompetition = useSelector((state) => state.competition);
@@ -18,6 +18,7 @@ const ResultListPage = () => {
     : useParams().competitionId;
   const { competition, fetchCompetition } = useCompetition(competitionId);
   const teamByCat = competition?.info?.team_by_cat;
+  const userInfo = useSelector((state) => state.user.info);
 
   useEffect(() => {
     fetchCompetition();
@@ -31,8 +32,12 @@ const ResultListPage = () => {
     <Stack>
       <HStack>
         <ResultTitle competitionInfo={competition?.info} />
-        <ResultLinkDialog competitionId={competitionId} />
-        <BaseDrawer description={result_desc} />
+        {!!userInfo && (
+          <>
+            <LinkDialog linkType="result" competitionId={competitionId}/>
+            <BaseDrawer description={result_desc} />
+          </>
+        )}
       </HStack>
 
       <Flex h="85svh" w="95svw" gap="2" p="2">
@@ -110,7 +115,9 @@ const ResultListPage = () => {
           <Heading size="lg">抽出</Heading>
           <List.Root>
             <List.Item ml="10">
-              <a href={`/result/${competitionId}/special/`} target="_blank">特別表彰</a>
+              <a href={`/result/${competitionId}/special/`} target="_blank">
+                特別表彰
+              </a>
             </List.Item>
           </List.Root>
         </Stack>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react";
 
 export const useWebSocket = () => {
   const socketRef = useRef(null);
@@ -15,12 +15,17 @@ export const useWebSocket = () => {
 
     socket.onclose = () => {
       setIsConnected(false);
-    }
+    };
 
-  },[]);
+    return () => {
+      socket.close();
+      setIsConnected(false);
+      socketRef.current = null;
+    };
+  }, []);
 
   const joinRoom = (competitionId, panel, role) => {
-    if(!isConnetcted || !socketRef.current) return;
+    if (!isConnetcted || !socketRef.current) return;
 
     socketRef.current.send(
       JSON.stringify({
@@ -29,19 +34,26 @@ export const useWebSocket = () => {
         panel,
         role,
       })
-    )
-  }
+    );
+  };
 
   const setMessageHandler = (callback) => {
-    socketRef.current.onmessage = callback;
-  }
+    if (socketRef.current) {
+      socketRef.current.onmessage = callback;
+    }
+  };
 
   const socketClose = () => {
     socketRef.current?.close();
     socketRef.current = null;
     setIsConnected(false);
-  }
+  };
 
-  return { socket: socketRef.current, isConnetcted, joinRoom, socketClose, setMessageHandler };
-
-}
+  return {
+    socket: socketRef.current,
+    isConnetcted,
+    joinRoom,
+    socketClose,
+    setMessageHandler,
+  };
+};

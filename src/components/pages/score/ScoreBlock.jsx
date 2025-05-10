@@ -466,6 +466,7 @@ const SystemBlock = ({
                   handler={() => {
                     handleMonitor("consecutive");
                   }}
+                  disabled={!player?.score?.id}
                 />
                 <ScoreButton
                   label="Score"
@@ -473,6 +474,7 @@ const SystemBlock = ({
                   handler={() => {
                     handleMonitor("score");
                   }}
+                  disabled={!player?.score?.id}
                 />
                 <ScoreButton
                   label="Rank"
@@ -480,6 +482,7 @@ const SystemBlock = ({
                   handler={() => {
                     handleMonitor("rank");
                   }}
+                  disabled={!player?.score?.id}
                 />
                 <ScoreButton
                   label="Player"

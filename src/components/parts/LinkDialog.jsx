@@ -1,7 +1,13 @@
 import { Dialog, IconButton, Text, Clipboard, QrCode, HStack } from "@chakra-ui/react";
 import { LuLink2 } from "react-icons/lu";
 
-const ResultLinkDialog = ({competitionId}) => {
+const LinkDialog = ({linkType = "result", competitionId}) => {
+  const linkLabels = {
+    result: "観客用",
+    monitor: "速報",
+    judge: "審判用"
+  }[linkType];
+
   return (
     <Dialog.Root size="lg">
       <Dialog.Trigger asChild>
@@ -13,16 +19,16 @@ const ResultLinkDialog = ({competitionId}) => {
       <Dialog.Positioner>
         <Dialog.Content>
           <Dialog.Header>
-            <Dialog.Title>観客用ページへのリンク</Dialog.Title>
+            <Dialog.Title>{linkLabels}ページへのリンク</Dialog.Title>
           </Dialog.Header>
           <Dialog.Body>
             <HStack>
               <Text>
-                https://tproduct.net/trascoringsystem_v3/result/
+                {import.meta.env.VITE_BASE_URL}/result/
                 {competitionId}
               </Text>
               <Clipboard.Root
-                value={`https://tproduct.net/trascoringsystem_v3/result/${competitionId}`}
+                value={`${import.meta.env.VITE_BASE_URL}/${linkType}/${competitionId}`}
               >
                 <Clipboard.Trigger asChild>
                   <IconButton size="xs" bg="white" color="myBlue.800">
@@ -32,7 +38,7 @@ const ResultLinkDialog = ({competitionId}) => {
               </Clipboard.Root>
             </HStack>
             <QrCode.Root
-              value={`https://tproduct.net/trascoringsystem_v3/result/${competitionId}`}
+              value={`${import.meta.env.VITE_BASE_URL}/${linkType}/${competitionId}`}
             >
               <QrCode.Frame>
                 <QrCode.Pattern />
@@ -45,4 +51,4 @@ const ResultLinkDialog = ({competitionId}) => {
   );
 };
 
-export default ResultLinkDialog;
+export default LinkDialog;

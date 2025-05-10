@@ -7,6 +7,9 @@ import {
   Spacer,
   IconButton,
   Stack,
+  Heading,
+  Image,
+  HStack,
 } from "@chakra-ui/react";
 import { useApiRequest } from "@hooks/useApiRequest";
 import { useEffect, useState } from "react";
@@ -19,6 +22,9 @@ import { LuMonitor } from "react-icons/lu";
 
 import { PiGearSixBold } from "react-icons/pi";
 import { FaRegNewspaper } from "react-icons/fa";
+import BaseDrawer from "@parts/BaseDrawer";
+import { dashboard_desc } from "@descriptions/dashboard_desc";
+import LinkDialog from "@parts/LinkDialog";
 
 const Dashboard = () => {
   const [competitions, setCompetitions] = useState(null);
@@ -76,109 +82,126 @@ const Dashboard = () => {
   const noticeColor = {
     info: "black",
     warning: "green",
-    alert: "red"
-  }
+    alert: "red",
+  };
 
   return (
-    <SimpleGrid
-      columns={{ base: 1, md: 3 }}
-      rows={{ base: 3, md: 3 }}
-      gap="6"
-      h="100svh"
-      w="90svw"
-    >
-      <GridItem colSpan={1} rowSpan={{ base: 1, md: 3 }}>
-        <SimpleGrid gap="20px">
-          <GridItem>
-            <Text>Notice</Text>
-            <Stack layerStyle="userHomeContainer">
-              {!!notices && notices.map(notice => (
-                <Text key={notice.id} color={noticeColor[notice.type]}>{notice.message}</Text>
-              ))}
-            </Stack>
-          </GridItem>
-          <GridItem>
-            <a href="/system/message/">Open Messages</a>
+    <Stack overflow="auto">
+      <HStack gap="2">
+        <Image src="/src/images/logo.png" w="30px" />
+        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-1</Heading>
+        <BaseDrawer description={dashboard_desc} />
+      </HStack>
 
-            <Stack layerStyle="userHomeContainer" gap="1" p="2">
-              {!!threads && Object.entries(threads).map(([key, contents], index) => {
-                return (
-                  index < 10 && (
-                    <Text key={contents.thread.id}>
-                      {contents.thread.title}
+      <SimpleGrid
+        columns={{ base: 1, md: 3 }}
+        rows={{ base: 3, md: 3 }}
+        gap="6"
+        h="90svh"
+        w="90svw"
+      >
+        <GridItem colSpan={1} rowSpan={{ base: 1, md: 3 }}>
+          <SimpleGrid gap="20px">
+            <GridItem>
+              <Text>Notice</Text>
+              <Stack layerStyle="userHomeContainer">
+                {notices?.length ? (
+                  notices.map((notice) => (
+                    <Text key={notice.id} color={noticeColor[notice.type]}>
+                      {notice.message}
                     </Text>
-                  )
-                );
-              })}
-            </Stack>
-          </GridItem>
-        </SimpleGrid>
-      </GridItem>
-      <GridItem colSpan={{ base: 1, md: 2 }} rowSpan={{ base: 1, md: 3 }}>
-        <Text>Your Competitions</Text>
-        <Box layerStyle="userHomeContainer">
-          {competitions?.map((competition) => (
-            <Flex key={competition.id} justifyContent="flex-start">
-              <Text
-                _hover={{ color: "myBlue.400", cursor: "pointer" }}
-                fontSize="16px"
-                mt="2"
-                onClick={() => {
-                  handleIconClick(competition.id, "competition");
-                }}
-              >
-                {competition.name}
-              </Text>
-              <Spacer />
-              <IconButton
-                bg="white"
-                color="myBlue.800"
-                onClick={() => {
-                  handleIconClick(competition.id, "competition");
-                }}
-              >
-                <PiGearSixBold />
-              </IconButton>
+                  ))
+                ) : (
+                  <Text>お知らせはありません</Text>
+                )}
+              </Stack>
+            </GridItem>
+            <GridItem>
+              <a href="/system/message/">Open Messages</a>
 
-              <IconButton
-                bg="white"
-                color="myBlue.800"
-                onClick={() => {
-                  handleIconClick(competition.id, "score");
-                }}
-              >
-                <FiDatabase />
-              </IconButton>
+              <Stack layerStyle="userHomeContainer" gap="1" p="2">
+                {!!threads &&
+                  Object.entries(threads).map(([key, contents], index) => {
+                    return (
+                      index < 10 && (
+                        <Text key={contents.thread.id}>
+                          {contents.thread.title}
+                        </Text>
+                      )
+                    );
+                  })}
+              </Stack>
+            </GridItem>
+          </SimpleGrid>
+        </GridItem>
+        <GridItem colSpan={{ base: 1, md: 2 }} rowSpan={{ base: 1, md: 3 }}>
+          <Text>Your Competitions</Text>
+          <Box layerStyle="userHomeContainer">
+            {competitions?.map((competition) => (
+              <Flex key={competition.id} justifyContent="flex-start">
+                <Text
+                  _hover={{ color: "myBlue.400", cursor: "pointer" }}
+                  fontSize="16px"
+                  mt="2"
+                  onClick={() => {
+                    handleIconClick(competition.id, "competition");
+                  }}
+                >
+                  {competition.name}
+                </Text>
+                <Spacer />
+                <IconButton
+                  bg="white"
+                  color="myBlue.800"
+                  onClick={() => {
+                    handleIconClick(competition.id, "competition");
+                  }}
+                >
+                  <PiGearSixBold />
+                </IconButton>
 
-              <IconButton
-                bg="white"
-                color="myBlue.800"
-                onClick={() => {
-                  handleIconClick(competition.id, "result");
-                }}
-              >
-                <FaRegNewspaper />
-              </IconButton>
+                <IconButton
+                  bg="white"
+                  color="myBlue.800"
+                  onClick={() => {
+                    handleIconClick(competition.id, "score");
+                  }}
+                >
+                  <FiDatabase />
+                </IconButton>
 
-              <IconButton
-                bg="white"
-                color="myBlue.800"
-                onClick={() => {
-                  handleIconClick(competition.id, "monitor");
-                }}
-              >
-                <LuMonitor />
-              </IconButton>
-            </Flex>
-          ))}
-          <AddButton
-            label="Competition"
-            handler={handleAdd}
-            layerStyle="boxSingle"
-          />
-        </Box>
-      </GridItem>
-    </SimpleGrid>
+                <IconButton
+                  bg="white"
+                  color="myBlue.800"
+                  onClick={() => {
+                    handleIconClick(competition.id, "result");
+                  }}
+                >
+                  <FaRegNewspaper />
+                </IconButton>
+
+                <IconButton
+                  bg="white"
+                  color="myBlue.800"
+                  onClick={() => {
+                    handleIconClick(competition.id, "monitor");
+                  }}
+                >
+                  <LuMonitor />
+                </IconButton>
+                <LinkDialog linkType="judge" competitionId={competition.id}/>
+              </Flex>
+            ))}
+            <br />
+            <AddButton
+              label="Competition"
+              handler={handleAdd}
+              layerStyle="boxSingle"
+            />
+          </Box>
+        </GridItem>
+      </SimpleGrid>
+    </Stack>
   );
 };
 
