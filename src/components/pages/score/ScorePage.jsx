@@ -29,8 +29,10 @@ const ScorePage = () => {
     return <Alert message="カテゴリーを設定してください" />;
   if (isConfigIncomplete(competition.categories, competition?.rules))
     return <Alert message="ルールを設定してください" />;
-  if (isConfigIncomplete(competition.categories, competition?.routines))
+  if (isConfigIncomplete(competition.categories, competition?.routines, competition?.rules))
     return <Alert message="得点設定をしてください" />;
+  // if(isNullObject(competition?.routines)) return <Alert message="得点設定をしてください" />;
+
   if (isNullObject(competition?.players))
     return <Alert message="選手登録をしてください" />;
   if (isNullObject(competition?.orders))

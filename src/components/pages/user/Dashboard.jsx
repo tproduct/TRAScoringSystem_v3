@@ -86,10 +86,10 @@ const Dashboard = () => {
   };
 
   return (
-    <Stack overflow="auto" w="100%" p="2">
+    <Stack overflow="auto" w="100%" p="2" h="90svh">
       <HStack gap="2" flexWrap="wrap">
         <Image src="/src/images/logo.png" w="30px" />
-        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-5</Heading>
+        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-6</Heading>
         <BaseDrawer description={dashboard_desc} />
         {user?.info.role === "admin" && (
           <Text
@@ -109,7 +109,7 @@ const Dashboard = () => {
           <SimpleGrid gap="20px">
             <GridItem>
               <Text>Notice</Text>
-              <Stack layerStyle="userHomeContainer">
+              <Stack layerStyle="userHomeContainer" p="2" h="20svh" overflow="auto">
                 {notices?.length ? (
                   notices.map((notice) => (
                     <Text key={notice.id} color={noticeColor[notice.type]}>
@@ -132,7 +132,7 @@ const Dashboard = () => {
                 Open Messages
               </Text>
 
-              <Stack layerStyle="userHomeContainer" gap="1" p="2">
+              <Stack layerStyle="userHomeContainer" gap="1" p="2" h="20svh" overflow="auto">
                 {!!threads &&
                   Object.entries(threads).map(([key, contents], index) => {
                     return (

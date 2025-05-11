@@ -48,7 +48,7 @@ export const maxOfObjArray = ( arr, field ) => {
   return Math.max(...newArr);
 }
 
-export const isConfigIncomplete = (categories, config) => {
+export const isConfigIncomplete = (categories, config, additional = null) => {
   if(!config) return true;
 
   const roundLabels = {
@@ -57,13 +57,17 @@ export const isConfigIncomplete = (categories, config) => {
     "3" : ["qualify", "semifinal", "final"]
   };
 
-  const roundArrays = categories.map( category => roundLabels[category.rounds] );
+  const roundArrays = categories.reduce( (acc, category) => ({ ...acc, [category.id]:roundLabels[category.rounds]}),{});
   const needs = {qualify:0, semifinal:0, final:0};
-  roundArrays.forEach( roundArray => {
+  Object.entries(roundArrays).forEach( ([categoryId, roundArray]) => {
     roundArray.forEach( round => {
-      needs[round] += 1;
+      if(additional !== null){
+        needs[round] += Number(additional[round].find(item => item.category_id === categoryId)?.routines || 0);
+      }else{
+        needs[round] += 1;
+      }
     });
   });
 
-  return !Object.entries(config).every( ([key, value]) => value.length === needs[key] );
+  return !Object.entries(config).every( ([key, value]) => value === null ? needs[key] === 0 : value.length === needs[key] );
 }
