@@ -1,27 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  isLoggedIn: true,
-  info: {
-    id: "user_6813675d31179",
-    name: "test3234",
-    email: "tes@test.com",
-    organization: "",
-    role:"user"
-  },
-  monitor: {
-    id: 5,
-    user_id: "user_6813675d31179",
-    switch_time: 10,
-    interval_time: 5,
-    group_size: 10,
-  }
-};
 // const initialState = {
-//   isLoggedIn: false,
-//   info: null,
-//   monitor: null
+//   isLoggedIn: true,
+//   info: {
+//     id: "user_6813675d31179",
+//     name: "test3234",
+//     email: "tes@test.com",
+//     organization: "",
+//     role:"user"
+//   },
+//   monitor: {
+//     id: 5,
+//     user_id: "user_6813675d31179",
+//     switch_time: 10,
+//     interval_time: 5,
+//     group_size: 10,
+//   }
 // };
+const initialState = {
+  isLoggedIn: false,
+  info: null,
+  monitor: null
+};
 
 export const userSlice = createSlice({
   name: "user",

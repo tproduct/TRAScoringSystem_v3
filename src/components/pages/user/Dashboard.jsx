@@ -89,7 +89,7 @@ const Dashboard = () => {
     <Stack overflow="auto" w="100%" p="2">
       <HStack gap="2" flexWrap="wrap">
         <Image src="/src/images/logo.png" w="30px" />
-        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-4</Heading>
+        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-5</Heading>
         <BaseDrawer description={dashboard_desc} />
         {user?.info.role === "admin" && (
           <Text
@@ -105,7 +105,7 @@ const Dashboard = () => {
       </HStack>
 
       <SimpleGrid columns={{ base: 1, md: 3 }} spacing="6" h="auto" w="100%">
-        <GridItem colSpan={{ base: 1, md: 1 }} rowSpan={{ base: 1, md: 3 }}>
+        <GridItem colSpan={{ base: 1, md: 1 }} rowSpan={{ base: 1, md: 3 }} m="1">
           <SimpleGrid gap="20px">
             <GridItem>
               <Text>Notice</Text>
@@ -147,7 +147,7 @@ const Dashboard = () => {
             </GridItem>
           </SimpleGrid>
         </GridItem>
-        <GridItem colSpan={{ base: 1, md: 2 }} rowSpan={{ base: 1, md: 3 }}>
+        <GridItem colSpan={{ base: 1, md: 2 }} rowSpan={{ base: 1, md: 3 }} m="1">
           <Text>Your Competitions</Text>
           <Box layerStyle="userHomeContainer">
             {competitions?.map((competition) => (

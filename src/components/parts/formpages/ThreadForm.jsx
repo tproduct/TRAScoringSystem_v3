@@ -48,24 +48,29 @@ const ThreadForm = ({ contents, fetchAllMessages }) => {
   return contents ? (
     <Box layerStyle="boxSingle">
       <form action={formAction}>
-        <Flex alignItems="center" justifyContent="space-between">
+        <Stack>
           {isMyThread ? (
             <input
               name="title"
               defaultValue={contents.thread.title}
-              style={{ fontSize: "24px", fontWeight: "bold" }}
+              style={{ fontSize: "24px", fontWeight: "bold", width: "100%" }}
             />
           ) : (
             <Heading>{contents.thread.title}</Heading>
           )}
-          <Text>{contents.thread.name}</Text>
-          <Spacer />
+          <Flex
+            alignItems={{ base: "left", md: "center" }}
+            direction={{ base: "column", md: "row" }}
+          >
+            <Text>{contents.thread.name}</Text>
+            <Spacer />
 
-          <Text>{contents.thread.created_at}投稿</Text>
-          {contents.thread.created_at !== contents.thread.updated_at && (
+            <Text>{contents.thread.created_at}投稿</Text>
+            {contents.thread.created_at !== contents.thread.updated_at && (
               <Text>({contents.thread.updated_at}更新)</Text>
-          )}
-        </Flex>
+            )}
+          </Flex>
+        </Stack>
         {isMyThread ? (
           <Textarea
             name="message"
@@ -88,9 +93,17 @@ const ThreadForm = ({ contents, fetchAllMessages }) => {
         )}
       </form>
       {contents.replies.map((reply) => (
-        <MessageForm reply={reply} key={reply.id} threadId={contents.thread.id} fetchAllMessages={fetchAllMessages}/>
+        <MessageForm
+          reply={reply}
+          key={reply.id}
+          threadId={contents.thread.id}
+          fetchAllMessages={fetchAllMessages}
+        />
       ))}
-      <MessageForm threadId={contents.thread.id} fetchAllMessages={fetchAllMessages}/>
+      <MessageForm
+        threadId={contents.thread.id}
+        fetchAllMessages={fetchAllMessages}
+      />
     </Box>
   ) : (
     <form action={formAction}>

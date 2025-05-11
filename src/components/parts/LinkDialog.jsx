@@ -1,11 +1,18 @@
-import { Dialog, IconButton, Text, Clipboard, QrCode, HStack } from "@chakra-ui/react";
+import {
+  Dialog,
+  IconButton,
+  Text,
+  Clipboard,
+  QrCode,
+  HStack,
+} from "@chakra-ui/react";
 import { LuLink2 } from "react-icons/lu";
 
-const LinkDialog = ({linkType = "result", competitionId}) => {
+const LinkDialog = ({ linkType = "result", competitionId }) => {
   const linkLabels = {
     result: "観客用",
     monitor: "速報",
-    judge: "審判用"
+    judge: "審判用",
   }[linkType];
 
   return (
@@ -23,12 +30,27 @@ const LinkDialog = ({linkType = "result", competitionId}) => {
           </Dialog.Header>
           <Dialog.Body>
             <HStack>
-              <Text>
-                {import.meta.env.VITE_BASE_URL}/result/
-                {competitionId}
-              </Text>
+              <a
+                href={
+                  import.meta.env.VITE_BASE_URL +
+                  "/" +
+                  linkType +
+                  "/" +
+                  competitionId
+                }
+                target="_blank"
+                style={{
+                  wordBreak: "break-all",
+                  whiteSpace: "normal",
+                  width: "100%",
+                }}
+              >
+                {import.meta.env.VITE_BASE_URL}/{linkType}/{competitionId}
+              </a>
               <Clipboard.Root
-                value={`${import.meta.env.VITE_BASE_URL}/${linkType}/${competitionId}`}
+                value={`${
+                  import.meta.env.VITE_BASE_URL
+                }/${linkType}/${competitionId}`}
               >
                 <Clipboard.Trigger asChild>
                   <IconButton size="xs" bg="white" color="myBlue.800">
@@ -38,7 +60,9 @@ const LinkDialog = ({linkType = "result", competitionId}) => {
               </Clipboard.Root>
             </HStack>
             <QrCode.Root
-              value={`${import.meta.env.VITE_BASE_URL}/${linkType}/${competitionId}`}
+              value={`${
+                import.meta.env.VITE_BASE_URL
+              }/${linkType}/${competitionId}`}
             >
               <QrCode.Frame>
                 <QrCode.Pattern />

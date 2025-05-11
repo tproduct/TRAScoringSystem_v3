@@ -1,4 +1,4 @@
-import { Center, VStack } from "@chakra-ui/react";
+import { Center, Flex, Stack, Text, VStack } from "@chakra-ui/react";
 import { FaRegSquarePlus } from "react-icons/fa6";
 
 const AddButton = ({label, handler, layerStyle}) => {
@@ -8,10 +8,10 @@ const AddButton = ({label, handler, layerStyle}) => {
       _hover={{ cursor: "pointer" }}
       onClick={handler}
     >
-      <VStack>
+      <Stack direction={label === "competition" ? "column" : "row"} alignItems="center">
         <FaRegSquarePlus size="1.8em" color="#1a3478" />
-        Add New {label}
-      </VStack>
+        <Text>New {label}</Text>
+      </Stack>
     </Center>
   );
 };
