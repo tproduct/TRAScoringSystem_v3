@@ -9,6 +9,7 @@ import {
   Stat,
   ButtonGroup,
   SegmentGroup,
+  Stack,
 } from "@chakra-ui/react";
 import { TiCancel } from "react-icons/ti";
 import { LuDownload, LuUpload } from "react-icons/lu";
@@ -121,7 +122,7 @@ const SystemBlock = ({
           handleScoreChange(data.judge, data.scores.score);
         }
       }
-    })
+    });
   }, [panel, isConnetcted]);
 
   const maxMarkArray = Array(maxSkill)
@@ -351,30 +352,35 @@ const SystemBlock = ({
         </Table.ScrollArea>
 
         {/* Maxmark area */}
-        <HStack>
+        <Stack direction={{ base: "column", md: "row" }} spacing="4" w="100%">
           <Text>MaxMark</Text>
           <SegmentGroup.Root
             bg="blue.50"
             value={`${maxMark}`}
-            size="xs"
+            size={{base:"xs", md:"xs"}}
             onValueChange={(e) => {
               handleSegmentChange(e);
             }}
             name="maxmark"
+            display="flex"
+            flexWrap="wrap" // ← これで折り返す
+            w={{ base: "100%", md: "auto" }} // ← 狭い画面では幅いっぱい使う
           >
             <SegmentGroup.Indicator />
             <SegmentGroup.Items items={maxMarkArray} />
           </SegmentGroup.Root>
-          DNS
-          <input
-            type="checkbox"
-            name="dns"
-            checked={check.dns}
-            onChange={() => {
-              handleCheckChange("dns");
-            }}
-          />
-        </HStack>
+          <HStack>
+            DNS
+            <input
+              type="checkbox"
+              name="dns"
+              checked={check.dns}
+              onChange={() => {
+                handleCheckChange("dns");
+              }}
+            />
+          </HStack>
+        </Stack>
 
         {/* Total Score area */}
         <Container>
@@ -431,67 +437,63 @@ const SystemBlock = ({
         </Container>
 
         <Flex mt="5" justifyContent="flex-start" flexWrap="wrap">
-          <HStack>
-            <BoxWithTitle title="Judge" icon={<LuDownload />} h="65px">
-              <HStack gap="2">
-                <ScoreButton
-                  label="Read"
-                  icon={
-                    isReading ? (
-                      <Spinner color="myBlue.400" size="md" />
-                    ) : (
-                      <TiSortNumerically />
-                    )
-                  }
-                  handler={startReading}
-                  disabled={isReading}
-                />
-                <ScoreButton
-                  label="Cancel"
-                  icon={<TiCancel />}
-                  handler={cancelReading}
-                  disabled={!isReading}
-                />
-              </HStack>
+          <Stack direction={{ base: "column", md: "row" }} spacing="4" w="100%">
+            <BoxWithTitle title="Judge" icon={<LuDownload />} h="auto">
+              <ScoreButton
+                label="Read"
+                icon={
+                  isReading ? (
+                    <Spinner color="myBlue.400" size="md" />
+                  ) : (
+                    <TiSortNumerically />
+                  )
+                }
+                handler={startReading}
+                disabled={isReading}
+              />
+              <ScoreButton
+                label="Cancel"
+                icon={<TiCancel />}
+                handler={cancelReading}
+                disabled={!isReading}
+              />
             </BoxWithTitle>
-            <BoxWithTitle title="Publish" icon={<LuUpload />} h="65px">
-              <HStack gap="2">
-                <ScoreButton
-                  label="Score&Rank"
-                  icon={
-                    <>
-                      <TiSortNumerically />&<HiNumberedList />
-                    </>
-                  }
-                  handler={() => {
-                    handleMonitor("consecutive");
-                  }}
-                  disabled={!player?.score?.id}
-                />
-                <ScoreButton
-                  label="Score"
-                  icon={<TiSortNumerically />}
-                  handler={() => {
-                    handleMonitor("score");
-                  }}
-                  disabled={!player?.score?.id}
-                />
-                <ScoreButton
-                  label="Rank"
-                  icon={<HiNumberedList />}
-                  handler={() => {
-                    handleMonitor("rank");
-                  }}
-                  disabled={!player?.score?.id}
-                />
-                <ScoreButton
-                  label="Player"
-                  icon={<GoPerson />}
-                  handler={() => {
-                    handleMonitor("player");
-                  }}
-                />
-              </HStack>
+            <BoxWithTitle title="Publish" icon={<LuUpload />} h="auto">
+              <ScoreButton
+                label="Score&Rank"
+                icon={
+                  <>
+                    <TiSortNumerically />&<HiNumberedList />
+                  </>
+                }
+                handler={() => {
+                  handleMonitor("consecutive");
+                }}
+                disabled={!player?.score?.id}
+              />
+              <ScoreButton
+                label="Score"
+                icon={<TiSortNumerically />}
+                handler={() => {
+                  handleMonitor("score");
+                }}
+                disabled={!player?.score?.id}
+              />
+              <ScoreButton
+                label="Rank"
+                icon={<HiNumberedList />}
+                handler={() => {
+                  handleMonitor("rank");
+                }}
+                disabled={!player?.score?.id}
+              />
+              <ScoreButton
+                label="Player"
+                icon={<GoPerson />}
+                handler={() => {
+                  handleMonitor("player");
+                }}
+              />
             </BoxWithTitle>
             <BoxWithTitle title="Regist" icon={<FiDatabase />} h="65px">
               <ButtonGroup>
@@ -507,7 +509,7 @@ const SystemBlock = ({
                 )}
               </ButtonGroup>
             </BoxWithTitle>
-          </HStack>
+          </Stack>
         </Flex>
       </Container>
     </form>

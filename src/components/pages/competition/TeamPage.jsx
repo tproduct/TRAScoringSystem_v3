@@ -22,7 +22,7 @@ const TeamPage = () => {
   if (!players) return <Alert message="選手登録をしてください" />;
 
   return (
-    <Box>
+    <Box h="100svh" w="100%">
       <Flex alignItems="center">
         <Text textStyle="title">団体登録</Text>
         <BaseDrawer description={team_desc} />

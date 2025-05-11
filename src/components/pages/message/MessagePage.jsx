@@ -20,7 +20,7 @@ const MessagePage = () => {
   }, []);
 
   return (
-    <Stack w="95svw" h="100svh" p="5" overflow="auto">
+    <Stack w="100%" h="100svh" p="5" overflow="auto">
       <ThreadForm fetchAllMessages={fetchAllMessages}/>
       {!!threads &&
         Object.entries(threads)?.map(([threadId, contents]) => (

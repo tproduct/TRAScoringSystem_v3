@@ -16,50 +16,59 @@ const CompetitionRootpage = () => {
       size="sm"
       colorPalette="myBlue"
       h="100svh"
-      w="94svw"
+      w="100%"
     >
-      <Tabs.List>
-        <Tabs.Trigger value="info" bg="white">
-          大会情報
-        </Tabs.Trigger>
-        <Tabs.Trigger value="category" bg="white">
-          カテゴリー
-        </Tabs.Trigger>
-        <Tabs.Trigger value="rule" bg="white">
-          ルール
-        </Tabs.Trigger>
-        <Tabs.Trigger value="routine" bg="white">
-          得点
-        </Tabs.Trigger>
-        <Tabs.Trigger value="player" bg="white">
-          選手登録
-        </Tabs.Trigger>
-        <Tabs.Trigger value="order" bg="white">
-          試技順
-        </Tabs.Trigger>
-        <Tabs.Trigger value="team" bg="white">
-          団体登録
-        </Tabs.Trigger>
+      <Tabs.List
+        overflowX="auto"
+        whiteSpace="nowrap"
+        gap="2"
+        p="2"
+        borderBottom="1px solid"
+        borderColor="gray.200"
+      >
+        {["info", "category", "rule", "routine", "player", "order", "team"].map(
+          (val, i) => (
+            <Tabs.Trigger
+              key={val}
+              value={val}
+              bg="white"
+              px={{ base: 2, md: 4 }}
+              fontSize={{ base: "xs", md: "sm" }}
+            >
+              {
+                [
+                  "大会情報",
+                  "カテゴリー",
+                  "ルール",
+                  "得点",
+                  "選手登録",
+                  "試技順",
+                  "団体登録",
+                ][i]
+              }
+            </Tabs.Trigger>
+          )
+        )}
       </Tabs.List>
-      <Tabs.Content value="info">
+      <Tabs.Content value="info" p="2">
         <CompetitionInfoPage />
       </Tabs.Content>
-      <Tabs.Content value="category">
+      <Tabs.Content value="category" p="2">
         <CategoryPage />
       </Tabs.Content>
-      <Tabs.Content value="rule">
+      <Tabs.Content value="rule" p="2">
         <RulePage />
       </Tabs.Content>
-      <Tabs.Content value="routine">
+      <Tabs.Content value="routine" p="2">
         <RoutinePage />
       </Tabs.Content>
-      <Tabs.Content value="player">
+      <Tabs.Content value="player" p="2">
         <PlayerPage />
       </Tabs.Content>
-      <Tabs.Content value="order">
+      <Tabs.Content value="order" p="2">
         <OrderPage />
       </Tabs.Content>
-      <Tabs.Content value="team">
+      <Tabs.Content value="team" p="2">
         <TeamPage />
       </Tabs.Content>
     </Tabs.Root>

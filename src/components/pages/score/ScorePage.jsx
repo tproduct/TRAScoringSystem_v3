@@ -23,12 +23,16 @@ import SelectPanel from "@parts/select/SelectPanel";
 
 const ScorePage = () => {
   const competition = useSelector((state) => state.competition);
-  
+
   if (!competition.info) return <Alert message="大会情報を設定してください" />;
-  if (!competition.categories) return <Alert message="カテゴリーを設定してください" />;
-  if (isConfigIncomplete(competition.categories, competition?.rules)) return <Alert message="ルールを設定してください" />;
-  if (isConfigIncomplete(competition.categories, competition?.routines)) return <Alert message="得点設定をしてください" />;
-  if (isNullObject(competition?.players)) return <Alert message="選手登録をしてください" />;
+  if (!competition.categories)
+    return <Alert message="カテゴリーを設定してください" />;
+  if (isConfigIncomplete(competition.categories, competition?.rules))
+    return <Alert message="ルールを設定してください" />;
+  if (isConfigIncomplete(competition.categories, competition?.routines))
+    return <Alert message="得点設定をしてください" />;
+  if (isNullObject(competition?.players))
+    return <Alert message="選手登録をしてください" />;
   if (isNullObject(competition?.orders))
     return <Alert message="試技順を確定してください" />;
 
@@ -104,39 +108,56 @@ const ScorePage = () => {
   ).routines;
 
   return (
-    <HStack>
-      <Table.ScrollArea rounded="md" height="95svh" w="15svw">
-        <Table.Root size="sm" fontSize="12px">
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeader>Player</Table.ColumnHeader>
-              <Table.ColumnHeader>Score</Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {players?.map((player, index) => (
-              <Table.Row key={player.id}>
-                <Table.Cell>{player.name}</Table.Cell>
-                <Table.Cell
-                  color="blue"
-                  _hover={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setPage(index + 1);
-                  }}
-                >
-                  {player.score?.sum !== null && player.score?.sum !== undefined
-                    ? player.score?.sum
-                    : !!player.score?.dns
-                    ? "DNS"
-                    : "*****"}
-                </Table.Cell>
+    <Flex
+      direction={{ base: "column-reverse", md: "row" }} // ← 画面幅で切替
+      h="100svh"
+      w="100%"
+    >
+      <Box
+        h={{ base: "30svh", md: "100%" }}
+        w={{ base: "100%", md: "15vw" }}
+        overflowY="auto"
+        p="2"
+      >
+        <Table.ScrollArea rounded="md" w="100%">
+          <Table.Root size="sm" fontSize="12px">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader>Player</Table.ColumnHeader>
+                <Table.ColumnHeader>Score</Table.ColumnHeader>
               </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Root>
-      </Table.ScrollArea>
+            </Table.Header>
+            <Table.Body>
+              {players?.map((player, index) => (
+                <Table.Row key={player.id}>
+                  <Table.Cell>{player.name}</Table.Cell>
+                  <Table.Cell
+                    color="blue"
+                    _hover={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setPage(index + 1);
+                    }}
+                  >
+                    {player.score?.sum !== null &&
+                    player.score?.sum !== undefined
+                      ? player.score?.sum
+                      : !!player.score?.dns
+                      ? "DNS"
+                      : "*****"}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Table.ScrollArea>
+      </Box>
 
-      <Stack gap="1" h="100svh" w="75svw">
+      <Box
+        h={{ base: "70svh", md: "100%" }}
+        w={{ base: "100%", md: "85vw" }}
+        overflowY="auto"
+        p="2"
+      >
         {/* select area */}
         <Flex justifyContent="flex-start" flexWrap="wrap">
           <SelectGender handler={handleSelect} />
@@ -144,18 +165,20 @@ const ScorePage = () => {
           <SelectCategory handler={handleSelect} />
           <SelectRound rounds={rounds} handler={handleSelect} />
           <SelectRoutine routines={routines} handler={handleSelect} />
-          <SelectPanel panels={competition?.info.panels} handler={handleSelect} />
+          <SelectPanel
+            panels={competition?.info.panels}
+            handler={handleSelect}
+          />
         </Flex>
 
         {/* player area */}
-        <Flex justifyContent="flex-start" alignItems="center" gap="2">
+        <Stack direction={{ base: "column", md: "row" }} spacing="4" w="100%" alignItems={{ base: "left", md: "center" }}>
           <Pagination.Root
             page={page}
             count={players?.length}
             pageSize={1}
             onPageChange={(e) => {
               setPage(e.page);
-              setPusherData(null);
             }}
           >
             <HStack>
@@ -184,7 +207,7 @@ const ScorePage = () => {
                 ? `/${players[page - 1]?.team2}`
                 : "")}
           </Text>
-        </Flex>
+        </Stack>
 
         <ScoreBlock
           type={selectValues.type}
@@ -194,8 +217,8 @@ const ScorePage = () => {
           routine={selectValues.routine}
           panel={selectValues.panel}
         />
-      </Stack>
-    </HStack>
+      </Box>
+    </Flex>
   );
 };
 

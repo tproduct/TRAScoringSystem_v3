@@ -3,7 +3,8 @@ const BoxWithTitle = ({ title, icon, w, h, children }) => {
   return (
     <Box
       position="relative"
-      w={w ? w : "fit-content"}
+      // w={w ? w : "fit-content"}
+      w={{ base: "100%", md: "auto" }}
       h={h}
       border="1px solid"
       borderColor="gray.400"
@@ -15,6 +16,7 @@ const BoxWithTitle = ({ title, icon, w, h, children }) => {
       textAlign="center"
       alignItems="center"
       display="flex"
+      flexWrap="wrap"
     >
       {children}
       <Float placement="top-start" offsetX="10" bg="white">

@@ -126,8 +126,17 @@ const TeamForm = ({ gender, competitionId, categoryId = null, players }) => {
   return (
     <form action={formAction}>
       <Stack w="100%">
-        <Flex justifyContent="left">
-          <Box h="50svh" w="100svw" overflow="auto">
+        <Flex
+          direction="column" h="70svh" w="100%"
+        >
+          <Flex
+            direction={{ base: "column", md: "row" }}
+            flex="1"
+            overflow="auto"
+            gap="4"
+            p="2"
+          >
+            <Box w={{ base: "100%", md: "50%" }}>
             {teamPlayers?.map((team, teamIndex) => (
               <BoxWithDeleteButton
                 layerStyle="boxSingle"
@@ -190,49 +199,69 @@ const TeamForm = ({ gender, competitionId, categoryId = null, players }) => {
               handler={handleAdd}
               layerStyle="boxSingle"
             />
-          </Box>
+            </Box>
 
-          <Table.ScrollArea rounded="md" height="50svh" w="98%" mt="3">
-            <Table.Root size="sm" stickyHeader>
-              <Table.Header>
-                <Table.Row bg="bg.subtle">
-                  <Table.ColumnHeader>Name</Table.ColumnHeader>
-                  <Table.ColumnHeader>Team</Table.ColumnHeader>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {players.map((player) => (
-                  <Table.Row key={player.id}>
-                    <Table.Cell
-                      onClick={() => {
-                        handlePlayerAdd(player);
-                      }}
-                      style={{
-                        color:
-                          player.team === selectedTeam?.name ? "blue" : "black",
-                      }}
-                    >
-                      {player.name}
-                    </Table.Cell>
-                    <Table.Cell
-                      style={{
-                        color:
-                          player.team === selectedTeam?.name ? "blue" : "black",
-                      }}
-                    >
-                      {player.team}
-                    </Table.Cell>
+          <Box
+            w={{ base: "100%", md: "50%" }}
+          >
+            <Table.ScrollArea rounded="md" height="50svh" w="98%" mt="3">
+              <Table.Root size="sm" stickyHeader>
+                <Table.Header>
+                  <Table.Row bg="bg.subtle">
+                    <Table.ColumnHeader>Name</Table.ColumnHeader>
+                    <Table.ColumnHeader>Team</Table.ColumnHeader>
                   </Table.Row>
-                ))}
-              </Table.Body>
-            </Table.Root>
-          </Table.ScrollArea>
-        </Flex>
-        <Flex justifyContent="end" p="2">
-          <HStack gap="2">
-            <SubmitButton label="Update" value="sync" disabled={isPending} />
-            <SubmitButton label="Delete" value="delete" disabled={isPending} />
-          </HStack>
+                </Table.Header>
+                <Table.Body>
+                  {players.map((player) => (
+                    <Table.Row key={player.id}>
+                      <Table.Cell
+                        onClick={() => {
+                          handlePlayerAdd(player);
+                        }}
+                        style={{
+                          color:
+                            player.team === selectedTeam?.name
+                              ? "blue"
+                              : "black",
+                        }}
+                      >
+                        {player.name}
+                      </Table.Cell>
+                      <Table.Cell
+                        style={{
+                          color:
+                            player.team === selectedTeam?.name
+                              ? "blue"
+                              : "black",
+                        }}
+                      >
+                        {player.team}
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table.Root>
+            </Table.ScrollArea>
+          </Box>
+          </Flex>
+
+          <Flex
+            justifyContent="flex-end"
+            p="4"
+            borderTop="1px solid #ccc"
+            bg="white"
+          >
+            <HStack gap="2">
+              <SubmitButton label="Update" value="sync" disabled={isPending} />
+              <SubmitButton
+                label="Delete"
+                value="delete"
+                disabled={isPending}
+              />
+            </HStack>
+          </Flex>
+
         </Flex>
       </Stack>
     </form>

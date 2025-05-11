@@ -20,7 +20,7 @@ const Sidebar = () => {
   }
 
   return (
-    <VStack w="60px" h="100svh" bg="myBlue.900" gap="5" p="5">
+    <VStack w="60px" h="100svh" bg="myBlue.900" gap="5" p="5" display={{base:"none", md:"block"}}>
       <NavButton icon={<FaHome />} label="HOME" href="/system/user/home/"/>
       <NavButton icon={<FaGear />} label="大会設定" href="/system/competition/"/>
       <NavButton icon={<FaDatabase />} label="得点集計" href="/system/score/"/>

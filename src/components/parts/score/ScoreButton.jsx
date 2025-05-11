@@ -11,6 +11,7 @@ const ScoreButton = ({ label, icon, handler, disabled = false }) => {
       border="1px solid"
       borderColor="gray.300"
       disabled={disabled}
+      m="1"
     >
       {icon}
       {label}

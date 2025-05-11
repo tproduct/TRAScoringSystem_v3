@@ -29,7 +29,7 @@ const ResultListPage = () => {
     return <Alert message="カテゴリーを設定してください" />;
 
   return (
-    <Stack>
+    <Stack w="100%">
       <HStack>
         <ResultTitle competitionInfo={competition?.info} />
         {!!userInfo && (
@@ -40,12 +40,18 @@ const ResultListPage = () => {
         )}
       </HStack>
 
-      <Flex h="85svh" w="95svw" gap="2" p="2">
+      <Flex direction={{ base: "column", md: "row" }}
+  h="85svh"
+  gap="2"
+  p="2">
         {Object.entries(typeLabels).map(([type, typeLabel]) =>
           competition?.info?.type !== "TRA" && type === "syncronized" ? (
             ""
           ) : (
-            <Stack key={type} layerStyle="boxThird" h="100%" overflow="auto">
+            <Stack key={type} flex="1"
+            layerStyle={{ base: "boxSingle", md: "boxThird" }}
+            h={{ base: "30svh", md: "100%" }}
+            overflow="auto">
               <Heading size="lg">{`${typeLabel}競技`}</Heading>
               {Object.entries(roundLabels).map(([round, roundLabel]) => (
                 <Stack key={type + round}>
@@ -74,7 +80,10 @@ const ResultListPage = () => {
             </Stack>
           )
         )}
-        <Stack layerStyle="boxThird" h="100%" overflow="auto">
+        <Stack flex="1"
+        layerStyle={{ base: "boxSingle", md: "boxThird" }}
+        h={{ base: "30svh", md: "100%" }}
+        overflow="auto">
           <Heading size="lg">団体競技</Heading>
           {teamByCat ? (
             competition?.categories?.map((category) => (

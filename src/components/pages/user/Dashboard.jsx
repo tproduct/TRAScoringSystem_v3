@@ -86,10 +86,10 @@ const Dashboard = () => {
   };
 
   return (
-    <Stack overflow="auto">
-      <HStack gap="2">
+    <Stack overflow="auto" w="100%" p="2">
+      <HStack gap="2" flexWrap="wrap">
         <Image src="/src/images/logo.png" w="30px" />
-        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-2</Heading>
+        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-4</Heading>
         <BaseDrawer description={dashboard_desc} />
         {user?.info.role === "admin" && (
           <Text
@@ -104,14 +104,8 @@ const Dashboard = () => {
         )}
       </HStack>
 
-      <SimpleGrid
-        columns={{ base: 1, md: 3 }}
-        rows={{ base: 3, md: 3 }}
-        gap="6"
-        h="90svh"
-        w="90svw"
-      >
-        <GridItem colSpan={1} rowSpan={{ base: 1, md: 3 }}>
+      <SimpleGrid columns={{ base: 1, md: 3 }} spacing="6" h="auto" w="100%">
+        <GridItem colSpan={{ base: 1, md: 1 }} rowSpan={{ base: 1, md: 3 }}>
           <SimpleGrid gap="20px">
             <GridItem>
               <Text>Notice</Text>

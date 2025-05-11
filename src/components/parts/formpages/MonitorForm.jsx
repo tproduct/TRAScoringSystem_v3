@@ -41,7 +41,9 @@ const MonitorForm = () => {
     <Stack w="100%">
       <Text color="red">{errors?.message}</Text>
       <form action={formAction}>
-        <HStack>
+        <Flex
+  direction={{ base: "column", md: "row" }} // スマホ・iPad縦では縦並び
+  gap="4">
           {Object.entries({ switch_time:"得点表示時間（順位表に切り替えるまでの時間）", interval_time: "順位表示時間", group_size: "順位表示人数" }).map(
             ([key, label]) => (
               <InputField
@@ -55,7 +57,7 @@ const MonitorForm = () => {
               />
             )
           )}
-        </HStack>
+        </Flex>
 
         <Flex justifyContent="end" p="2">
           {monitor ? (
