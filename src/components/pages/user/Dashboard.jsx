@@ -89,7 +89,7 @@ const Dashboard = () => {
     <Stack overflow="auto" w="100%" p="2" h="90svh">
       <HStack gap="2" flexWrap="wrap">
         <Image src="/src/images/logo.png" w="30px" />
-        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-6</Heading>
+        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-7</Heading>
         <BaseDrawer description={dashboard_desc} />
         {user?.info.role === "admin" && (
           <Text

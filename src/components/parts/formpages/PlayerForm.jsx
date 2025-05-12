@@ -225,7 +225,7 @@ const PlayerForm = ({ type }) => {
   };
 
   return (
-    <Stack w="100%" h="80svh" overflow="auto">
+    <Stack w="100%" h="75svh" overflow="auto">
       <Text color="red">{errors?.message}</Text>
 
       <form action={formAction}>

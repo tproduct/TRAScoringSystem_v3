@@ -68,7 +68,7 @@ const CategoryForm = () => {
   };
 
   return (
-    <Stack w="100%">
+    <Stack w="100%" h={{base:"75svh", md:"80svh"}} overflow="auto">
       <Text color="red">{errors?.message}</Text>
       <Text color="red">{willUpdate ? "まだ更新されていません" : ""}</Text>
 

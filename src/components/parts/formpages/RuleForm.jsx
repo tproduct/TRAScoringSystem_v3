@@ -68,7 +68,7 @@ const RuleForm = ({ round }) => {
   ];
 
   return (
-    <Stack w="100%">
+    <Stack w="100%" h="75svh" overflow="auto">
       <Text color="red">{errors?.message}</Text>
       <form action={formAction}>
         <Box display="flex" flexWrap="wrap" gap="1">
