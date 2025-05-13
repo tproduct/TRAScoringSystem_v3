@@ -44,7 +44,7 @@ const MessageForm = ({ threadId, reply, fetchAllMessages }) => {
     <form action={formAction}>
       <Stack gap="2" mt="2" borderBottom="1px solid" p="2">
         <HStack>
-          <Text fontSize="lg">{reply.name}</Text>
+          <Text>{reply.name}</Text>
           <Text>{reply.created_at}</Text>
           {reply.created_at !== reply.updated_at && (
             <Text>({reply.updated_at}更新)</Text>

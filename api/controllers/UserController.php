@@ -40,13 +40,12 @@ class UserController extends BaseController
     }
 
     if($user["role"] !== "admin"){
-      Log::auth("Invalid role",$userId);
+      Log::auth("Invalid role[get all user]",$userId);
       $this->error->addStatusAndError("unauthorized", "message", "権限がありません");
       $this->error->throwErrors();
     }
 
     $result = User::getAll();
-    Log::event("user","Get all users", ["userId" => $userId]);
 
     echo json_encode($result);
   }

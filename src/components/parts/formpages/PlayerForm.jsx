@@ -225,12 +225,12 @@ const PlayerForm = ({ type }) => {
   };
 
   return (
-    <Stack w="100%" h="75svh" overflow="auto">
+    <Stack w="100%" h={{base:"65svh", md:"75svh"}} overflow="auto">
       <Text color="red">{errors?.message}</Text>
 
       <form action={formAction}>
-        <Flex justifyContent="space-between" p="2">
-          <HStack>
+        <Flex direction={{base:"column", md:"row"}} p="2">
+          <HStack gap="1" mt="1" ml="1">
             <FileUpload.Root
               accept={["text/csv"]}
               maxFiles="1"
@@ -245,8 +245,7 @@ const PlayerForm = ({ type }) => {
             </FileUpload.Root>
             <TemplateDownloadButton type={type}/>
           </HStack>
-          <Spacer />
-          <HStack gap="2">
+          <HStack gap="1" mt="1" ml="1">
             <SubmitButton label="Update" value="sync" disabled={isPending} />
             <SubmitButton label="Delete" value="delete" disabled={isPending} />
           </HStack>

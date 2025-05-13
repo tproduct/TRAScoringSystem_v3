@@ -86,10 +86,10 @@ const Dashboard = () => {
   };
 
   return (
-    <Stack overflow="auto" w="100%" p="2" h="90svh">
+    <Stack overflow="auto" w="100%" p="2" h={{base:"85svh",md:"90svh"}}>
       <HStack gap="2" flexWrap="wrap">
         <Image src="/src/images/logo.png" w="30px" />
-        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-7</Heading>
+        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-8</Heading>
         <BaseDrawer description={dashboard_desc} />
         {user?.info.role === "admin" && (
           <Text
@@ -113,7 +113,7 @@ const Dashboard = () => {
                 {notices?.length ? (
                   notices.map((notice) => (
                     <Text key={notice.id} color={noticeColor[notice.type]}>
-                      {notice.message}
+                      {`[${notice.created_at}]${notice.message}`}
                     </Text>
                   ))
                 ) : (

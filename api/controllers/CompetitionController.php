@@ -101,13 +101,12 @@ class CompetitionController extends BaseController
     }
 
     if($user["role"] !== "admin"){
-      Log::auth("Invalid role",$userId);
+      Log::auth("Invalid role[get all competition]",$userId);
       $this->error->addStatusAndError("unauthorized", "message", "権限がありません");
       $this->error->throwErrors();
     }
 
     $result = Competition::getAllByAdmin();
-    Log::event("user","Get all competitions", ["userId" => $userId]);
 
     echo json_encode($result);
   }

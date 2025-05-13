@@ -36,6 +36,8 @@ class ResultController extends BaseController
     $rounds = $category["rounds"];
 
     if (!$competition) {
+      Log::system("competition not found[result]", $competitionId);
+
       $this->error->throwCompetitionNotFound();
     }
 
@@ -65,7 +67,7 @@ class ResultController extends BaseController
     }
 
     if (!$result) {
-      Log::system("get error[result]", $competitionId);
+      Log::system("result not found[result]", $competitionId);
 
       $this->error->throwResultNotFound();
     }

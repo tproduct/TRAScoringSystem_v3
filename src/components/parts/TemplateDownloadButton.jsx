@@ -14,7 +14,7 @@ const TemplateDownloadButton = ({type}) => {
 
   return (
     <Button onClick={handleDownload} variant="outline" size="sm" border="1px solid">
-      <HiDownload /> テンプレート：{label}
+      <HiDownload /> テンプレート
     </Button>
   );
 };
