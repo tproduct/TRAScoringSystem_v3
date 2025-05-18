@@ -43,7 +43,7 @@ const ScorePage = () => {
     type: "individual",
     gender: "men",
     categoryId: competition.categories[0].id,
-    round: "qualify",
+    round: competition.categories[0].rounds === "1" ? "final" : "qualify",
     routine: 1,
     panel: "A",
   });
@@ -165,7 +165,7 @@ const ScorePage = () => {
           <SelectGender handler={handleSelect} />
           <SelectType handler={handleSelect} />
           <SelectCategory handler={handleSelect} />
-          <SelectRound rounds={rounds} handler={handleSelect} />
+          <SelectRound rounds={rounds} defaultValue={selectValues.round} handler={handleSelect} />
           <SelectRoutine routines={routines} handler={handleSelect} />
           <SelectPanel
             panels={competition?.info.panels}
