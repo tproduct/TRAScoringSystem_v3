@@ -8,13 +8,14 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useForm } from "@hooks/useForm";
-import InputField from "@parts/formparts/InputField";
 import MessageSubmitButton from "@parts/formparts/MessageSubmitButton";
 import { useActionState, useState } from "react";
 import { useSelector } from "react-redux";
+import EditButton from "@parts/formparts/EditButton";
 
 const MessageForm = ({ threadId, reply, fetchAllMessages }) => {
   const [errors, setErrors] = useState(null);
+  const [isEditting, setIsEditting] = useState(false);
   const userId = useSelector((state) => state.user.info.id);
 
   const fields = reply ? ["message"] : ["thread_id", "user_id", "message"];
@@ -28,7 +29,10 @@ const MessageForm = ({ threadId, reply, fetchAllMessages }) => {
     },
     null,
     setErrors,
-    fetchAllMessages
+    () => {
+      setIsEditting(false);
+      fetchAllMessages();
+    }
   );
 
   const [state, formAction, isPending] = useActionState(
@@ -52,8 +56,13 @@ const MessageForm = ({ threadId, reply, fetchAllMessages }) => {
         </HStack>
         {isMyMessage ? (
           <HStack>
-            <Input name="message" defaultValue={reply.message} />
-            <MessageSubmitButton value="update" />
+            {isEditting ? (
+              <Input name="message" defaultValue={reply.message} />
+            ) : (
+              <Text>{reply.message}</Text>
+            )}
+            <EditButton isEditting={isEditting} setIsEditting={setIsEditting} />
+            {isEditting && <MessageSubmitButton value="update" />}
             <MessageSubmitButton value="delete" />
           </HStack>
         ) : (

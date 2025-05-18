@@ -15,9 +15,11 @@ import { useActionState, useState } from "react";
 import { useSelector } from "react-redux";
 import MessageForm from "./MessageForm";
 import MessageSubmitButton from "@parts/formparts/MessageSubmitButton";
+import EditButton from "@parts/formparts/EditButton";
 
 const ThreadForm = ({ contents, fetchAllMessages }) => {
   const [errors, setErrors] = useState(null);
+  const [isEditting, setIsEditting] = useState(false);
   const userId = useSelector((state) => state.user.info.id);
 
   const fields = contents
@@ -49,11 +51,11 @@ const ThreadForm = ({ contents, fetchAllMessages }) => {
     <Box layerStyle="boxSingle">
       <form action={formAction}>
         <Stack>
-          {isMyThread ? (
+          {isMyThread && isEditting ? (
             <input
               name="title"
               defaultValue={contents.thread.title}
-              style={{ fontSize: "24px", fontWeight: "bold", width: "100%" }}
+              style={{ fontSize: "20px", fontWeight: "bold", width: "100%" }}
             />
           ) : (
             <Heading>{contents.thread.title}</Heading>
@@ -71,7 +73,7 @@ const ThreadForm = ({ contents, fetchAllMessages }) => {
             )}
           </Flex>
         </Stack>
-        {isMyThread ? (
+        {isMyThread && isEditting ? (
           <Textarea
             name="message"
             id="message"
@@ -86,7 +88,8 @@ const ThreadForm = ({ contents, fetchAllMessages }) => {
         {isMyThread && (
           <Flex justifyContent="end">
             <HStack gap="2">
-              <MessageSubmitButton value="update" />
+            <EditButton isEditting={isEditting} setIsEditting={setIsEditting}/>
+              {isEditting && <MessageSubmitButton value="update" />}
               <MessageSubmitButton value="delete" />
             </HStack>
           </Flex>

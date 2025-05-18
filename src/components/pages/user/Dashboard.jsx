@@ -25,6 +25,8 @@ import { FaRegNewspaper } from "react-icons/fa";
 import BaseDrawer from "@parts/BaseDrawer";
 import { dashboard_desc } from "@descriptions/dashboard_desc";
 import LinkDialog from "@parts/LinkDialog";
+import { isWithinOneDay } from "@libs/helper";
+import { IoChatbubbleEllipses } from "react-icons/io5";
 
 const Dashboard = () => {
   const [competitions, setCompetitions] = useState(null);
@@ -86,10 +88,10 @@ const Dashboard = () => {
   };
 
   return (
-    <Stack overflow="auto" w="100%" p="2" h={{base:"85svh",md:"90svh"}}>
+    <Stack overflow="auto" w="100%" p="2" h={{ base: "85svh", md: "90svh" }}>
       <HStack gap="2" flexWrap="wrap">
         <Image src="/src/images/logo.png" w="30px" />
-        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-8</Heading>
+        <Heading size="3xl">TRA ScoringSystem ver3.0.0-beta-9</Heading>
         <BaseDrawer description={dashboard_desc} />
         {user?.info.role === "admin" && (
           <Text
@@ -105,11 +107,20 @@ const Dashboard = () => {
       </HStack>
 
       <SimpleGrid columns={{ base: 1, md: 3 }} spacing="6" h="auto" w="100%">
-        <GridItem colSpan={{ base: 1, md: 1 }} rowSpan={{ base: 1, md: 3 }} m="1">
+        <GridItem
+          colSpan={{ base: 1, md: 1 }}
+          rowSpan={{ base: 1, md: 3 }}
+          m="1"
+        >
           <SimpleGrid gap="20px">
             <GridItem>
               <Text>Notice</Text>
-              <Stack layerStyle="userHomeContainer" p="2" h="20svh" overflow="auto">
+              <Stack
+                layerStyle="userHomeContainer"
+                p="2"
+                h="20svh"
+                overflow="auto"
+              >
                 {notices?.length ? (
                   notices.map((notice) => (
                     <Text key={notice.id} color={noticeColor[notice.type]}>
@@ -132,14 +143,25 @@ const Dashboard = () => {
                 Open Messages
               </Text>
 
-              <Stack layerStyle="userHomeContainer" gap="1" p="2" h="20svh" overflow="auto">
+              <Stack
+                layerStyle="userHomeContainer"
+                gap="1"
+                p="2"
+                h="20svh"
+                overflow="auto"
+              >
                 {!!threads &&
                   Object.entries(threads).map(([key, contents], index) => {
                     return (
                       index < 10 && (
-                        <Text key={contents.thread.id}>
-                          {contents.thread.title}
-                        </Text>
+                        <Flex key={contents.thread.id}>
+                          <Text>
+                            {contents.thread.title}
+                          </Text>
+                          {!!contents.replies.find((reply) =>
+                            isWithinOneDay(reply.updated_at)
+                          ) && <IoChatbubbleEllipses color="red"/>}
+                        </Flex>
                       )
                     );
                   })}
@@ -147,7 +169,11 @@ const Dashboard = () => {
             </GridItem>
           </SimpleGrid>
         </GridItem>
-        <GridItem colSpan={{ base: 1, md: 2 }} rowSpan={{ base: 1, md: 3 }} m="1">
+        <GridItem
+          colSpan={{ base: 1, md: 2 }}
+          rowSpan={{ base: 1, md: 3 }}
+          m="1"
+        >
           <Text>Your Competitions</Text>
           <Box layerStyle="userHomeContainer">
             {competitions?.map((competition) => (

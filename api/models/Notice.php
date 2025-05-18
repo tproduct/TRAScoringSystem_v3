@@ -8,7 +8,7 @@ class Notice extends Model
 {
   public static function getAll()
   {
-    return parent::fetchAll("SELECT * FROM notices WHERE expires_at > NOW()", []);
+    return parent::fetchAll("SELECT * FROM notices WHERE expires_at > NOW() ORDER BY created_at DESC", []);
   }
 
   public static function create($data)

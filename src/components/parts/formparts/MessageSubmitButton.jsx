@@ -11,7 +11,7 @@ const MessageSubmitButton = ({value}) => {
   }[value];
 
   return (
-    <IconButton bg="white" color="myBlue.800" type="submit" value={value} name="button">
+    <IconButton bg="white" color="myBlue.800" type="submit" value={value} name="button" >
       {icon}
     </IconButton>
   )
