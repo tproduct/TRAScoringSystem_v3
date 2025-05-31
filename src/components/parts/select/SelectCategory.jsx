@@ -7,7 +7,7 @@ const SelectCategory = ({ handler }) => {
 
   const selectCategoryItems = {
     title: "カテゴリー",
-    key: "category",
+    key: "categoryId",
     items
   };
 

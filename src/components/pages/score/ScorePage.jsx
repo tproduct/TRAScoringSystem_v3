@@ -49,6 +49,7 @@ const ScorePage = () => {
   });
   const [players, setPlayers] = useState([]);
   const [errors, setErrors] = useState(null);
+  console.log(selectValues)
 
   useEffect(() => {
     if (Object.values(selectValues).some((val) => val === null)) return;

@@ -133,22 +133,27 @@ const PlayerForm = ({ type }) => {
       }
 
       //試技順の重複チェック
-      const numbersArray = allPlayers.map(({ players }, categoryIndex) => {
-        return players.map((player, playerIndex) => {
-          const group = formData.get(
-            `grp${getFlattenedIndex(categoryIndex, playerIndex)}`
-          );
-          const number = formData.get(
-            `number${getFlattenedIndex(categoryIndex, playerIndex)}`
-          );
-          return group + number;
+      for (const gender of ["men", "women", "mix"]) {
+        const numbersArray = allPlayers.map(({ players }, categoryIndex) => {
+          return players
+            .filter((player) => player.gender === gender)
+            .map((player, playerIndex) => {
+              const group = formData.get(
+                `grp${getFlattenedIndex(categoryIndex, playerIndex)}`
+              );
+              const number = formData.get(
+                `number${getFlattenedIndex(categoryIndex, playerIndex)}`
+              );
+              return group + number;
+            });
         });
-      });
 
-      if (numbersArray.some((numbers) => hasDuplicates(numbers))) {
-        setErrors({ message: "試技順が重複しています" });
-        return prev;
+        if (numbersArray.some((numbers) => hasDuplicates(numbers))) {
+          setErrors({ message: `試技順が重複しています(${gender})` });
+          return prev;
+        }
       }
+
       return await formAsyncAction(prev, formData, formDataBaseArray);
     },
     createDefaultState(formDataBaseArray)
@@ -225,11 +230,11 @@ const PlayerForm = ({ type }) => {
   };
 
   return (
-    <Stack w="100%" h={{base:"65svh", md:"75svh"}} overflow="auto">
+    <Stack w="100%" h={{ base: "65svh", md: "75svh" }} overflow="auto">
       <Text color="red">{errors?.message}</Text>
 
       <form action={formAction}>
-        <Flex direction={{base:"column", md:"row"}} p="2">
+        <Flex direction={{ base: "column", md: "row" }} p="2">
           <HStack gap="1" mt="1" ml="1">
             <FileUpload.Root
               accept={["text/csv"]}
@@ -243,7 +248,7 @@ const PlayerForm = ({ type }) => {
                 </Button>
               </FileUpload.Trigger>
             </FileUpload.Root>
-            <TemplateDownloadButton type={type}/>
+            <TemplateDownloadButton type={type} />
           </HStack>
           <HStack gap="1" mt="1" ml="1">
             <SubmitButton label="Update" value="sync" disabled={isPending} />
