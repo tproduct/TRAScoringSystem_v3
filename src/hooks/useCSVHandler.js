@@ -12,9 +12,10 @@ export const useCSVHandler = () => {
   const createObjFromCSV = async (e) => {
     const csv = await readCSVFile(e);
 
-    const csvArray = csv.split("\n");
+    // 改行で分割して空行を除外する
+    const csvArray = csv.split("\n").filter(line => line.trim() !== "");
     const header = csvArray[0].split(",");
-    const data = csvArray.slice(1).map((row) => row.split(","));
+    const data = csvArray.slice(1).map(row => row.split(","));
 
     //ヘッダーとデータの列数が異なる場合
     if (!data.reduce((acc, row) => acc && header.length === row.length, true))
