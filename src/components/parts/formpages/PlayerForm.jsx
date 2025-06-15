@@ -92,9 +92,9 @@ const PlayerForm = ({ type }) => {
 
   useEffect(() => {
     setAllPlayers(
-      registeredPlayers ??
-        categories.reduce((acc, category) => {
-          return [...acc, { category_id: category.id, players: [] }];
+      categories.reduce((acc, category) => {
+        const registed = registeredPlayers?.find( registeredCategory => registeredCategory.category_id === category.id );
+          return [...acc, { category_id: category.id, players: registed ? registed.players : [] }];
         }, [])
     );
   }, [registeredPlayers]);
@@ -147,6 +147,8 @@ const PlayerForm = ({ type }) => {
               return group + number;
             });
         });
+
+        console.log(numbersArray)
 
         if (numbersArray.some((numbers) => hasDuplicates(numbers))) {
           setErrors({ message: `試技順が重複しています(${gender})` });
@@ -296,7 +298,7 @@ const PlayerForm = ({ type }) => {
                   {!!players.length &&
                     players.map((player, playerIndex) => (
                       <Table.Row
-                        key={`${category_id}player${player.name}${player.team}`}
+                        key={`${category_id}player${playerIndex}`}
                       >
                         {Object.entries(header).map(([field, width]) => (
                           <Table.Cell
@@ -312,7 +314,10 @@ const PlayerForm = ({ type }) => {
                               />
                             ) : field === "gender" ? (
                               <SelectGender
-                                handler={() => {}}
+                                handler={(a, e) => {
+                                  // console.log(player)
+                                  // console.log(a, e)
+                                }}
                                 defaultValue={player[field]}
                                 width="80px"
                                 name={`${field}${getFlattenedIndex(

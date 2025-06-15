@@ -1,6 +1,6 @@
 import { Select, createListCollection, Portal } from "@chakra-ui/react";
 
-const CustomSelect = ({ contents, handler, defaultValue, width, name, bg, color }) => {
+const CustomSelect = ({ contents, handler, defaultValue, width, name, bg, color}) => {
   const collections = createListCollection({
     items: contents.items,
   });
